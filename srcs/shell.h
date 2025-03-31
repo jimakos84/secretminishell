@@ -6,7 +6,7 @@
 /*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:30:44 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/03/28 14:44:05 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:22:24 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ typedef struct s_shell
 {
 	t_env	*env;
 	char	**copy_env;
+	char	*trim;
+	char	**tokens;
 }	t_shell;
 
 #endif

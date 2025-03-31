@@ -6,7 +6,7 @@
 /*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:48 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/03/28 14:42:29 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/03/31 17:24:34 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@ t_env	*new_node(char *content)
 	if (!node)
 		return (NULL);
 	node->name = ft_substr(content, 0, (ft_strchr(content, '=') - content));
+	if (!node->name)
+		return (NULL);
 	node->value = ft_strdup(ft_strchr(content, '=') + 1);
+	if (!node->value)
+		return (NULL);
 	node->next = NULL;
 	return (node);
 }
@@ -67,7 +71,7 @@ static char	**copy_env(char **envp)
 	char	**copy;
 
 	len = ft_arraylen(envp);
-	copy = (char **)malloc(len * sizeof(char *) + 1);
+	copy = (char **)malloc((len + 1) * sizeof(char *));
 	if (!copy)
 		return (NULL);
 	i = 0;
@@ -93,6 +97,8 @@ static int	init_shell(t_shell *mini, char **envp)
 	list_env(&mini->env, envp);
 	mini->copy_env = NULL;
 	mini->copy_env = copy_env(envp);
+	mini->trim = NULL;
+	mini->tokens = NULL;
 	return (0);
 }
 
@@ -107,24 +113,107 @@ int	ft_isempty(char *str)
 	return (1);
 }
 
-static int	handle_input(t_shell *mini, char *input)
+static int	quotes_checker(char *input, int len)
 {
-	char	**token;
-	char	*path;
-	char	*_path;
+	int	in_quote;
+	int	i;
+
+	i = 0;
+	in_quote = 0;
+	while (input[i] && i < len)
+	{
+		if (input[i] == '\'' || input[i] == '"')
+		{
+			if (in_quote == 0)
+				in_quote = input[i];
+			else if (in_quote == input[i])
+				in_quote = 0;
+		}
+		i++;
+	}
+	return (in_quote);
+}
+
+static int	_exe_cmd(t_shell *mini)
+{
+	char	**path_dirs;
+	int		i;
+	char	*full_path;
 	int		status;
 
-	(void)mini;
-	path = "/bin/";
-	add_history(input);
-	if (!ft_strncmp(input, "exit", 4))
-		exit (1);
-	token = ft_split(input, ' ');
-	_path = ft_strjoin(path, token[0]);
-	if (fork() == 0)
-		execve(_path, token, mini->copy_env);
-	wait(&status);
+	i = 0;
+	path_dirs = ft_split(getenv("PATH"), ':');
+	while (path_dirs && path_dirs[i])
+	{
+		full_path = ft_strjoin(path_dirs[i], "/");
+		full_path = ft_strjoin(full_path, mini->tokens[0]);
+		if (access(full_path, X_OK) == 0)
+		{
+			if (fork() == 0)
+				execve(full_path, mini->tokens, mini->copy_env);
+			wait(&status);
+			return (0);
+		}
+		free(full_path);
+		i++;
+	}
+	printf("Command not found:%s\n", mini->tokens[0]);
 	return (0);
+}
+
+static int	tokenize(t_shell *mini)
+{
+	int		i;
+
+	i = 0;
+	mini->tokens = ft_split(mini->trim, ' ');
+	if (!mini->tokens)
+		return (1);
+	return (0);
+}
+
+static int	input_handler(t_shell *mini, char *input)
+{
+	(void)mini;
+	add_history(input);
+	if (mini->trim)
+		free(mini->trim);
+	mini->trim = ft_strtrim(input, " \t\n\r\v");
+	if (!mini->trim)
+		return (1);
+	tokenize(mini);
+	_exe_cmd(mini);
+	if (quotes_checker(mini->trim, ft_strlen(mini->trim)))
+		printf("unmatched quotes\n");
+	return (0);
+}
+
+static void	_free_env(t_shell *mini)
+{
+	t_env	*env;
+	t_env	*next;
+	int		i;
+
+	i = 0;
+	while (mini->copy_env && mini->copy_env[i])
+		free(mini->copy_env[i++]);
+	if (mini->copy_env)
+		free(mini->copy_env);
+	env = mini->env;
+	while (env != NULL)
+	{
+		next = env->next;
+		if (env->name)
+			free(env->name);
+		if (env->value)
+			free(env->value);
+		free(env);
+		env = next;
+	}
+	mini->env = NULL;
+	if (mini->trim)
+		free(mini->trim);
+	free(mini);
 }
 
 static int	_prompt(t_shell *mini, int status)
@@ -134,9 +223,13 @@ static int	_prompt(t_shell *mini, int status)
 	(void)mini;
 	while (1)
 	{
-		input = readline("tell me all your secrets> ");
-		if (input == NULL)
+		input = readline("minihell> ");
+		if (input == NULL || !ft_strncmp("exit", input, 4))
+		{
+			free(input);
+			_free_env(mini);
 			break ;
+		}
 		if (ft_isempty(input))
 		{
 			free(input);
@@ -144,7 +237,8 @@ static int	_prompt(t_shell *mini, int status)
 		}
 		if (input && *input)
 		{
-			handle_input(mini, input);
+			input_handler(mini, input);
+			free(input);
 			continue ;
 		}
 	}
@@ -171,6 +265,15 @@ static int	start_shell(int status, char **envp)
 	return (0);
 }
 
+void	_handler(int signo)
+{
+	(void)signo;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	int		status;
@@ -182,6 +285,8 @@ int	main(int ac, char **av, char **envp)
 		printf("Run just ./minishell, no arguments allowed!\n");
 		return (1);
 	}
+	signal(SIGINT, _handler);
+	signal(SIGQUIT, SIG_IGN);
 	start_shell(status, envp);
 	return (EXIT_SUCCESS);
 }
