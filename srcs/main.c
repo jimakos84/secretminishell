@@ -6,7 +6,7 @@
 /*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:48 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/03/31 17:24:34 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:03:01 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,12 +163,73 @@ static int	_exe_cmd(t_shell *mini)
 
 static int	tokenize(t_shell *mini)
 {
+	char	buffer[1024];
+	int		buf_i;
+	int		token_i;
 	int		i;
+	char	quote;
 
+	buf_i = 0;
+	token_i = 0;
 	i = 0;
-	mini->tokens = ft_split(mini->trim, ' ');
+	mini->tokens = malloc(1024 * sizeof(char *));
 	if (!mini->tokens)
 		return (1);
+	if (quotes_checker(mini->trim, ft_strlen(mini->trim)))
+	{
+		ft_putstr_fd("Error: unmatched quotes\n", 2);
+		free(mini->tokens);
+		return (1);
+	}
+	while (mini->trim[i])
+	{
+		if (mini->trim[i] == '\'' || mini->trim[i] == '"')
+		{
+			quote = mini->trim[i];
+			i++;
+			while (mini->trim[i] && mini->trim[i] != quote)
+			{
+				if (mini->trim[i] == '\\' && quote == '"')
+				{
+					i++;
+					if (mini->trim[i])
+						buffer[buf_i++] = mini->trim[i];
+				}
+				else
+					buffer[buf_i++] = mini->trim[i];
+				i++;
+			}
+			i++;
+		}
+		else if (ft_isspace(mini->trim[i]))
+		{
+			if (buf_i > 0)
+			{
+				buffer[buf_i] = '\0';
+				mini->tokens[token_i++] = ft_strdup(buffer);
+				buf_i = 0;
+			}
+			i++;
+		}
+		else if (mini->trim[i] == '\\')
+		{
+			i++;
+			if (mini->trim[i])
+				buffer[buf_i++] = mini->trim[i];
+			i++;
+		}
+		else
+		{
+			buffer[buf_i++] = mini->trim[i];
+			i++;
+		}
+	}
+	if (buf_i > 0)
+	{
+		buffer[buf_i] = '\0';
+		mini->tokens[token_i++] = ft_strdup(buffer);
+	}
+	mini->tokens[token_i] = NULL;
 	return (0);
 }
 
@@ -181,10 +242,9 @@ static int	input_handler(t_shell *mini, char *input)
 	mini->trim = ft_strtrim(input, " \t\n\r\v");
 	if (!mini->trim)
 		return (1);
-	tokenize(mini);
+	if (tokenize(mini))
+		return (1);
 	_exe_cmd(mini);
-	if (quotes_checker(mini->trim, ft_strlen(mini->trim)))
-		printf("unmatched quotes\n");
 	return (0);
 }
 
@@ -213,6 +273,10 @@ static void	_free_env(t_shell *mini)
 	mini->env = NULL;
 	if (mini->trim)
 		free(mini->trim);
+	while (mini->tokens && *mini->tokens)
+		free(*mini->tokens++);
+	if (mini->tokens)
+		free(*mini->tokens);
 	free(mini);
 }
 
