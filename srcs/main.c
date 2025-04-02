@@ -6,11 +6,14 @@
 /*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:48 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/01 14:03:01 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:45:50 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+
+static int	check_builtin(t_shell *mini);
+static int	builtin_cd(t_shell *mini);
 
 t_env	*new_node(char *content)
 {
@@ -157,7 +160,8 @@ static int	_exe_cmd(t_shell *mini)
 		free(full_path);
 		i++;
 	}
-	printf("Command not found:%s\n", mini->tokens[0]);
+	if (check_builtin(mini))
+		printf("%s: command not found\n", mini->tokens[0]);
 	return (0);
 }
 
@@ -177,7 +181,7 @@ static int	tokenize(t_shell *mini)
 		return (1);
 	if (quotes_checker(mini->trim, ft_strlen(mini->trim)))
 	{
-		ft_putstr_fd("Error: unmatched quotes\n", 2);
+		ft_putstr_fd("Error: Unmatched quotes\n", 2);
 		free(mini->tokens);
 		return (1);
 	}
@@ -231,6 +235,69 @@ static int	tokenize(t_shell *mini)
 	}
 	mini->tokens[token_i] = NULL;
 	return (0);
+}
+
+static char	*extract_env_value(t_shell *mini, char *name)
+{
+	while (mini->env)
+	{
+		if (ft_strncmp(name, mini->env->name, sizeof(name)) == 0)
+			return (mini->env->value);
+		mini->env = mini->env->next;
+	}
+	return (NULL);
+}
+
+static int	builtin_cd(t_shell *mini)
+{
+	char	*home;
+	char	*dir;
+
+	home = extract_env_value(mini, "HOME");
+	dir = NULL;
+	if (!home)
+	{
+		ft_putstr_fd("cd: HOME not set\n", 2);
+		return (1);
+	}
+	if (!mini->tokens[1])
+		chdir(home);
+	else
+	{	
+		if ((ft_strncmp("~", mini->tokens[1], 1) == 0))
+		{
+			if (mini->tokens[1] && !mini->tokens[1][1])
+				chdir(home);
+			else
+			{
+				dir = ft_strjoin(home, ft_strchr(mini->tokens[1], '~') + 1);
+			}
+		}
+		else
+		{
+			dir = ft_strjoin(getcwd(NULL, 0), "/");
+			dir = ft_strjoin(dir, mini->tokens[1]);
+		}
+		if (chdir(dir))
+		{
+			printf("cd: %s: No such file or directory\n", mini->tokens[1]);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+static int	check_builtin(t_shell *mini)
+{
+	if (ft_strncmp("cd", mini->tokens[0], 2) == 0)
+	{
+		if (builtin_cd(mini))
+			return (1);
+		else
+			return (0);
+	}
+	else
+		return (1);
 }
 
 static int	input_handler(t_shell *mini, char *input)
@@ -287,7 +354,7 @@ static int	_prompt(t_shell *mini, int status)
 	(void)mini;
 	while (1)
 	{
-		input = readline("minihell> ");
+		input = readline("minishell> ");
 		if (input == NULL || !ft_strncmp("exit", input, 4))
 		{
 			free(input);
