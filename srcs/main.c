@@ -6,7 +6,7 @@
 /*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:48 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/02 16:45:50 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/04/04 13:41:19 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,8 @@ static int	_exe_cmd(t_shell *mini)
 	char	*full_path;
 	int		status;
 
+	if (check_builtin(mini) == 1)
+		return (0);
 	i = 0;
 	path_dirs = ft_split(getenv("PATH"), ':');
 	while (path_dirs && path_dirs[i])
@@ -160,8 +162,7 @@ static int	_exe_cmd(t_shell *mini)
 		free(full_path);
 		i++;
 	}
-	if (check_builtin(mini))
-		printf("%s: command not found\n", mini->tokens[0]);
+	printf("%s: command not found\n", mini->tokens[0]);
 	return (0);
 }
 
@@ -239,20 +240,46 @@ static int	tokenize(t_shell *mini)
 
 static char	*extract_env_value(t_shell *mini, char *name)
 {
-	while (mini->env)
+	t_env	*temp;
+
+	temp = mini->env;
+	while (temp)
 	{
-		if (ft_strncmp(name, mini->env->name, sizeof(name)) == 0)
-			return (mini->env->value);
-		mini->env = mini->env->next;
+		if (ft_strncmp(name, temp->name, sizeof(name)) == 0)
+			return (temp->value);
+		temp = temp->next;
 	}
 	return (NULL);
+}
+
+static void	updatewd(t_shell *mini, char *newpwd, char *oldpwd)
+{
+	t_env	*env;
+	
+	env = mini->env;
+	while (env)
+	{
+		if (ft_strncmp("OLDPWD", env->name, 6) == 0)
+		{
+			free(env->value);
+			env->value = ft_strdup(oldpwd);
+		}
+		if (ft_strncmp("PWD", env->name, 3) == 0)
+		{
+			free(env->value);
+			env->value = ft_strdup(newpwd);
+		}
+		env = env->next;
+	}
 }
 
 static int	builtin_cd(t_shell *mini)
 {
 	char	*home;
 	char	*dir;
+	char	*oldpwd;
 
+	oldpwd = getcwd(NULL, 0);
 	home = extract_env_value(mini, "HOME");
 	dir = NULL;
 	if (!home)
@@ -267,10 +294,11 @@ static int	builtin_cd(t_shell *mini)
 		if ((ft_strncmp("~", mini->tokens[1], 1) == 0))
 		{
 			if (mini->tokens[1] && !mini->tokens[1][1])
-				chdir(home);
+				dir = home;
 			else
 			{
 				dir = ft_strjoin(home, ft_strchr(mini->tokens[1], '~') + 1);
+				free(home);
 			}
 		}
 		else
@@ -284,7 +312,31 @@ static int	builtin_cd(t_shell *mini)
 			return (1);
 		}
 	}
+	updatewd(mini, getcwd(NULL, 0), oldpwd);
+	free(oldpwd);
+	if (dir)
+		free(dir);
 	return (0);
+}
+
+static int	builtin_env(t_shell *mini)
+{
+	t_env	*temp;
+
+	temp = mini->env;
+	if (!mini->tokens[1])
+	{
+		while (temp)
+		{
+			printf("%s", temp->name);
+			printf("=");
+			printf("%s\n", temp->value);
+			temp = temp->next;
+		}
+		return (0);
+	}
+	else
+		return (1);
 }
 
 static int	check_builtin(t_shell *mini)
@@ -292,12 +344,20 @@ static int	check_builtin(t_shell *mini)
 	if (ft_strncmp("cd", mini->tokens[0], 2) == 0)
 	{
 		if (builtin_cd(mini))
-			return (1);
+			return (2);
 		else
-			return (0);
+			return (1);
+	}
+	if (ft_strncmp("env", mini->tokens[0], 3) == 0)
+	{
+		if (builtin_env(mini))
+			return (2);
+		else
+			return (1);
 	}
 	else
-		return (1);
+		return (0);
+	return (1);
 }
 
 static int	input_handler(t_shell *mini, char *input)
