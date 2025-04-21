@@ -1,45 +1,59 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/03/25 11:46:44 by dvlachos          #+#    #+#              #
-#    Updated: 2025/03/28 12:49:57 by dvlachos         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 TARGET = minishell
-
-LIBFT_DIR = ./libft
-LIBFT_LIB = $(LIBFT_DIR)/libft.a
 
 CMD = cc
 
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Werror -Wall -Wextra
 
 LDFLAGS = -lreadline
 
-SRCS = srcs/main.c
+LIBFT_DIR = ./ft_libft
+
+TARGET_LIBFT = $(LIBFT_DIR)/libft.a
+
+LIBFT_LINK = -L$(LIBFT_DIR) -lft
+
+LIBFT_INC = $(LIBFT_DIR)/libft.h $(LIBFT_DIR)/ft_printf.h $(LIBFT_DIR)/get_next_line.h
+
+SRCS = \
+	srcs/help.c\
+	srcs/cleaner.c\
+	srcs/error.c\
+	srcs/execute.c\
+	srcs/helper.c\
+	srcs/heredoc.c\
+	srcs/parser.c\
+	srcs/signal.c\
+	srcs/token.c\
+	srcs/validate.c\
+	srcs/built_in.c\
+	srcs/envrn.c\
+	srcs/utils.c\
+	srcs/built_in2.c\
+	srcs/redirect.c\
+	srcs/quote.c\
+	srcs/input.c\
+	main.c\
+
 
 OBJS = $(SRCS:.c=.o)
 
-all : $(TARGET) 
+all : $(TARGET)
 
-$(TARGET) : $(OBJS) $(LIBFT_LIB)
-	$(CMD) $(CFLAGS) $^ -o $@ $(LDFLAGS) -L$(LIBFT_DIR) -lft
+$(TARGET) : $(TARGET_LIBFT) $(OBJS)
+	$(CMD) $(CFLAGS) $(OBJS) $(LIBFT_LINK) -o $(TARGET) $(LDFLAGS)
+%.o : %.c
+	$(CMD) $(CFLAGS) -c $< -o $@
 
-$(LIBFT_LIB):
-	$(MAKE) -C $(LIBFT_DIR)
+$(TARGET_LIBFT) :
+	@make -C $(LIBFT_DIR)
 
 clean :
 	rm -f $(OBJS)
-	$(MAKE) -C $(LIBFT_DIR) clean
+	@make -C $(LIBFT_DIR) clean
 
 fclean : clean
 	rm -f $(TARGET)
-	rm -f $(LIBFT_LIB)
+	@make -C $(LIBFT_DIR) fclean
 
 re : fclean all
 
