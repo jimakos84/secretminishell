@@ -7,7 +7,8 @@ t_cmd *handle_heredoc(t_shell *mini, t_cmd *cmd, char *token)
 	int fd;
 	char *pmpt = NULL, *dem;
 	char *str = ft_strchr(token, '<');
-	char *new_token = ft_strnmdup(token, 0, str - token);
+	char *temp = ft_strnmdup(token, 0, str - token);
+	char *new_token = ft_strtrim(temp, " \f\n\t\v\r");
 	cmd->type = set_command_type(token);
 	cmd->command = set_path_name(mini, new_token);
 	cmd->filename = ft_strdup(CACHE);
@@ -15,22 +16,6 @@ t_cmd *handle_heredoc(t_shell *mini, t_cmd *cmd, char *token)
 	cmd->num_args = get_num_args(new_token);
 	cmd->args = set_arg_array(cmd->num_args, new_token, cmd->command);
 	cmd->next = NULL;
-
-	printf("tokne : {%s}\n", token);
-	printf("str : {%s}\n", str);
-	printf("new token : {%s}\n", new_token);
-	printf("type : {%d}\n", cmd->type);
-	printf("command : {%s}\n", cmd->command);
-	printf("filename : {%s}\n", cmd->filename);
-	printf("cmd : {%s}\n", cmd->cmd);
-	printf("num_args : {%d}\n", cmd->num_args);
-	int i = 0;
-	while(cmd->args[i])
-	{
-		printf("args[%d] : %s\n", i, cmd->args[i]);
-		i++;
-	}
-
 	dem = get_heredoc_dem(token);
 	if((fd = open(CACHE, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
 	{

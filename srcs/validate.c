@@ -12,13 +12,13 @@ int input_validate(char **input)
 {
 	input_preprocess(input);
 	if(check_properly_enclosed(*input))
-		return (syntax_error(*input ,"Sysntax Error : unclosed quotes !"));
+		return (syntax_error(*input ,"Sysntax Error : unclosed quotes !", 2));
 	if(check_special_character(*input))
-		return (syntax_error(*input ,"Sysntax Error : unrecognized characters !"));
+		return (syntax_error(*input ,"Sysntax Error : unrecognized characters !", 1));
 	if(check_output_character(*input))
-		return (syntax_error(*input ,"Sysntax Error : syntax error near token '>'!"));
+		return (syntax_error(*input ,"Sysntax Error : syntax error near token '>'!", 1));
 	if(check_input_character(*input))
-		return (syntax_error(*input ,"Sysntax Error : syntax error near token '<'!"));
+		return (syntax_error(*input ,"Sysntax Error : syntax error near token '<'!", 1));
 	return (0);
 }
 

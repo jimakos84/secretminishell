@@ -60,7 +60,6 @@ typedef struct s_cmd
 typedef struct s_shell
 {
 	int 		num_cmds;
-	char 		*trim;
 	t_cmd 		*cmds;
 	t_list 		*tokens;
 	t_initenv	*initenv;
@@ -70,7 +69,7 @@ typedef struct s_shell
 /**
  * Implementaion in main.c
 */
-void 	print(t_list *list, char *msg);
+void print(t_list *list, char *msg);
 
 /**
  * Implementaion in srcs/validate.c
@@ -81,7 +80,7 @@ int 	input_validate(char **input);
 /**
  * Implementaion in srcs/error.c
 */
-int 	syntax_error(char *input, char *msg);
+int syntax_error(char *input, char *msg, int code);
 
 /**
  * Implementation in srcs/helper.c
@@ -98,40 +97,39 @@ int 	extract_tokens(t_list **tokens, char *input);
 /**
  * Implementation in srcs/parser.c
 */
-int 	parse_and_expand(t_shell *mini);
-t_cmd 	*handel_pipe(t_shell *mini, t_list *current);
+int parse_and_expand(t_shell *mini);
+t_cmd *handel_pipe(t_shell *mini, t_list *current);
 
 /**
  * Implementaion in srcs/utils.c
 */
-int 	ft_strnmcpy(char **dest, char *src, int n, int m);
-char 	*ft_strnmdup(char const *src, int n , int m);
+int ft_strnmcpy(char **dest, char *src, int n, int m);
+char *ft_strnmdup(char const *src, int n , int m);
 
 /**
  * Implementaion in srcs/execute.c
 */
-int 	execute(t_shell *mini);
+int execute(t_shell *mini);
 
 /**
  * Implementaion in srcs/cleaner.c
 */
-int 	clear_and_exit(t_shell *mini);
-int 	clear_array(char **array);
+int clear_and_exit(t_shell *mini);
 
 
 /**
  * Implementaion in srcs/signal.c
 */
-void 	init_sig(void);
+void init_sig(void);
 
 /**
  * Implementaion in srcs/redirect.c
 */
-char 	*set_filename(char *token, int ch);
-char 	*set_filename(char *token, int ch);
-char 	*set_arg_string(char *token, int ch);
-char 	*get_arg_string(char *token);
-int 	set_command_type(char *token);
+char *set_filename(char *token, int ch);
+char *set_filename(char *token, int ch);
+char *set_arg_string(char *token, int ch);
+char *get_arg_string(char *token);
+int set_command_type(char *token);
 
 /**
  * Implementaion in srcs/input.c
@@ -143,7 +141,7 @@ t_cmd *handel_input(t_shell *mini, char *token);
 /**
  * Implementaion in srcs/heredoc.c
 */
-t_cmd 	*handle_heredoc(t_shell *mini, t_cmd *cmd, char *token);
+t_cmd *handle_heredoc(t_shell *mini, t_cmd *cmd, char *token);
 
 t_env	*new_node(char *content);
 void	add_to_list(t_env **env, char *content);
@@ -159,17 +157,18 @@ char 	*get_command(char *token);
 int		tokenize(t_shell *mini, char *input);
 int		quotes_checker(char *input, int len);
 bool	builtin_cmd(char *cmd);
-void    builtin_unset(t_shell *mini, char **unset_args);
+void    builtin_unset(t_shell *mini);
 
-int		ft_isspace(int c);
+int	ft_isspace(int c);
 
-t_cmd 	*handle_quoted(t_shell *mini, char *token);
-char 	*enclosed_in_quotes(char *input);
-int 	check_if_quoted(char *input);
-char 	*remove_quotes(char *str);
-char 	*set_path_name(t_shell *mini, char *token);
-int 	get_num_args(char *token);
-char 	**set_arg_array(int num_args, char *token, char *cmdpath);
+t_cmd *handle_quoted(t_shell *mini, char *token);
+char *enclosed_in_quotes(char *input);
+int check_if_quoted(char *input);
+char *remove_quotes(char *str);
+char *set_path_name(t_shell *mini, char *token);
+int get_num_args(char *token);
+char **set_arg_array(int num_args, char *token, char *cmdpath);
 int		ft_lst_len(t_env *env);
+char **quote_aware_tokenize(const char *input);
 
 #endif

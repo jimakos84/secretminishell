@@ -22,9 +22,25 @@ void	init_env(t_initenv **initenv, char **envp)
 	list_env(&(*initenv)->env, envp);
 }
 
-int	main(int ac, char **av, char **envp)
+static void	init_shell(int status, t_initenv *initenv)
 {
 	char		*input;
+
+	input = readline("minishell> ");
+	if (!input)
+		exit (1);
+	if (ft_isempty(input))
+	{
+		free(input);
+		return ;
+	}
+	add_history(input);
+	status = activate_shell(input, initenv);
+	free(input);
+}
+
+int	main(int ac, char **av, char **envp)
+{
 	int			status;
 	t_initenv	*initenv;
 
@@ -36,17 +52,7 @@ int	main(int ac, char **av, char **envp)
 		init_sig();
 		init_env(&initenv, envp);
 		while (1)
-		{
-			input = readline("minishell> ");
-			if (ft_isempty(input))
-			{
-				free(input);
-				continue ;
-			}
-			add_history(input);
-			status = activate_shell(input, initenv);
-			free(input);
-		}
+			init_shell(status, initenv);
 	}
 	return (status);
 }

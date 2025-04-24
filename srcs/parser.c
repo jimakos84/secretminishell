@@ -22,6 +22,7 @@ int parse_and_expand(t_shell *mini)
 	}
 	return (0);
 }
+
 void handle_dollar(t_list *list, t_shell *mini)
 {
     t_list *current;
@@ -36,10 +37,10 @@ void handle_dollar(t_list *list, t_shell *mini)
 
 	current = list;
 	token = current->token;
-    expanded_token = malloc(strlen(token) + 1);
 	i = 0;
 	j = 0;
-    if (!expanded_token)
+	expanded_token = malloc(4128+ 1);
+	if (!expanded_token)
         return ;
     while (token[i]) {
         if (token[i] == '$') {
@@ -71,9 +72,9 @@ void expand(t_shell *mini, t_list *list)
 	while(current)
 	{
 		handle_dollar(current, mini);
-		if(check_if_quoted(current->token))
-			cmd = handle_quoted(mini, current->token);
-		else if(ft_strchr(current->token, '>'))
+		// if(check_if_quoted(current->token))
+		// 	cmd = handle_quoted(mini, current->token);
+		if(ft_strchr(current->token, '>'))
 			cmd = handel_output(mini, current->token);
 		else if(ft_strchr(current->token, '<'))
 			cmd = handel_input(mini, current->token);
@@ -94,9 +95,9 @@ t_cmd *handel_pipe(t_shell *mini, t_list *current)
 	cmd->type = set_command_type(current->token);
 	cmd->cmd = get_command(current->token);
 	cmd->command = set_path_name(mini, current->token);
-	cmd->filename = NULL;
 	cmd->num_args = get_num_args(current->token);
 	cmd->args = set_arg_array(cmd->num_args, current->token, cmd->command);
+	cmd->filename = NULL;
 	cmd->next = NULL;
 	return (cmd);
 }
@@ -121,6 +122,7 @@ char *set_path_name(t_shell *mini, char *token)
 	int		i;
 
 	i = 0;
+
 	command = ft_substr(token, 0, ft_strchr(token, ' ') - token);
 	path = command;
 	if (access(path, X_OK) == 0)
@@ -131,7 +133,7 @@ char *set_path_name(t_shell *mini, char *token)
 	if (!path_value)
 	{
     	if (!builtin_cmd(command))
-    	    printf("%s: command not found\n", command);
+    	    printf("%s: command not found2\n", command);
    		free(command);
    		return (NULL);
 	}
@@ -153,7 +155,7 @@ char *set_path_name(t_shell *mini, char *token)
 		if (builtin_cmd(command))
 			return (NULL);
 		else
-			printf("%s: command not found\n", command);
+			printf("%s: command not found1\n", command);
 	}
 	return (NULL);
 }
@@ -202,7 +204,7 @@ void get_args(char **args, char *token, int size)
 		{
 			args[step][k] = token[k + start];
 			k++;
-		}
+		}	
 		args[step][k] = '\0';
 		step++;
 	}

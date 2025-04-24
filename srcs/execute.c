@@ -69,7 +69,6 @@ int execute(t_shell *mini)
 			mini->initenv->copy_env = copy_env(mini->initenv->env);
 			if((execve(current->command, current->args, mini->initenv->copy_env)) == -1)
 				exit(1);
-			clear_array(mini->initenv->copy_env);
 		}
 		current = current->next;
 		index++;

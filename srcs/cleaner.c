@@ -1,22 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cleaner.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 12:48:20 by tsomacha          #+#    #+#             */
+/*   Updated: 2025/04/23 12:53:31 by tsomacha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/shell.h"
 
-int clear_commands(t_cmd *cmds);
-int clear_tokens(t_list *tokens);
-int clear_array(char **array);
+int	clear_commands(t_cmd *cmds);
+int	clear_tokens(t_list *tokens);
+int	clear_array(char **array);
 
-int clear_and_exit(t_shell *mini)
+int		clear_env(t_shell *mini)
 {
-	clear_commands(mini->cmds);
-	clear_tokens(mini->tokens);
-	if (mini->initenv->copy_env)
-		clear_array(mini->initenv->copy_env);
+	char	*name;
+	char	*value;
+	t_env	*current;
+	t_env	*temp;
+
+	current = mini->initenv->env;
+	if (!current)
+		return (1);
+	while (current)
+	{
+		name = mini->initenv->env->name;
+		value = mini->initenv->env->value;
+		free(name);
+		if (value)
+			free(value);
+		temp = current;
+		current = current->next;
+		free(temp);
+	}
 	return (0);
 }
 
-int clear_commands(t_cmd *cmds)
+int	clear_and_exit(t_shell *mini)
 {
-	t_cmd *current = cmds, *cmd;
-	while(current)
+	clear_commands(mini->cmds);
+	clear_tokens(mini->tokens);
+	//clear_env(mini);
+	return (0);
+}
+
+int	clear_commands(t_cmd *cmds)
+{
+	t_cmd	*current;
+	t_cmd	*cmd;
+
+	current = cmds;
+	while (current)
 	{
 		cmd = current;
 		current = current->next;
@@ -24,10 +62,14 @@ int clear_commands(t_cmd *cmds)
 	}
 	return (0);
 }
-int clear_tokens(t_list *tokens)
+
+int	clear_tokens(t_list *tokens)
 {
-	t_list *current = tokens, *token;
-	while(current)
+	t_list	*current;
+	t_list	*token;
+
+	current = tokens;
+	while (current)
 	{
 		token = current;
 		current = current->next;
@@ -36,16 +78,18 @@ int clear_tokens(t_list *tokens)
 	return (0);
 }
 
-int clear_array(char **array)
+int	clear_array(char **array)
 {
-	int i = 0;
-	while(array && array[i])
+	int	i;
+
+	i = 0;
+	while (array && array[i])
 	{
-		if(array[i])
+		if (array[i])
 			free(array[i]);
 		i++;
 	}
-	if(array)
+	if (array)
 		free(array);
 	return (0);
 }
