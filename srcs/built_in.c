@@ -37,8 +37,21 @@ int	builtin_cd(t_shell *mini)
 {
 	char	*dir;
 	char	*oldpwd;
+	char	*home;
 
+	home = mini->initenv->home;
 	oldpwd = getcwd(NULL, 0);
+	if (!mini->cmds->args[1])
+	{
+		if (!home[0])
+		{
+			printf("cd: HOME not set\n");
+			return (1);
+		}
+		chdir(home);
+		updatewd(mini, home, oldpwd);
+		return (0);
+	}
 	dir = NULL;
 	dir = ft_strjoin(getcwd(NULL, 0), "/");
 	dir = ft_strjoin(dir, mini->cmds->args[1]);

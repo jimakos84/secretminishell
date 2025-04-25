@@ -20,12 +20,14 @@ void	init_env(t_initenv **initenv, char **envp)
 	(*initenv)->copy_env = NULL;
 	(*initenv)->env = NULL;
 	list_env(&(*initenv)->env, envp);
+	(*initenv)->home = ft_strdup(extract_env_value(*initenv, "HOME"));
 }
 
 static void	init_shell(int status, t_initenv *initenv)
 {
 	char		*input;
 
+	(void)status;
 	input = readline("minishell> ");
 	if (!input)
 		exit (1);

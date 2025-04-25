@@ -16,7 +16,8 @@ t_cmd *handel_output(t_shell *mini, char *token)
 	if(!cmd)
 		return (NULL);
 	cmd->type = set_command_type(token);
-	cmd->command = set_path_name(mini, arg_str);
+	cmd->cmd = get_command(arg_str);
+	cmd->command = set_path_name(mini, cmd->cmd);
 	cmd->filename = set_filename(token, '>');
 	cmd->num_args = get_num_args(arg_str);
 	cmd->args = set_arg_array(cmd->num_args, arg_str, cmd->command);

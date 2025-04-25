@@ -94,7 +94,7 @@ t_cmd *handel_pipe(t_shell *mini, t_list *current)
 			return (NULL);
 	cmd->type = set_command_type(current->token);
 	cmd->cmd = get_command(current->token);
-	cmd->command = set_path_name(mini, current->token);
+	cmd->command = set_path_name(mini, cmd->cmd);
 	cmd->num_args = get_num_args(current->token);
 	cmd->args = set_arg_array(cmd->num_args, current->token, cmd->command);
 	cmd->filename = NULL;
@@ -122,8 +122,7 @@ char *set_path_name(t_shell *mini, char *token)
 	int		i;
 
 	i = 0;
-
-	command = ft_substr(token, 0, ft_strchr(token, ' ') - token);
+	command = token;
 	path = command;
 	if (access(path, X_OK) == 0)
 		return (path);
@@ -155,35 +154,59 @@ char *set_path_name(t_shell *mini, char *token)
 		if (builtin_cmd(command))
 			return (NULL);
 		else
-			printf("%s: command not found1\n", command);
+			printf("%s: command not found\n", command);
 	}
 	return (NULL);
 }
 
+
 char *get_command(char *token)
 {
-	int i = 0, j = 0;
-	char *command;
-	while(token && token[i])
-	{
-		if(token[i] == ' ')
-		{
-			command = malloc(sizeof(char)*(i + 1));
-			if(!command)
-				return (NULL);
-			while(token && token[j] && j < i)
-			{
-				command[j] = token[j];
-				j++;
-			}
-			command[j] = '\0';
-			return (command);
-		}
-		i++;
-	}
-	if(token[i] == '\0')
-		return (token);
-	return (NULL);
+    int i = 0;
+    int start = 0;
+    char *command;
+    int len = strlen(token);
+    int in_quote = quotes_checker(token, len);  // Check for any open quotes
+
+    // Skip any leading spaces
+    while (token[i] == ' ') {
+        i++;
+    }
+    start = i;
+
+    // Traverse the string to find the first space outside of quotes
+    while (token[i])
+    {
+        if (token[i] == '\'' || token[i] == '"')
+        {
+            // If we're inside quotes, continue without splitting
+            if (!in_quote)
+                in_quote = token[i];  // Start of a quote
+            else if (in_quote == token[i])
+                in_quote = 0;  // End of the quote
+        }
+        else if (token[i] == ' ' && in_quote == 0)
+        {
+            break;  // Found a space outside of quotes, we can split here
+        }
+        i++;
+    }
+
+    // Allocate memory for the command (including null terminator)
+    command = malloc(sizeof(char) * (i - start + 1));
+    if (!command) {
+        return NULL;  // Memory allocation failure
+    }
+
+    // Copy the part before the first space or end of the string
+    for (int j = 0; j < (i - start); j++) {
+        command[j] = token[start + j];
+    }
+	command = remove_quotes(command);
+    // Null-terminate the string
+    command[i - start] = '\0';
+
+    return command;
 }
 
 void get_args(char **args, char *token, int size)
@@ -204,7 +227,8 @@ void get_args(char **args, char *token, int size)
 		{
 			args[step][k] = token[k + start];
 			k++;
-		}	
+		}
+		args[step] = remove_quotes(args[step]);
 		args[step][k] = '\0';
 		step++;
 	}

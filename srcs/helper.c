@@ -11,8 +11,8 @@ int activate_shell(char *input, t_initenv *env)
 	mini->cmds = NULL;
 	mini->initenv = env;
 	mini->status = 0;
-	// if((status = input_validate(&input)))
-	// 	return (status);
+	if((status = input_validate(&input)))
+	 	return (status);
 	if((status = extract_tokens(&mini->tokens, input)))
 		return (status);
 	if((status = parse_and_expand(mini)))
