@@ -83,17 +83,20 @@ int clear_commands(t_cmd *cmd)
 int	clear_tokens(t_list *tokens)
 {
 	t_list	*current;
-	t_list	*token;
+	t_list	*next;
 
 	current = tokens;
 	while (current)
 	{
-		token = current;
-		current = current->next;
-		free(token);
+		next = current->next;
+		if (current->token)
+			free(current->token);  // FREE THE STRING INSIDE
+		free(current);
+		current = next;
 	}
 	return (0);
 }
+
 
 int	clear_array(char **array)
 {

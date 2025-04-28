@@ -174,7 +174,7 @@ int		ft_isspace(int c);
 t_cmd 	*handle_quoted(t_shell *mini, char *token);
 bool 	contains_unquoted_char(char *str, char symbol);
 int 	check_if_quoted(char *input);
-char 	*remove_quotes(char *str);
+void remove_quotes_inplace(char *str);
 char 	*set_path_name(t_shell *mini, char *token);
 int 	get_num_args(char *token);
 char 	**set_arg_array(int num_args, char *token, char *cmdpath);

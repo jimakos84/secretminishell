@@ -72,29 +72,29 @@ int check_if_quoted(char *input)
 		return (0);
 }
 
-char *remove_quotes(char *str) 
+void remove_quotes_inplace(char *str)
 {
-    int     i;
-    int     len;
-    int     j;
-    char    *result;
+    int i = 0;
+    int j = 0;
+    int quote;
 
-    len = ft_strlen(str);
-    j = 0;
-    i = 0;
-    if (str == NULL || len == 0)
-        return (str);
-    while ((str[i] == '"' || str[i] == '\'') && i < len)
-        i++;
-    while ((str[len - 1] == '"' || str[len - 1] == '\'') && len > i)
-        len--;
-    result = malloc(sizeof(char) * (len - i + 1));
-    if (!result) 
-        return (NULL);
-    while (i < len) 
-        result[j++] = str[i++];
-    result[j] = '\0';
-    return (result);
+    if (!str)
+        return;
+    quote = 0;
+    while (str[i])
+    {
+        if ((str[i] == '\'' || str[i] == '"') && !quote)
+            quote = str[i++];
+        else if (str[i] == quote)
+        {
+            quote = 0;
+            i++;
+        }
+        else
+            str[j++] = str[i++];
+    }
+    str[j] = '\0';
 }
+
 
 

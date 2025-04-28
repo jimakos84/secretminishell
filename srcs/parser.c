@@ -38,47 +38,53 @@ char **allocate_args_array(int num_args)
     return args;
 }
 
+t_list *handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
+{
+    if (is_redirection_token(current->token))
+    {
+        if (current->next)
+        {
+            cmd->filename = ft_strdup(current->next->token);
+            remove_quotes_inplace(cmd->filename);
+            if (ft_strncmp(current->token, ">", ft_strlen(current->token)) == 0)
+                cmd->type = OPRD_CMD;
+            else if (ft_strncmp(current->token, "<", ft_strlen(current->token)) == 0)
+                cmd->type = IPRD_CMD;
+            current = current->next;
+        }
+    }
+    else
+    {
+        cmd->args[*i] = ft_strdup(current->token);
+        remove_quotes_inplace(cmd->args[*i]);
+        (*i)++;
+    }
+    return (current->next);
+}
+
+
 t_list *fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
 {
-    int i = 0;
-    t_list *current = tokens;
+    int     i;
+    t_list  *current;
 
-    cmd->cmd = remove_quotes(ft_strdup(current->token));
+    i = 0;
+    current = tokens;
+    cmd->cmd = ft_strdup(current->token);
+    remove_quotes_inplace(cmd->cmd);
     if (builtin_cmd(cmd->cmd))
         cmd->is_builtin = 1;
     else
-	{
         cmd->command = set_path_name(mini, cmd->cmd);
-	}
-	cmd->args[i++] = ft_strdup(cmd->cmd);
+    cmd->args[i++] = ft_strdup(cmd->cmd);
     current = current->next;
     while (current && !contains_unquoted_char(current->token, '|'))
-    {
-        if (is_redirection_token(current->token))
-        {
-            if (current->next)
-            {
-                cmd->filename = remove_quotes(ft_strdup(current->next->token));
-                if (ft_strncmp(current->token, ">", ft_strlen(current->token)) == 0)
-                    cmd->type = OPRD_CMD;
-                else if (ft_strncmp(current->token, "<", ft_strlen(current->token)) == 0)
-                    cmd->type = IPRD_CMD;
-            }
-            current = current->next; // skip filename
-        }
-        else
-        {
-            cmd->args[i] = remove_quotes(ft_strdup(current->token));
-            i++;
-        }
-        current = current->next;
-    }
-
+        current = handle_arg_or_redirection(cmd, current, &i);
     cmd->args[i] = NULL;
     cmd->num_args = i;
-    
-    return current; // return where parsing stopped
+    return (current);
 }
+
 
 
 int count_args(t_list *tokens)
