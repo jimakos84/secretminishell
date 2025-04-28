@@ -39,19 +39,24 @@
 // 	return (cmd);
 // }
 
-char *enclosed_in_quotes(char *input)
+bool contains_unquoted_char(char *str, char symbol)
 {
-	char *str = NULL;
-	int len = ft_strlen(input);
+	bool in_single = false;
+	bool in_double = false;
 
-	str = ft_strnstr(input, "'", len);
-	if(str)
-		return (str);
-	str = ft_strnstr(input, "\"", len);
-	if(str)
-		return (str);
-	return (str);
+	for (int i = 0; str[i]; i++)
+	{
+		if (str[i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (str[i] == '"' && !in_single)
+			in_double = !in_double;
+		else if (str[i] == symbol && !in_single && !in_double)
+			return true;
+	}
+	return false;
 }
+
+
 
 int check_if_quoted(char *input)
 {
@@ -67,40 +72,29 @@ int check_if_quoted(char *input)
 		return (0);
 }
 
-char *remove_quotes(char *str) {
-    int i = 0, j = 0, len = strlen(str);
-    char *result;
+char *remove_quotes(char *str) 
+{
+    int     i;
+    int     len;
+    int     j;
+    char    *result;
 
-    // Handle case where input might be empty
-    if (str == NULL || len == 0) {
-        return str;
-    }
-
-    // Find where the quotes start and end (skip leading quotes)
-    while ((str[i] == '"' || str[i] == '\'') && i < len) {
+    len = ft_strlen(str);
+    j = 0;
+    i = 0;
+    if (str == NULL || len == 0)
+        return (str);
+    while ((str[i] == '"' || str[i] == '\'') && i < len)
         i++;
-    }
-
-    // Find where the quotes end (skip trailing quotes)
-    while ((str[len - 1] == '"' || str[len - 1] == '\'') && len > i) {
+    while ((str[len - 1] == '"' || str[len - 1] == '\'') && len > i)
         len--;
-    }
-
-    // Allocate memory for the cleaned string (null-terminated)
-    result = malloc(sizeof(char) * (len - i + 1)); // +1 for the null-terminator
-    if (!result) {
-        return NULL;  // Memory allocation failed
-    }
-
-    // Copy the cleaned string into the result
-    for (j = 0; i < len; i++, j++) {
-        result[j] = str[i];
-    }
-
-    // Null-terminate the result string
+    result = malloc(sizeof(char) * (len - i + 1));
+    if (!result) 
+        return (NULL);
+    while (i < len) 
+        result[j++] = str[i++];
     result[j] = '\0';
-
-    return result;
+    return (result);
 }
 
 

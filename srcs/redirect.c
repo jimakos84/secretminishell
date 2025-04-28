@@ -11,16 +11,17 @@ t_cmd *handel_output(t_shell *mini, char *token)
 	 * example of the command format
 	 * echo "the string need to write in to the file" > file.txt
 	*/
+	printf("output happens\n");
 	char *arg_str = set_arg_string(token, '>');
 	t_cmd *cmd = malloc(sizeof(t_cmd));
 	if(!cmd)
 		return (NULL);
 	cmd->type = set_command_type(token);
-	cmd->cmd = get_command(arg_str);
+	//cmd->cmd = get_command(arg_str);
 	cmd->command = set_path_name(mini, cmd->cmd);
 	cmd->filename = set_filename(token, '>');
-	cmd->num_args = get_num_args(arg_str);
-	cmd->args = set_arg_array(cmd->num_args, arg_str, cmd->command);
+	//cmd->num_args = get_num_args(arg_str);
+	//cmd->args = set_arg_array(cmd->num_args, arg_str, cmd->command);
 	cmd->next = NULL;
 	free(arg_str);
 	return (cmd);
@@ -28,34 +29,31 @@ t_cmd *handel_output(t_shell *mini, char *token)
 
 int set_command_type(char *token)
 {
-	char *s1 = NULL, *s2 = NULL;
-	if(token)
-	{
-		s1 = ft_strtrim(token, " \f\n\t\v\r");
-		s2 = ft_strchr(s1, '>');
-		if(s2 && s2[0] == '>')
-		{
-			if (s2[1] && s2[1] == '>')
-				return (APRD_CMD);
-			return(OPRD_CMD);
-		}
-		s2 = ft_strchr(s1, '<');
-		if(s2 && s2[0] == '<')
-		{
-			if (s2[1] && s2[1] == '<')
-				return(HDRD_CMD);
-			return (IPRD_CMD);
-		}
-		else
-		{
-			return (SMPL_CMD);
-		}
-	}
-	else
-	{
+	if (!token)
 		return (0);
+
+	char *trimmed = ft_strtrim(token, " \f\n\t\v\r");
+
+	if (contains_unquoted_char(trimmed, '>'))
+	{
+		// Look for >> only if both > are unquoted
+		if (ft_strnstr(trimmed, ">>", ft_strlen(trimmed)) &&
+			contains_unquoted_char(trimmed, '>') &&
+			contains_unquoted_char(trimmed + 1, '>'))
+			return (APRD_CMD);
+		return (OPRD_CMD);
 	}
+	else if (contains_unquoted_char(trimmed, '<'))
+	{
+		if (ft_strnstr(trimmed, "<<", ft_strlen(trimmed)) &&
+			contains_unquoted_char(trimmed, '<') &&
+			contains_unquoted_char(trimmed + 1, '<'))
+			return (HDRD_CMD);
+		return (IPRD_CMD);
+	}
+	return (SMPL_CMD);
 }
+
 
 char *set_filename(char *token, int ch)
 {

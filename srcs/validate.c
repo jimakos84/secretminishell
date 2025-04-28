@@ -3,7 +3,7 @@
 int input_validate(char **input);
 static void input_preprocess(char **input);
 static int check_properly_enclosed(char *input);
-static int check_special_character(char *input);
+//static int check_special_character(char *input);
 static int check_output_character(char *input);
 static int check_input_character(char *input);
 static char *remove_comments(char *input);
@@ -12,13 +12,13 @@ int input_validate(char **input)
 {
 	input_preprocess(input);
 	if(check_properly_enclosed(*input))
-		return (syntax_error(*input ,"Sysntax Error : unclosed quotes !", 2));
-	if(check_special_character(*input))
-		return (syntax_error(*input ,"Sysntax Error : unrecognized characters !", 1));
+		return (syntax_error(*input ,"minishell: syntax error: unclosed quotes", 2));
+	//if(check_special_character(*input))
+	//	return (syntax_error(*input ,"Sysntax Error : unrecognized characters !", 1));
 	if(check_output_character(*input))
-		return (syntax_error(*input ,"Sysntax Error : syntax error near token '>'!", 1));
+		return (syntax_error(*input ,"minishell: syntax error near token 'newline'", 2));
 	if(check_input_character(*input))
-		return (syntax_error(*input ,"Sysntax Error : syntax error near token '<'!", 1));
+		return (syntax_error(*input ,"minishell: syntax error near token 'newline'", 2));
 	return (0);
 }
 
@@ -59,25 +59,25 @@ static int check_properly_enclosed(char *input)
 	return (in_single_quotes || in_double_quotes);
 }
 
-static int check_special_character(char *input)
-{
-	int i = 0;
-	char *special_chars = "\\&;,{()}", *str;
+// static int check_special_character(char *input)
+// {
+// 	int i = 0;
+// 	char *special_chars = "\\&;,{()}", *str;
 
-	str = enclosed_in_quotes(input);
-	while(special_chars[i])
-	{
-		if(ft_strchr(input, special_chars[i]))
-		{
-			if(!str)
-				return (1);
-			if(str && !ft_strchr(str, special_chars[i]))
-				return (1);
-		}
-		i++;
-	}
-	return (0);
-}
+// 	str = enclosed_in_quotes(input);
+// 	while(special_chars[i])
+// 	{
+// 		if(ft_strchr(input, special_chars[i]))
+// 		{
+// 			if(!str)
+// 				return (1);
+// 			if(str && !ft_strchr(str, special_chars[i]))
+// 				return (1);
+// 		}
+// 		i++;
+// 	}
+// 	return (0);
+// }
 
 static int check_output_character(char *input)
 {

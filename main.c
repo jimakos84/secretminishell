@@ -19,6 +19,7 @@ void	init_env(t_initenv **initenv, char **envp)
 	*initenv = malloc(sizeof(t_initenv));
 	(*initenv)->copy_env = NULL;
 	(*initenv)->env = NULL;
+	(*initenv)->home = NULL;
 	list_env(&(*initenv)->env, envp);
 	(*initenv)->home = ft_strdup(extract_env_value(*initenv, "HOME"));
 }

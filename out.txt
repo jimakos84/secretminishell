@@ -1,0 +1,14 @@
+total 1904
+drwxrwxr-x  6 dimitris dimitris    4096 Apr 27 17:33 .
+drwxr-x--- 22 dimitris dimitris    4096 Apr 25 14:11 ..
+-rw-rw-r--  1 dimitris dimitris 1568461 Apr 25 08:58 en.subject.pdf
+drwxrwxr-x  5 dimitris dimitris    4096 Apr 25 15:07 ft_libft
+drwxrwxr-x  8 dimitris dimitris    4096 Apr 25 14:09 .git
+drwxrwxr-x  2 dimitris dimitris    4096 Apr 25 08:58 includes
+-rw-rw-r--  1 dimitris dimitris    1735 Apr 25 12:12 main.c
+-rw-rw-r--  1 dimitris dimitris     947 Apr 25 08:58 Makefile
+-rwxrwxr-x  1 dimitris dimitris   52152 Apr 27 17:33 minishell
+-rw-rw-r--  1 dimitris dimitris  275272 Apr 25 08:58 ng_3_minishell.pdf
+-rw-rw-r--  1 dimitris dimitris       0 Apr 27 17:34 out.txt
+-rw-rw-r--  1 dimitris dimitris   12345 Apr 25 08:58 README.md
+drwxrwxr-x  2 dimitris dimitris    4096 Apr 27 17:33 srcs

@@ -26,3 +26,23 @@ int		ft_lst_len(t_env *env)
 	}
 	return (len);
 }
+
+bool is_invalid_pipe_sequence(t_list *current)
+{
+    if (!current || !current->next)
+        return false;
+    if (contains_unquoted_char(current->token, '|') &&
+        contains_unquoted_char(current->next->token, '|'))
+        return true;
+    return false;
+}
+
+int is_redirection_token(char *token)
+{
+	size_t		len;
+
+	len = ft_strlen(token);
+    return (ft_strncmp(token, ">", len) == 0 || 
+            ft_strncmp(token, "<", len) == 0 ||
+            ft_strncmp(token, ">>", len) == 0);
+}

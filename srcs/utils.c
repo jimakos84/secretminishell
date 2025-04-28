@@ -143,3 +143,27 @@ bool	builtin_cmd(char *cmd)
 	}
 	return (false);
 }
+
+char *ft_strjoin_free(char *s1, char *s2)
+{
+    char *joined;
+
+    joined = ft_strjoin(s1, s2);
+    free(s1);
+    return (joined);
+}
+
+void free_env(char **env)
+{
+    int i = 0;
+
+    if (env)
+    {
+        while (env[i])
+        {
+            free(env[i]);
+            i++;
+        }
+        free(env);
+    }
+}
