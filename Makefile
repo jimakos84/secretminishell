@@ -15,6 +15,7 @@ LIBFT_LINK = -L$(LIBFT_DIR) -lft
 LIBFT_INC = $(LIBFT_DIR)/libft.h $(LIBFT_DIR)/ft_printf.h $(LIBFT_DIR)/get_next_line.h
 
 SRCS = \
+	srcs/export.c\
 	srcs/help.c\
 	srcs/cleaner.c\
 	srcs/error.c\

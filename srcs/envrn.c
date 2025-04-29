@@ -22,9 +22,14 @@ t_env	*new_node(char *content)
 	node->name = ft_substr(content, 0, (ft_strchr(content, '=') - content));
 	if (!node->name)
 		return (NULL);
-	node->value = ft_strdup(ft_strchr(content, '=') + 1);
-	if (!node->value)
-		return (NULL);
+	if (ft_strchr(content, '='))
+	{
+		node->value = ft_strdup(ft_strchr(content, '=') + 1);
+		if (!node->value)
+			return (NULL);
+	}
+	else
+		node->value = ft_strdup("");
 	node->next = NULL;
 	return (node);
 }

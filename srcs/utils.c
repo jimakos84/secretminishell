@@ -125,7 +125,7 @@ int	quotes_checker(char *input, int len)
 
 bool	builtin_cmd(char *cmd)
 {
-	static char	*builtins[6];
+	static char	*builtins[7];
 	int		i;
 
 	i = 0;
@@ -134,7 +134,8 @@ bool	builtin_cmd(char *cmd)
 	builtins[2] = "env";
 	builtins[3] = "pwd";
 	builtins[4] = "unset";
-	builtins[5] = NULL;
+	builtins[5] = "export";
+	builtins[6] = NULL;
 	while (builtins[i])
 	{
 		if (ft_strncmp(cmd, builtins[i], sizeof(cmd)) == 0)

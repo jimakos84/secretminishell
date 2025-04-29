@@ -168,6 +168,7 @@ int		quotes_checker(char *input, int len);
 bool	builtin_cmd(char *cmd);
 void    builtin_unset(t_shell *mini);
 int 	is_redirection_token(char *token);
+void    export(t_shell *mini);
 
 int		ft_isspace(int c);
 

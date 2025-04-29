@@ -35,7 +35,7 @@ static void	updatewd(t_shell *mini, char *newpwd, char *oldpwd)
 
 static int	print_cd_error(char *path, char *oldpwd)
 {
-	printf("cd: %s: No such file or directory\n", path);
+	printf("minishell: cd: %s: No such file or directory\n", path);
 	free(oldpwd);
 	return (1);
 }
@@ -53,7 +53,7 @@ int	builtin_cd(t_shell *mini)
 	char	*oldpwd;
 	char	*home;
 
-	home = mini->initenv->home;
+	home = extract_env_value(mini->initenv, "HOME");
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
 		return (1);
@@ -72,8 +72,6 @@ int	builtin_cd(t_shell *mini)
 	}
 	return (try_change_dir(mini, mini->cmds->args[1], oldpwd));
 }
-
-// will work with the same way env command on bash
 
 int	builtin_env(t_shell *mini)
 {
@@ -103,9 +101,6 @@ int	builtin_pwd(void)
 	printf("%s\n", pwd);
 	return (2);
 }
-
-//to check if the command is in the built_in commands 
-//list, if yes then use the custome one
 
 int	check_builtin(t_shell *mini)
 {
@@ -138,11 +133,16 @@ int	check_builtin(t_shell *mini)
 			free(mini->initenv);
 			clear_and_exit(mini);
 			rl_clear_history();
-			exit (1);
+			exit (mini->status);
 		}
 		if (ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0)
 		{
 			builtin_unset(mini);
+			return (0);
+		}
+		if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
+		{
+			export(mini);
 			return (0);
 		}
 		else

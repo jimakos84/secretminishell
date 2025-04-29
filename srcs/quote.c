@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quote.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/29 12:35:17 by dvlachos          #+#    #+#             */
+/*   Updated: 2025/04/29 12:41:32 by dvlachos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/shell.h"
 
 //static char **set_arg_array_quoted(t_shell *mini, char *token);
@@ -39,62 +51,65 @@
 // 	return (cmd);
 // }
 
-bool contains_unquoted_char(char *str, char symbol)
+bool	contains_unquoted_char(char *str, char symbol)
 {
-	bool in_single = false;
-	bool in_double = false;
+	bool	in_single;
+	bool	in_double;
+	int		i;
 
-	for (int i = 0; str[i]; i++)
+	i = 0;
+	in_single = false;
+	in_double = false;
+	while (str[i])
 	{
 		if (str[i] == '\'' && !in_double)
 			in_single = !in_single;
 		else if (str[i] == '"' && !in_single)
 			in_double = !in_double;
 		else if (str[i] == symbol && !in_single && !in_double)
-			return true;
+			return (true);
+		i++;
 	}
-	return false;
+	return (false);
 }
 
-
-
-int check_if_quoted(char *input)
+int	check_if_quoted(char *input)
 {
-	int len = ft_strlen(input);
+	int	len;
 
-	if(len == 0)
+	len = ft_strlen(input);
+	if (len == 0)
 		return (0);
-	else if(input[0] == '\'' && input[len-1] == '\'')
+	else if (input[0] == '\'' && input[len - 1] == '\'')
 		return (1);
-	else if(input[0] == '"' && input[len-1] == '"')
+	else if (input[0] == '"' && input[len - 1] == '"')
 		return (1);
 	else
 		return (0);
 }
 
-void remove_quotes_inplace(char *str)
+void	remove_quotes_inplace(char *str)
 {
-    int i = 0;
-    int j = 0;
-    int quote;
+	int	i;
+	int	j;
+	int	quote;
 
-    if (!str)
-        return;
-    quote = 0;
-    while (str[i])
-    {
-        if ((str[i] == '\'' || str[i] == '"') && !quote)
-            quote = str[i++];
-        else if (str[i] == quote)
-        {
-            quote = 0;
-            i++;
-        }
-        else
-            str[j++] = str[i++];
-    }
-    str[j] = '\0';
+	i = 0;
+	j = 0;
+	if (!str)
+		return ;
+	quote = 0;
+	while (str[i])
+	{
+		if ((str[i] == '\'' || str[i] == '"') && !quote)
+			quote = str[i++];
+		else if (str[i] == quote)
+		{
+			quote = 0;
+			i++;
+		}
+		else
+			str[j++] = str[i++];
+	}
+	str[j] = '\0';
 }
-
-
-
