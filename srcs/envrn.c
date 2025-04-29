@@ -1,8 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   envrn.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/29 10:21:01 by dvlachos          #+#    #+#             */
+/*   Updated: 2025/04/29 10:22:29 by dvlachos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/shell.h"
 
-/**
- * creating new env list node 
-*/
 t_env	*new_node(char *content)
 {
 	t_env	*node;
@@ -20,9 +29,6 @@ t_env	*new_node(char *content)
 	return (node);
 }
 
-/**
- * apending a env node to the existing list
-*/
 void	add_to_list(t_env **env, char *content)
 {
 	t_env	*new;
@@ -42,18 +48,12 @@ void	add_to_list(t_env **env, char *content)
 	}
 }
 
-/**
- * travesring through the original envp array and pass one item at a time to add_to_list funtion 
-*/
 void	list_env(t_env **env, char **envp)
 {
 	while (envp && *envp)
-        add_to_list(env, *envp++);
+		add_to_list(env, *envp++);
 }
 
-/**
- * creating a copy of envp 2D array
-*/
 char	**copy_env(t_env *env)
 {
 	int		len;
@@ -86,10 +86,6 @@ char	**copy_env(t_env *env)
 	copy[i] = NULL;
 	return (copy);
 }
-
-/**
- * custome implementaion of getenv() library function
-*/
 
 char	*extract_env_value(t_initenv *initenv, char *name)
 {

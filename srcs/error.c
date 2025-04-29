@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/29 10:23:57 by dvlachos          #+#    #+#             */
+/*   Updated: 2025/04/29 10:24:09 by dvlachos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/shell.h"
 
-int syntax_error(char *input, char *msg, int code)
+int	syntax_error(char *input, char *msg, int code)
 {
 	free(input);
 	ft_putendl_fd(msg, 2);

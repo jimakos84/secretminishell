@@ -1,146 +1,162 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/29 10:57:55 by dvlachos          #+#    #+#             */
+/*   Updated: 2025/04/29 11:56:39 by dvlachos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/shell.h"
 
-void expand(t_shell *mini, t_list *list);
-int get_num_args(char *token);
-void get_args(char **args, char *token, int size);
-char *get_command(char *token);
-char *set_path_name(t_shell *mini, char *token);
-char **set_arg_array(int num_args, char *token, char *cmd);
-void parse_commands(t_shell *mini, t_list *tokens);
+void	expand(t_shell *mini, t_list *list);
+int		get_num_args(char *token);
+void	get_args(char **args, char *token, int size);
+char	*get_command(char *token);
+char	*set_path_name(t_shell *mini, char *token);
+char	**set_arg_array(int num_args, char *token, char *cmd);
+void	parse_commands(t_shell *mini, t_list *tokens);
 
-int parse_and_expand(t_shell *mini)
+int	parse_and_expand(t_shell *mini)
 {
-    parse_commands(mini, mini->tokens);
-    return (0);
+	parse_commands(mini, mini->tokens);
+	return (0);
 }
 
-t_cmd *allocate_cmd_node(void)
+t_cmd	*allocate_cmd_node(void)
 {
-    t_cmd *cmd = malloc(sizeof(t_cmd));
-    if (!cmd)
-        return NULL;
-    cmd->args = NULL;
-    cmd->cmd = NULL;
-    cmd->command = NULL;
-    cmd->num_args = 0;
+	t_cmd	*cmd;
+
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->args = NULL;
+	cmd->cmd = NULL;
+	cmd->command = NULL;
+	cmd->num_args = 0;
 	cmd->is_builtin = 0;
-    cmd->type = SMPL_CMD;
-    cmd->filename = NULL;
-    cmd->next = NULL;
-    return cmd;
+	cmd->type = SMPL_CMD;
+	cmd->filename = NULL;
+	cmd->next = NULL;
+	return (cmd);
 }
 
-char **allocate_args_array(int num_args)
+char	**allocate_args_array(int num_args)
 {
-    char **args = malloc(sizeof(char *) * (num_args + 1));
-    if (!args)
-        return NULL;
-    return args;
+	char	**args;
+
+	args = malloc(sizeof(char *) * (num_args + 1));
+	if (!args)
+		return (NULL);
+	return (args);
 }
 
-t_list *handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
+t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
 {
-    if (is_redirection_token(current->token))
-    {
-        if (current->next)
-        {
-            cmd->filename = ft_strdup(current->next->token);
-            remove_quotes_inplace(cmd->filename);
-            if (ft_strncmp(current->token, ">", ft_strlen(current->token)) == 0)
-                cmd->type = OPRD_CMD;
-            else if (ft_strncmp(current->token, "<", ft_strlen(current->token)) == 0)
-                cmd->type = IPRD_CMD;
-            current = current->next;
-        }
-    }
-    else
-    {
-        cmd->args[*i] = ft_strdup(current->token);
-        remove_quotes_inplace(cmd->args[*i]);
-        (*i)++;
-    }
-    return (current->next);
+	if (is_redirection_token(current->token))
+	{
+		if (current->next)
+		{
+			cmd->filename = ft_strdup(current->next->token);
+			remove_quotes_inplace(cmd->filename);
+			if (ft_strncmp(current->token, ">", ft_strlen(current->token)) == 0)
+				cmd->type = OPRD_CMD;
+			else if (ft_strncmp(current->token, "<",
+					ft_strlen(current->token)) == 0)
+				cmd->type = IPRD_CMD;
+			current = current->next;
+		}
+	}
+	else
+	{
+		cmd->args[*i] = ft_strdup(current->token);
+		remove_quotes_inplace(cmd->args[*i]);
+		(*i)++;
+	}
+	return (current->next);
 }
 
-
-t_list *fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
+t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
 {
-    int     i;
-    t_list  *current;
+	int		i;
+	t_list	*current;
 
-    i = 0;
-    current = tokens;
-    cmd->cmd = ft_strdup(current->token);
-    remove_quotes_inplace(cmd->cmd);
-    if (builtin_cmd(cmd->cmd))
-        cmd->is_builtin = 1;
-    else
-        cmd->command = set_path_name(mini, cmd->cmd);
-    cmd->args[i++] = ft_strdup(cmd->cmd);
-    current = current->next;
-    while (current && !contains_unquoted_char(current->token, '|'))
-        current = handle_arg_or_redirection(cmd, current, &i);
-    cmd->args[i] = NULL;
-    cmd->num_args = i;
-    return (current);
+	i = 0;
+	current = tokens;
+	cmd->cmd = ft_strdup(current->token);
+	remove_quotes_inplace(cmd->cmd);
+	if (builtin_cmd(cmd->cmd))
+		cmd->is_builtin = 1;
+	else
+		cmd->command = set_path_name(mini, cmd->cmd);
+	cmd->args[i++] = ft_strdup(cmd->cmd);
+	current = current->next;
+	while (current && !contains_unquoted_char(current->token, '|'))
+		current = handle_arg_or_redirection(cmd, current, &i);
+	cmd->args[i] = NULL;
+	cmd->num_args = i;
+	return (current);
 }
 
-
-
-int count_args(t_list *tokens)
+int	count_args(t_list *tokens)
 {
-    int count = 0;
-    t_list *tmp = tokens;
-    while (tmp)
-    {
-        count++;
-        tmp = tmp->next;
-    }
-    return count;
+	int		count;
+	t_list	*tmp;
+
+	tmp = tokens;
+	count = 0;
+	while (tmp)
+	{
+		count++;
+		tmp = tmp->next;
+	}
+	return (count);
 }
 
-void parse_commands(t_shell *mini, t_list *tokens)
+void	parse_commands(t_shell *mini, t_list *tokens)
 {
-    t_list *current = tokens;
+	t_list	*current;
+	t_cmd	*cmd;
+	int		num_args;
 
-    while (current)
-    {
-        t_cmd *cmd = allocate_cmd_node();
-        if (!cmd)
-            return;
-
-        int num_args = count_args(current);
-        if (num_args == 0)
-        {
-            free(cmd);
-            return;
-        }
-
-        cmd->args = allocate_args_array(num_args);
-        if (!cmd->args)
-        {
-            free(cmd);
-            return;
-        }
-
-        // 🔥 current is now updated after parsing!
-        current = fill_args_and_cmd(cmd, current, mini);
-
-        mini->cmds = list_add_command(mini->cmds, cmd);
-        mini->num_cmds++;
-
-        // If current is on a pipe token ("|"), skip it
-        if (current && contains_unquoted_char(current->token, '|'))
-            current = current->next;
-    }
+	current = tokens;
+	while (current)
+	{
+		cmd = allocate_cmd_node();
+		if (!cmd)
+			return ;
+		num_args = count_args(current);
+		if (num_args == 0)
+		{
+			free(cmd);
+			return ;
+		}
+		cmd->args = allocate_args_array(num_args);
+		if (!cmd->args)
+		{
+			free(cmd);
+			return ;
+		}
+		current = fill_args_and_cmd(cmd, current, mini);
+		mini->cmds = list_add_command(mini->cmds, cmd);
+		mini->num_cmds++;
+		if (current && contains_unquoted_char(current->token, '|'))
+			current = current->next;
+	}
 }
 
-char *set_path_name(t_shell *mini, char *token)
+char	*set_path_name(t_shell *mini, char *token)
 {
-	char **path_dirs;
-	char *command;
-	char *path;
-	int i;
+	char	**path_dirs;
+	char	*command;
+	char	*path;
+	char	*path_value;
+	char	*temp;
+	char	*full_path;
+	int		i;
 
 	i = 0;
 	command = token;
@@ -149,23 +165,21 @@ char *set_path_name(t_shell *mini, char *token)
 		return (path);
 	else
 		path = NULL;
-	char *path_value = extract_env_value(mini->initenv, "PATH");
+	path_value = extract_env_value(mini->initenv, "PATH");
 	if (!path_value)
 	{
-		return (command); // Just return the raw token
+		return (command);
 	}
 	path_dirs = ft_split(path_value, ':');
 	if (!path_dirs)
 		return (command);
-
 	while (path_dirs[i])
 	{
-		char *temp = ft_strjoin(path_dirs[i], "/");
-		char *full_path = ft_strjoin(temp, command);
+		temp = ft_strjoin(path_dirs[i], "/");
+		full_path = ft_strjoin(temp, command);
 		free(temp);
 		if (access(full_path, X_OK) == 0)
 		{
-			// Found it!
 			clear_array(path_dirs);
 			return (full_path);
 		}
@@ -173,7 +187,7 @@ char *set_path_name(t_shell *mini, char *token)
 		i++;
 	}
 	clear_array(path_dirs);
-	return (command); // Not found, return original
+	return (command);
 }
 
 // void handle_dollar(t_list *list, t_shell *mini)
@@ -374,9 +388,6 @@ char *set_path_name(t_shell *mini, char *token)
 // 	}
 // }
 
-
-
-
 // int get_num_args(char *token)
 // {
 // 	int i = 0, count = 1, flag = 0;
@@ -393,4 +404,3 @@ char *set_path_name(t_shell *mini, char *token)
 // 	}
 // 	return (count);
 // }
-

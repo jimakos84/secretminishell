@@ -6,7 +6,7 @@
 /*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:18:12 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/23 14:21:18 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/04/29 10:14:13 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,51 +33,48 @@ static void	updatewd(t_shell *mini, char *newpwd, char *oldpwd)
 	}
 }
 
-static int print_cd_error(char *path, char *oldpwd)
+static int	print_cd_error(char *path, char *oldpwd)
 {
-    printf("cd: %s: No such file or directory\n", path);
-    free(oldpwd);
-    return (1);
+	printf("cd: %s: No such file or directory\n", path);
+	free(oldpwd);
+	return (1);
 }
 
-static int try_change_dir(t_shell *mini, char *target, char *oldpwd)
+static int	try_change_dir(t_shell *mini, char *target, char *oldpwd)
 {
-    if (chdir(target) != 0)
-        return (print_cd_error(target, oldpwd));
-    updatewd(mini, getcwd(NULL, 0), oldpwd);
-    return (0);
+	if (chdir(target) != 0)
+		return (print_cd_error(target, oldpwd));
+	updatewd(mini, getcwd(NULL, 0), oldpwd);
+	return (0);
 }
 
-int builtin_cd(t_shell *mini)
+int	builtin_cd(t_shell *mini)
 {
-    char    *oldpwd;
-    char    *home;
+	char	*oldpwd;
+	char	*home;
 
-    home = mini->initenv->home;
-    oldpwd = getcwd(NULL, 0);
-    if (!oldpwd)
-        return (1); // Optional: handle getcwd fail
-    if (!mini->cmds->args[1])
-    {
-        if (!home || !home[0])
-        {
-            printf("cd: HOME not set\n");
-            free(oldpwd);
-            return (1);
-        }
-        if (chdir(home) != 0)
-            return (print_cd_error(home, oldpwd));
-        updatewd(mini, getcwd(NULL, 0), oldpwd);
-        return (0);
-    }
-    return (try_change_dir(mini, mini->cmds->args[1], oldpwd));
+	home = mini->initenv->home;
+	oldpwd = getcwd(NULL, 0);
+	if (!oldpwd)
+		return (1);
+	if (!mini->cmds->args[1])
+	{
+		if (!home || !home[0])
+		{
+			printf("cd: HOME not set\n");
+			free(oldpwd);
+			return (1);
+		}
+		if (chdir(home) != 0)
+			return (print_cd_error(home, oldpwd));
+		updatewd(mini, getcwd(NULL, 0), oldpwd);
+		return (0);
+	}
+	return (try_change_dir(mini, mini->cmds->args[1], oldpwd));
 }
 
+// will work with the same way env command on bash
 
-
-/**
- * will work with the same way env command on bash
-*/
 int	builtin_env(t_shell *mini)
 {
 	t_env	*temp;

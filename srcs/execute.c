@@ -1,8 +1,14 @@
-#include "../includes/shell.h"
-
-static int close_fds(int fd[][2], int limit);
-static int init_pipes(int fd[][2], int limit);
-static int wait_for_children(int limit);
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
+/*   Updated: 2025/04/29 10:31:15 by dvlachos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../includes/shell.h"
 
@@ -12,7 +18,8 @@ static int	wait_for_children(int count);
 static void	handle_redirections(t_cmd *current);
 static int	handle_dup2(int old_fd, int new_fd);
 static void	handle_file_redirection(t_cmd *current, int fd_type);
-static int	execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index);
+static int	execute_command(t_shell *mini, t_cmd *current,
+				int fd[][2], int index);
 
 int	execute(t_shell *mini)
 {
@@ -26,8 +33,8 @@ int	execute(t_shell *mini)
 	limit = mini->num_cmds - 1;
 	if (mini->num_cmds == 1 && current->is_builtin)
 	{
-    		check_builtin(mini);
-    		return (0); // builtins should also exit inside forked child
+		check_builtin(mini);
+		return (0);
 	}
 	if (init_pipes(fd, limit))
 		return (1);
@@ -118,7 +125,6 @@ static void	handle_file_redirection(t_cmd *current, int fd_type)
 	}
 	else
 		fd = open(current->filename, O_RDONLY);
-
 	if (fd == -1)
 	{
 		perror("File opening failed");
@@ -132,7 +138,8 @@ static void	handle_file_redirection(t_cmd *current, int fd_type)
 	close(fd);
 }
 
-static int	execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index)
+static int	execute_command(t_shell *mini, t_cmd *current,
+			int fd[][2], int index)
 {
 	pid_t	pid;
 
@@ -153,16 +160,17 @@ static int	execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index
 		mini->initenv->copy_env = copy_env(mini->initenv->env);
 		if (current->is_builtin)
 		{
-    		check_builtin(mini);
-    		free_env(mini->initenv->copy_env);
-    		exit(0);
+			check_builtin(mini);
+			free_env(mini->initenv->copy_env);
+			exit(0);
 		}
-		if (execve(current->command, current->args, mini->initenv->copy_env) == -1)
+		if (execve(current->command, current->args,
+				mini->initenv->copy_env) == -1)
 		{
 			if (errno == ENOENT || errno == EACCES)
 				p_exe_error(current->args[0], errno);
 			else
-    			perror(current->args[0]);
+				perror(current->args[0]);
 			free_env(mini->initenv->copy_env);
 			mini->initenv->copy_env = NULL;
 			exit (127);
@@ -170,4 +178,3 @@ static int	execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index
 	}
 	return (0);
 }
-

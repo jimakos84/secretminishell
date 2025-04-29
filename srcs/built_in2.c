@@ -6,7 +6,7 @@
 /*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:03:27 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/23 14:08:00 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/04/29 10:15:07 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ static void	remove_env_nodes(t_shell *mini, char *unset)
 
 void	builtin_unset(t_shell *mini)
 {
-	int	i;
+	int		i;
 	char	**unset;
 
-	unset =  mini->cmds->args;
+	unset = mini->cmds->args;
 	i = 1;
 	if (!unset)
 		return ;

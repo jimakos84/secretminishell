@@ -14,9 +14,11 @@ int input_validate(char **input)
     if (check_properly_enclosed(trimmed))
         return (syntax_error(trimmed, "minishell: syntax error: unclosed quotes", 2));
     if (check_redirect_syntax(trimmed, '>'))
-        return (syntax_error(trimmed, "minishell: syntax error near token 'newline'", 2));
+        return (syntax_error(trimmed, "minishell: syntax error near unexpected token 'newline'", 2));
     if (check_redirect_syntax(trimmed, '<'))
-        return (syntax_error(trimmed, "minishell: syntax error near token 'newline'", 2));
+        return (syntax_error(trimmed, "minishell: syntax error near unexpected token 'newline'", 2));
+    if (check_redirect_syntax(trimmed, '|'))
+        return (syntax_error(trimmed, "minishell: syntax error near unexpected token '|'", 2));
     free(trimmed);
 	return (0);
 }
@@ -39,10 +41,10 @@ static char *input_preprocess(char **input)
     char *no_comments;
     char *trimmed;
     
-    no_comments = remove_comments(*input); // always allocates new string
-    trimmed = ft_strtrim(no_comments, " \f\n\r\t\v"); // allocates
+    no_comments = remove_comments(*input);
+    trimmed = ft_strtrim(no_comments, " \f\n\r\t\v");
     free(no_comments);
-    return (trimmed); // caller must free
+    return (trimmed);
 }
 
 
