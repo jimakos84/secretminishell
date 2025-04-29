@@ -142,7 +142,12 @@ int	check_builtin(t_shell *mini)
 		}
 		if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
 		{
-			export(mini);
+			builtin_export(mini);
+			return (0);
+		}
+		if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
+		{
+			builtin_echo(mini);
 			return (0);
 		}
 		else

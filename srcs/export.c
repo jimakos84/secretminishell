@@ -32,7 +32,7 @@ void    change_env_value(t_env *env, char *var)
     add_to_list(&env, var);
 }
 
-void    export(t_shell *mini)
+void    builtin_export(t_shell *mini)
 {
     t_env   *env;
     t_env   *current;

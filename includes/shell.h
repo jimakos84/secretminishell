@@ -168,7 +168,7 @@ int		quotes_checker(char *input, int len);
 bool	builtin_cmd(char *cmd);
 void    builtin_unset(t_shell *mini);
 int 	is_redirection_token(char *token);
-void    export(t_shell *mini);
+void    builtin_export(t_shell *mini);
 
 int		ft_isspace(int c);
 
@@ -183,5 +183,6 @@ int		ft_lst_len(t_env *env);
 char 	**quote_aware_tokenize(const char *input);
 void 	free_env(char **env);
 bool 	is_invalid_pipe_sequence(t_list *current);
+void    builtin_echo(t_shell *mini);
 
 #endif

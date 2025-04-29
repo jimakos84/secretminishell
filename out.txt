@@ -1,0 +1,11 @@
+total 1884
+-rw-r--r-- 1 dvlachos 2020 1568461 Apr 29 09:23 en.subject.pdf
+drwxr-xr-x 5 dvlachos 2020     137 Apr 29 17:38 ft_libft
+drwxr-xr-x 2 dvlachos 2020      21 Apr 29 09:23 includes
+-rw-r--r-- 1 dvlachos 2020    1761 Apr 29 09:23 main.c
+-rw-r--r-- 1 dvlachos 2020     977 Apr 29 17:49 Makefile
+-rwxr-xr-x 1 dvlachos 2020   49680 Apr 29 17:55 minishell
+-rw-r--r-- 1 dvlachos 2020  275272 Apr 29 09:23 ng_3_minishell.pdf
+-rw-r--r-- 1 dvlachos 2020       0 Apr 29 17:58 out.txt
+-rw-r--r-- 1 dvlachos 2020   12345 Apr 29 09:23 README.md
+drwxr-xr-x 2 dvlachos 2020    4096 Apr 29 17:55 srcs
