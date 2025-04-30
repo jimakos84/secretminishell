@@ -15,6 +15,7 @@
 int	clear_commands(t_cmd *cmds);
 int	clear_tokens(t_list *tokens);
 int	clear_array(char **array);
+void free_redirections(t_redir *redir_list);
 
 void	clear_env(t_env *env)
 {
@@ -30,48 +31,59 @@ void	clear_env(t_env *env)
 	}
 }
 
+void free_redirections(t_redir *redir_list)
+{
+	t_redir *tmp;
+
+	while (redir_list)
+	{
+		tmp = redir_list->next;
+		if (redir_list->filename)
+			free(redir_list->filename);
+		free(redir_list);
+		redir_list = tmp;
+	}
+}
+
+
 int	clear_and_exit(t_shell *mini)
 {
-	/*if (mini->cmds)
-	{
-		clear_commands(mini->cmds);
-		mini->cmds = NULL;
-	}*/
-	if (mini->tokens)
-	{
-		clear_tokens(mini->tokens);
-		mini->tokens = NULL;
-	}
+	clear_commands(mini->cmds);
+	clear_tokens(mini->tokens);
 	free(mini);
 	return (0);
 }
 
-int	clear_commands(t_cmd *cmd)
-{	
-	t_cmd	*tmp;
-	int		i;
+int clear_commands(t_cmd *cmd)
+{
+	t_cmd *tmp;
+	int i;
 
 	while (cmd)
 	{
 		tmp = cmd->next;
 		if (cmd->cmd)
 			free(cmd->cmd);
-		if (cmd->command)
-			free(cmd->command);
-		if (cmd->filename)
-			free(cmd->filename);
 		if (cmd->args)
 		{
-			i = 0;
-			while (cmd->args[i])
-				free(cmd->args[i++]);
+			for (i = 0; cmd->args[i]; i++)
+			{
+				free(cmd->args[i]);
+				cmd->args[i] = NULL;
+			}
 			free(cmd->args);
+		}
+		if (cmd->redir_list)
+		{
+			free_redirections(cmd->redir_list);
+			cmd->redir_list = NULL;
 		}
 		free(cmd);
 		cmd = tmp;
 	}
-	return (0);
+	return 0;
 }
+
 
 int	clear_tokens(t_list *tokens)
 {

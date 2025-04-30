@@ -81,7 +81,7 @@ typedef struct s_shell
  * Implementaion in main.c
 */
 void 	print(t_list *list, char *msg);
-
+void		printcmdtokens(t_shell *mini);
 /**
  * Implementaion in srcs/validate.c
 */
