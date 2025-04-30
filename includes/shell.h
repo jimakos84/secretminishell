@@ -49,8 +49,8 @@ typedef struct s_initenv
 }	t_initenv;
 
 typedef struct s_redir {
-	int type;              // OPRD_CMD, IPRD_CMD, APRD_CMD, HDRD_CMD
-	char *filename;        // Redirection target (e.g., "file.txt")
+	int type;
+	char *filename;
 	struct s_redir *next;
 } t_redir;
 
@@ -59,7 +59,6 @@ typedef struct s_cmd
 {
 	int 			type;
 	int				is_builtin;
-	char			*filename;
 	char 			*cmd;
 	char 			*command;
 	char 			**args;
@@ -124,7 +123,7 @@ char 	*ft_strnmdup(char const *src, int n , int m);
 */
 int 	execute(t_shell *mini);
 
-/**
+/*
  * Implementaion in srcs/cleaner.c
 */
 int 	clear_and_exit(t_shell *mini);
@@ -135,27 +134,26 @@ void 	clear_env(t_env *env);
 
 
 
-/**
+/*
  * Implementaion in srcs/signal.c
 */
 void 	init_sig(void);
 
-/**
+/*
  * Implementaion in srcs/redirect.c
 */
-char 	*set_filename(char *token, int ch);
-char 	*set_filename(char *token, int ch);
-char 	*set_arg_string(char *token, int ch);
-char 	*get_arg_string(char *token);
-int 	set_command_type(char *token);
 
-/**
+int		handle_redirections(t_cmd *current);
+int		close_fds(int fd[][2], int limit);
+
+/*
  * Implementaion in srcs/input.c
 */
-t_cmd 	*handel_output(t_shell *mini, char *token);
-t_cmd 	*handel_input(t_shell *mini, char *token);
-void add_redir(t_redir **list, t_redir *new);
-t_redir *create_redir_node(int type, const char *filename);
+t_cmd 		*handel_output(t_shell *mini, char *token);
+t_cmd 		*handel_input(t_shell *mini, char *token);
+void 		add_redir(t_redir **list, t_redir *new);
+t_redir 	*create_redir_node(int type, const char *filename);
+
 
 
 

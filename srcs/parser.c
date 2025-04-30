@@ -39,7 +39,6 @@ t_cmd	*allocate_cmd_node(void)
 	cmd->num_args = 0;
 	cmd->is_builtin = 0;
 	cmd->type = SMPL_CMD;
-	cmd->filename = NULL;
 	cmd->next = NULL;
 	return (cmd);
 }

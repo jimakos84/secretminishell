@@ -33,7 +33,6 @@ SRCS = \
 	srcs/built_in2.c\
 	srcs/redirect.c\
 	srcs/quote.c\
-	srcs/input.c\
 	main.c\
 
 
