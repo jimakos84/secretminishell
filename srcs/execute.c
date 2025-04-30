@@ -137,6 +137,7 @@ static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index
 			free_env(mini->initenv->copy_env);
 			exit(127);
 		}
+		free_env(mini->initenv->copy_env);
 	}
 	return 0;
 }

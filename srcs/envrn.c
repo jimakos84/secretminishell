@@ -106,37 +106,3 @@ char	*extract_env_value(t_initenv *initenv, char *name)
 	return ("");
 }
 
-/**
- * memory clering in env linkrd list
-*/
-// static void	_free_env(t_shell *mini)
-// {
-// 	t_env	*env;
-// 	t_env	*next;
-// 	int		i;
-
-// 	i = 0;
-// 	while (mini->copy_env && mini->copy_env[i])
-// 		free(mini->copy_env[i++]);
-// 	if (mini->copy_env)
-// 		free(mini->copy_env);
-// 	env = mini->env;
-// 	while (env != NULL)
-// 	{
-// 		next = env->next;
-// 		if (env->name)
-// 			free(env->name);
-// 		if (env->value)
-// 			free(env->value);
-// 		free(env);
-// 		env = next;
-// 	}
-// 	mini->env = NULL;
-// 	if (mini->trim)
-// 		free(mini->trim);
-// 	while (mini->tokens && *mini->tokens)
-// 		free(*mini->tokens++);
-// 	if (mini->tokens)
-// 		free(*mini->tokens);
-// 	free(mini);
-// }
