@@ -96,40 +96,49 @@ static int	wait_for_children(int count)
 	return (0);
 }
 
-static int execute_command(t_shell *mini, t_cmd *current,
-	int fd[][2], int index)
+static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index)
 {
-pid_t pid;
+	pid_t pid;
+	int limit = mini->num_cmds - 1;
 
-(void)index;
-pid = fork();
-if (pid == -1)
-{
-perror("Fork failed");
-return (-1);
-}
-else if (pid == 0)
-{
-	close_fds(fd, mini->num_cmds - 1);
-	handle_redirections(current);
-	mini->initenv->copy_env = copy_env(mini->initenv->env);
-	if (current->is_builtin)
+	pid = fork();
+	if (pid == -1)
 	{
-		check_builtin(mini);
-		free_env(mini->initenv->copy_env);
-		exit(0);
+		perror("Fork failed");
+		return -1;
 	}
-	if (execve(current->command, current->args, mini->initenv->copy_env) == -1)
+	else if (pid == 0)
 	{
-		if (errno == ENOENT || errno == EACCES)
+		if (index > 0)
+		{
+			if (dup2(fd[index - 1][0], STDIN_FILENO) == -1)
+				perror_exit("dup2 stdin");
+		}
+		if (index < limit)
+		{
+			if (dup2(fd[index][1], STDOUT_FILENO) == -1)
+				perror_exit("dup2 stdout");
+		}
+		close_fds(fd, limit);
+		if (handle_redirections(current) == -1)
+		{
+			fprintf(stderr, "Redirection failed\n");
+			exit(1);
+		}
+		if (current->is_builtin)
+		{
+			check_builtin(mini);
+			exit(0);
+		}
+		mini->initenv->copy_env = copy_env(mini->initenv->env);
+		if (execve(current->command, current->args, mini->initenv->copy_env) == -1)
+		{
 			p_exe_error(current->args[0], errno);
-		else
-			perror(current->args[0]);
-		free_env(mini->initenv->copy_env);
-		mini->initenv->copy_env = NULL;
-		exit(127);
+			free_env(mini->initenv->copy_env);
+			exit(127);
+		}
 	}
+	return 0;
 }
-return (0);
-}
+
 
