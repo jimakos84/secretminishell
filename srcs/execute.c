@@ -16,8 +16,6 @@ static int	init_pipes(int fd[][2], int limit);
 static int	close_fds(int fd[][2], int limit);
 static int	wait_for_children(int count);
 int	handle_redirections(t_cmd *current);
-//static int	handle_dup2(int old_fd, int new_fd);
-//static void	handle_file_redirection(t_cmd *current, int fd_type);
 static int	execute_command(t_shell *mini, t_cmd *current,
 				int fd[][2], int index);
 
@@ -128,6 +126,7 @@ int handle_redirections(t_cmd *cmd)
 
         if (r->type == OPRD_CMD)  // >
         {
+			printf("WE GET TO heREeeee!\n");
             fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
             if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
             {
@@ -138,6 +137,7 @@ int handle_redirections(t_cmd *cmd)
         }
         else if (r->type == APRD_CMD)  // >>
         {
+			printf("WE GET TO heRE!\n");
             fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
             if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
             {
@@ -170,44 +170,6 @@ int handle_redirections(t_cmd *cmd)
 
     return 0;
 }
-
-
-
-// static int	handle_dup2(int old_fd, int new_fd)
-// {
-// 	if (dup2(old_fd, new_fd) == -1)
-// 	{
-// 		perror("dup2 failed");
-// 		return (-1);
-// 	}
-// 	return (0);
-// }
-
-// static void	handle_file_redirection(t_cmd *current, int fd_type)
-// {
-// 	int	fd;
-
-// 	if (fd_type == O_WRONLY)
-// 	{
-// 		if (current->type == OPRD_CMD)
-// 			fd = open(current->filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-// 		else
-// 			fd = open(current->filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
-// 	}
-// 	else
-// 		fd = open(current->filename, O_RDONLY);
-// 	if (fd == -1)
-// 	{
-// 		perror("File opening failed");
-// 		exit(1);
-// 	}
-// 	if (dup2(fd, fd_type == O_WRONLY ? STDOUT_FILENO : STDIN_FILENO) == -1)
-// 	{
-// 		perror("dup2 failed");
-// 		exit(1);
-// 	}
-// 	close(fd);
-// }
 
 static int execute_command(t_shell *mini, t_cmd *current,
 	int fd[][2], int index)

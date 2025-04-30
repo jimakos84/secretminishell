@@ -57,27 +57,26 @@ char	**allocate_args_array(int num_args)
 t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
 {
 	int type;
+	t_redir *redir;
 
 	if (is_redirection_token(current->token))
 	{
 		if (!current->next)
-			return (current);  // Error handling recommended
+			return (current);
 
-		if (ft_strncmp(current->token, ">", 1) == 0)
+		if (ft_strncmp(current->token, ">", ft_strlen(current->token)) == 0)
 			type = OPRD_CMD;
-		else if (ft_strncmp(current->token, ">>", 2) == 0)
+		else if (ft_strncmp(current->token, ">>", ft_strlen(current->token)) == 0)
 			type = APRD_CMD;
-		else if (ft_strncmp(current->token, "<", 1) == 0)
+		else if (ft_strncmp(current->token, "<", ft_strlen(current->token)) == 0)
 			type = IPRD_CMD;
-		else if (ft_strncmp(current->token, "<<", 2) == 0)
+		else if (ft_strncmp(current->token, "<<", ft_strlen(current->token)) == 0)
 			type = HDRD_CMD;
 		else
 			type = 0;
-
-		t_redir *redir = create_redir_node(type, current->next->token);
+		redir = create_redir_node(type, current->next->token);
 		add_redir(&cmd->redir_list, redir);
-
-		current = current->next;  // Skip filename token
+		current = current->next;
 	}
 	else
 	{
