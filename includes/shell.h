@@ -48,6 +48,13 @@ typedef struct s_initenv
 	char	*home;
 }	t_initenv;
 
+typedef struct s_redir {
+	int type;              // OPRD_CMD, IPRD_CMD, APRD_CMD, HDRD_CMD
+	char *filename;        // Redirection target (e.g., "file.txt")
+	struct s_redir *next;
+} t_redir;
+
+
 typedef struct s_cmd
 {
 	int 			type;
@@ -57,6 +64,7 @@ typedef struct s_cmd
 	char 			*command;
 	char 			**args;
 	int 			num_args;
+	t_redir			*redir_list; 
 	struct s_cmd 	*next;
 } t_cmd;
 
@@ -85,6 +93,7 @@ int 	input_validate(char **input);
 */
 int 	syntax_error(char *input, char *msg, int code);
 void	p_exe_error(char *command, int err);
+void	perror_exit(const char *msg);
 
 /**
  * Implementation in srcs/helper.c
@@ -145,6 +154,9 @@ int 	set_command_type(char *token);
 */
 t_cmd 	*handel_output(t_shell *mini, char *token);
 t_cmd 	*handel_input(t_shell *mini, char *token);
+void add_redir(t_redir **list, t_redir *new);
+t_redir *create_redir_node(int type, const char *filename);
+
 
 
 /**

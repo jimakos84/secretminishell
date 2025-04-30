@@ -23,28 +23,34 @@ int	extract_tokens(t_list **tokens, char *input)
 
 t_list	*tokenize_input(const char *input)
 {
-	t_list	*tokens;
-	int		i;
-	int		start;
-	char	quote;
+	t_list	*tokens = NULL;
+	int		i = 0;
+	int		start = 0;
+	char	quote = 0;
 
-	tokens = NULL;
-	i = 0;
-	start = 0;
-	quote = 0;
 	while (input[i])
 	{
+		// Start quote tracking
 		if ((input[i] == '\'' || input[i] == '\"') && !quote)
 			quote = input[i];
 		else if (input[i] == quote)
 			quote = 0;
-		if ((input[i] == ' ' || input[i] == '>'
-				|| input[i] == '<' || input[i] == '|') && !quote)
+
+		// If we're not inside quotes and hit a special character
+		if ((input[i] == ' ' || input[i] == '|' || input[i] == '<' || input[i] == '>') && !quote)
 		{
+			// Add the word/token before the special character
 			if (i > start)
-				tokens = list_add_back(tokens,
-						ft_substr(input, start, i - start));
-			if (input[i] != ' ')
+				tokens = list_add_back(tokens, ft_substr(input, start, i - start));
+
+			// Handle '>>' and '<<'
+			if ((input[i] == '>' || input[i] == '<') && input[i + 1] == input[i])
+			{
+				tokens = list_add_back(tokens, ft_substr(input, i, 2));
+				i += 2;
+			}
+			// Handle single '|', '<', '>'
+			else if (input[i] != ' ')
 			{
 				if (input[i] == '|' && i > 0 && input[i - 1] == '|')
 				{
@@ -53,19 +59,26 @@ t_list	*tokenize_input(const char *input)
 					return (NULL);
 				}
 				tokens = list_add_back(tokens, ft_substr(input, i, 1));
+				i++;
 			}
-			i++;
+			else
+				i++; // Skip space
+
+			// Skip spaces after a special character
 			while (input[i] == ' ' && !quote)
 				i++;
-			start = i;
+			start = i; // update starting point for the next token
 		}
 		else
 			i++;
 	}
+
+	// Add the final token if there's anything left
 	if (i > start)
 		tokens = list_add_back(tokens, ft_substr(input, start, i - start));
 	return (tokens);
 }
+
 
 t_list	*list_add_back(t_list *list, char *str)
 {

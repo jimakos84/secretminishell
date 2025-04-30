@@ -32,3 +32,9 @@ void	p_exe_error(char *command, int err)
 		ft_putendl_fd(": Permission denied", 2);
 	}
 }
+
+void	perror_exit(const char *msg)
+{
+	perror(msg);
+	exit(EXIT_FAILURE);
+}

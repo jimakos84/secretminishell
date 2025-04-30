@@ -56,19 +56,28 @@ char	**allocate_args_array(int num_args)
 
 t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
 {
+	int type;
+
 	if (is_redirection_token(current->token))
 	{
-		if (current->next)
-		{
-			cmd->filename = ft_strdup(current->next->token);
-			remove_quotes_inplace(cmd->filename);
-			if (ft_strncmp(current->token, ">", ft_strlen(current->token)) == 0)
-				cmd->type = OPRD_CMD;
-			else if (ft_strncmp(current->token, "<",
-					ft_strlen(current->token)) == 0)
-				cmd->type = IPRD_CMD;
-			current = current->next;
-		}
+		if (!current->next)
+			return (current);  // Error handling recommended
+
+		if (ft_strncmp(current->token, ">", 1) == 0)
+			type = OPRD_CMD;
+		else if (ft_strncmp(current->token, ">>", 2) == 0)
+			type = APRD_CMD;
+		else if (ft_strncmp(current->token, "<", 1) == 0)
+			type = IPRD_CMD;
+		else if (ft_strncmp(current->token, "<<", 2) == 0)
+			type = HDRD_CMD;
+		else
+			type = 0;
+
+		t_redir *redir = create_redir_node(type, current->next->token);
+		add_redir(&cmd->redir_list, redir);
+
+		current = current->next;  // Skip filename token
 	}
 	else
 	{
@@ -78,6 +87,7 @@ t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
 	}
 	return (current->next);
 }
+
 
 t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
 {
