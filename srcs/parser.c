@@ -226,6 +226,11 @@ char	*copy_var_value(char *token, int *i, int *j, char *expanded, t_shell *mini)
 		expand_exit_status(j, expanded, mini->initenv->last_status);
 		return (expanded);
 	}
+	if (!token[*i] || !(ft_isalnum(token[*i]) || token[*i] == '_'))
+	{
+		expanded[(*j)++] = '$';  // Just copy the literal $
+		return (expanded);
+	}
 	k = 0;
 	while (token[*i] && (ft_isalnum(token[*i]) || token[*i] == '_'))
 	{

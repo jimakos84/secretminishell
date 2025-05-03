@@ -2,7 +2,7 @@
 
 int input_validate(char **input);
 static char *input_preprocess(char **input);
-static int check_properly_enclosed(char *input);
+//static int check_properly_enclosed(char *input);
 static int check_redirect_syntax(char *input, char redirect_char);
 static char *remove_comments(char *input);
 
@@ -11,8 +11,8 @@ int input_validate(char **input)
 	char		*trimmed;
 
     trimmed = input_preprocess(input);
-    if (check_properly_enclosed(trimmed))
-        return (syntax_error(trimmed, "minishell: syntax error: unclosed quotes", 2));
+    //if (check_properly_enclosed(trimmed))
+    //   return (syntax_error(trimmed, "minishell: syntax error: unclosed quotes", 2));
     if (check_redirect_syntax(trimmed, '>'))
         return (syntax_error(trimmed, "minishell: syntax error near unexpected token 'newline'", 2));
     if (check_redirect_syntax(trimmed, '<'))
@@ -48,20 +48,20 @@ static char *input_preprocess(char **input)
 }
 
 
-static int check_properly_enclosed(char *input)
-{
-    int i = 0, in_single = 0, in_double = 0;
+// static int check_properly_enclosed(char *input)
+// {
+//     int i = 0, in_single = 0, in_double = 0;
 
-    while (input && input[i])
-    {
-        if (input[i] == '\'' && !in_double)
-            in_single = !in_single;
-        else if (input[i] == '"' && !in_single)
-            in_double = !in_double;
-        i++;
-    }
-    return (in_single || in_double);
-}
+//     while (input && input[i])
+//     {
+//         if (input[i] == '\'' && !in_double)
+//             in_single = !in_single;
+//         else if (input[i] == '"' && !in_single)
+//             in_double = !in_double;
+//         i++;
+//     }
+//     return (in_single || in_double);
+// }
 
 static int check_redirect_syntax(char *input, char redirect_char)
 {

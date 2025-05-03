@@ -74,3 +74,22 @@ void add_redir(t_redir **list, t_redir *new)
 		temp = temp->next;
 	temp->next = new;
 }
+
+int is_valid_identifier(char *str)
+{
+	int		i;
+
+	i = 0;
+	if (!str || str[0] == '\0')
+		return (0);
+	if (!ft_isalpha(str[i]) && str[i] != '_')
+		return (0);
+	i++;
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}

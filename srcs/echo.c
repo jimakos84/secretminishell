@@ -33,7 +33,11 @@ void    builtin_echo(t_shell *mini)
     else
     {
         while(args && args[i])
+        {
             printf("%s", args[i++]);
+            if (args[i])
+                printf(" ");
+        }
         printf("\n");
     }
 }

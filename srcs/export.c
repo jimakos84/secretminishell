@@ -17,6 +17,11 @@ void    change_env_value(t_env *env, char *var)
     t_env   *current;
     char    *env_var;
 
+    if (!is_valid_identifier(var) && !ft_strchr(var, '='))
+    {
+        ft_putendl_fd("not a valid identifier", 2);
+        return ;
+    }
     current = env;
     while (current)
     {

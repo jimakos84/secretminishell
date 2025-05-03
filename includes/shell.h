@@ -182,6 +182,7 @@ void    builtin_unset(t_shell *mini);
 int 	is_redirection_token(char *token);
 void    builtin_export(t_shell *mini);
 int		ft_isspace(int c);
+int		is_valid_identifier(char *str);
 t_cmd 	*handle_quoted(t_shell *mini, char *token);
 bool 	contains_unquoted_char(char *str, char symbol);
 int 	check_if_quoted(const char *input);
