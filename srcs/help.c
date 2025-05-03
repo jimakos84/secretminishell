@@ -50,7 +50,7 @@ int	is_redirection_token(char *token)
 
 t_redir *create_redir_node(int type, const char *filename)
 {
-	t_redir *new = malloc(sizeof(t_redir));
+	t_redir *new = ft_calloc(1, sizeof(t_redir));
 	if (!new)
 		return (NULL);
 	new->type = type;

@@ -39,6 +39,7 @@ t_cmd	*allocate_cmd_node(void)
 	cmd->num_args = 0;
 	cmd->is_builtin = 0;
 	cmd->type = SMPL_CMD;
+	cmd->redir_list = NULL;
 	cmd->next = NULL;
 	return (cmd);
 }
@@ -198,46 +199,84 @@ char	*set_path_name(t_shell *mini, char *token)
 	return (command);
 }
 
-// void handle_dollar(t_list *list, t_shell *mini)
-// {
-//     t_list *current;
-//     char 	*token;
-//     char 	*expanded_token;
-//     int 	i;
-// 	int		j;
-// 	int 	var_start;
-// 	int 	var_len;
-// 	char 	*var_value;
-// 	int		k;
+char	*copy_var_value(char *token, int *i, int *j, char *expanded, t_shell *mini)
+{
+	int		k;
+	char	var_name[1024];
+	char	*var_value;
 
-// 	current = list;
-// 	token = current->token;
-// 	i = 0;
-// 	j = 0;
-// 	expanded_token = malloc(4128+ 1);
-// 	if (!expanded_token)
-//         return ;
-//     while (token[i]) {
-//         if (token[i] == '$') {
-//             i++;
-// 	 	var_start = i;
-//         while (token[i] && (ft_isalnum(token[i]) || token[i] == '_'))
-//             i++;
-//         var_len = i - var_start;
-//         char var_name[var_len + 1];
-//         ft_strlcpy(var_name, token + var_start, var_len + 1);
-// 		var_value = extract_env_value(mini->initenv, var_name);
-// 		k = 0;
-//         while (var_value[k])
-//             expanded_token[j++] = var_value[k++];
-//         } else
-//             expanded_token[j++] = token[i++];
-//     }
-//     expanded_token[j] = '\0';
-// 	free(current->token);
-// 	expanded_token = ft_strtrim(expanded_token, " ");
-// 	current->token = expanded_token;
-// }
+	k = 0;
+	while (token[*i] && (ft_isalnum(token[*i]) || token[*i] == '_'))
+	{
+		var_name[k] = token[*i];
+		k++;
+		(*i)++;
+	}
+	var_name[k] = '\0';
+	var_value = extract_env_value(mini->initenv, var_name);
+	if (var_value)
+		*j += ft_strlcpy(&expanded[*j], var_value, 4096 - *j);
+	return (expanded);
+}
+
+char	*expand_token(char *token, t_shell *mini)
+{
+	char	*expanded;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	expanded = malloc(4096);
+	if (!expanded)
+		return (NULL);
+	while (token[i])
+	{
+		if (token[i] == '$')
+		{
+			i++;
+			expanded = copy_var_value(token, &i, &j, expanded, mini);
+		}
+		else
+		{
+			expanded[j] = token[i];
+			j++;
+			i++;
+		}
+	}
+	expanded[j] = '\0';
+	return (expanded);
+}
+
+void	process_token_expansion(t_list *curr, t_shell *mini)
+{
+	char	*new_token;
+	char	*old_token;
+
+	if (curr->in_single_quotes)
+		return ;
+	old_token = curr->token;
+	new_token = expand_token(old_token, mini);
+	if (!new_token)
+		return ;
+	curr->token = ft_strdup(new_token);
+	free(old_token);
+	free(new_token);
+}
+
+void	handle_dollar(t_list *list, t_shell *mini)
+{
+	t_list	*curr;
+
+	curr = list;
+	while (curr)
+	{
+		process_token_expansion(curr, mini);
+		curr = curr->next;
+	}
+}
+
+
 
 // void expand(t_shell *mini, t_list *list)
 // {

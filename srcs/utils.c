@@ -139,7 +139,7 @@ bool	builtin_cmd(char *cmd)
 	builtins[7] = NULL;
 	while (builtins[i])
 	{
-		if (ft_strncmp(cmd, builtins[i], sizeof(cmd)) == 0)
+		if (ft_strncmp(cmd, builtins[i], ft_strlen(cmd)) == 0)
 			return (true);
 		i++;
 	}

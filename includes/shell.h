@@ -15,7 +15,7 @@
 # include "../ft_libft/libft.h"
 # include "../ft_libft/ft_printf.h"
 # include "../ft_libft/get_next_line.h"
-#include <errno.h>
+# include <errno.h>
 
 # define SMPL_CMD 1 // For simple command
 # define OPRD_CMD 2 // For output redirect command ">"
@@ -31,6 +31,7 @@
 typedef struct s_list
 {
 	char 			*token;
+	int				in_single_quotes;
 	struct s_list 	*next;
 } t_list;
 
@@ -179,13 +180,11 @@ bool	builtin_cmd(char *cmd);
 void    builtin_unset(t_shell *mini);
 int 	is_redirection_token(char *token);
 void    builtin_export(t_shell *mini);
-
 int		ft_isspace(int c);
-
 t_cmd 	*handle_quoted(t_shell *mini, char *token);
 bool 	contains_unquoted_char(char *str, char symbol);
-int 	check_if_quoted(char *input);
-void remove_quotes_inplace(char *str);
+int 	check_if_quoted(const char *input);
+void 	remove_quotes_inplace(char *str);
 char 	*set_path_name(t_shell *mini, char *token);
 int 	get_num_args(char *token);
 char 	**set_arg_array(int num_args, char *token, char *cmdpath);
@@ -194,5 +193,8 @@ char 	**quote_aware_tokenize(const char *input);
 void 	free_env(char **env);
 bool 	is_invalid_pipe_sequence(t_list *current);
 void    builtin_echo(t_shell *mini);
+void 	handle_dollar(t_list *list, t_shell *mini);
+int		enclosed_in_quotes(const char *str);
+void	set_single_quote_flags(t_list *tokens);
 
 #endif

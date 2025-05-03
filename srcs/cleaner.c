@@ -81,6 +81,7 @@ int clear_commands(t_cmd *cmd)
 		free(cmd);
 		cmd = tmp;
 	}
+	cmd = NULL;
 	return 0;
 }
 

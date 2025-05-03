@@ -73,7 +73,7 @@ bool	contains_unquoted_char(char *str, char symbol)
 	return (false);
 }
 
-int	check_if_quoted(char *input)
+int	check_if_quoted(const char *input)
 {
 	int	len;
 
@@ -112,4 +112,39 @@ void	remove_quotes_inplace(char *str)
 			str[j++] = str[i++];
 	}
 	str[j] = '\0';
+}
+
+int	enclosed_in_quotes(const char *str)
+{
+	char	quote;
+	int		i;
+
+	if (!str || (*str != '\'' && *str != '"'))
+		return (0);
+	quote = *str;
+	i = 1;
+	while (str[i])
+	{
+		if (str[i] == quote)
+			return (1); // proper closing quote found
+		i++;
+	}
+	return (0); // no closing quote found
+}
+
+void	set_single_quote_flags(t_list *tokens)
+{
+	t_list	*curr;
+	int		len;
+
+	curr = tokens;
+	while (curr)
+	{
+		len = ft_strlen(curr->token);
+		if (len >= 2 && curr->token[0] == '\'' && curr->token[len - 1] == '\'')
+			curr->in_single_quotes = 1;
+		else
+			curr->in_single_quotes = 0;
+		curr = curr->next;
+	}
 }

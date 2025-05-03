@@ -16,9 +16,13 @@ int	close_fds(int fd[][2], int limit)
 
 int handle_redirections(t_cmd *cmd)
 {
-    t_redir *r = cmd->redir_list;
+    t_redir *r;
     int fd;
 
+
+    if (!cmd || !cmd->redir_list)
+        return (0);  // No redirections to handle
+    r = cmd->redir_list;
     while (r)
     {
         if (!r->filename)
@@ -26,10 +30,13 @@ int handle_redirections(t_cmd *cmd)
             fprintf(stderr, "Redirection error: missing filename\n");
             return -1;
         }
-
+        // if (!builtin_cmd(cmd->cmd) && access(cmd->cmd, F_OK) != 0)  // Check only non-builtins with access()
+        // {
+        //     fprintf(stderr, "%s: command not found\n", cmd->cmd);
+        //     return -1;  // Command not found, don't proceed with redirection
+        // }
         if (r->type == OPRD_CMD)  // >
         {
-			printf("WE GET TO heREeeee!\n");
             fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
             if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
             {
@@ -40,7 +47,6 @@ int handle_redirections(t_cmd *cmd)
         }
         else if (r->type == APRD_CMD)  // >>
         {
-			printf("WE GET TO heRE!\n");
             fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
             if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
             {
