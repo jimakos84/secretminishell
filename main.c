@@ -20,6 +20,7 @@ void	init_env(t_initenv **initenv, char **envp)
 	(*initenv)->copy_env = NULL;
 	(*initenv)->env = NULL;
 	(*initenv)->home = NULL;
+	(*initenv)->last_status = 0;
 	list_env(&(*initenv)->env, envp);
 	(*initenv)->home = ft_strdup(extract_env_value(*initenv, "HOME"));
 }
@@ -44,18 +45,16 @@ static void	init_shell(int status, t_initenv *initenv)
 
 int	main(int ac, char **av, char **envp)
 {
-	int			status;
 	t_initenv	*initenv;
 
 	initenv = NULL;
-	status = 0;
 	(void)av;
 	if (ac == 1)
 	{
 		init_sig();
 		init_env(&initenv, envp);
 		while (1)
-			init_shell(status, initenv);
+			init_shell(initenv->last_status, initenv);
 	}
-	return (status);
+	return (initenv->last_status);
 }

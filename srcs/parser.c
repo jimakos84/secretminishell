@@ -199,12 +199,33 @@ char	*set_path_name(t_shell *mini, char *token)
 	return (command);
 }
 
+static int	expand_exit_status(int *j, char *expanded, int status)
+{
+	char	*status_str;
+	int		len;
+
+	status_str = ft_itoa(status);
+	if (!status_str)
+		return (0);
+	len = ft_strlcpy(&expanded[*j], status_str, 4096 - *j);
+	*j += len;
+	free(status_str);
+	return (1);
+}
+
+
 char	*copy_var_value(char *token, int *i, int *j, char *expanded, t_shell *mini)
 {
 	int		k;
 	char	var_name[1024];
 	char	*var_value;
 
+	if (token[*i] == '?')
+	{
+		(*i)++;
+		expand_exit_status(j, expanded, mini->initenv->last_status);
+		return (expanded);
+	}
 	k = 0;
 	while (token[*i] && (ft_isalnum(token[*i]) || token[*i] == '_'))
 	{

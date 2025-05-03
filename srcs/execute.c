@@ -13,7 +13,7 @@
 #include "../includes/shell.h"
 
 static int	init_pipes(int fd[][2], int limit);
-static int	wait_for_children(int count);
+static int	wait_for_children(int count, t_initenv *initenv);
 static int	execute_command(t_shell *mini, t_cmd *current,
 				int fd[][2], int index);
 
@@ -61,7 +61,7 @@ int	execute(t_shell *mini)
 		index++;
 	}
 	close_fds(fd, limit);
-	wait_for_children(index);
+	wait_for_children(index, mini->initenv);
 	return (0);
 }
 
@@ -83,16 +83,22 @@ static int	init_pipes(int fd[][2], int limit)
 }
 
 
-static int	wait_for_children(int count)
+static int	wait_for_children(int count, t_initenv *initenv)
 {
-	int	i;
+	int	i = 0;
+	int	status;
+	int	last_exit_status = 0;
 
-	i = 0;
 	while (i < count)
 	{
-		wait(NULL);
+		wait(&status);
+		if (WIFEXITED(status))
+			last_exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			last_exit_status = 128 + WTERMSIG(status);
 		i++;
 	}
+	initenv->last_status = last_exit_status;
 	return (0);
 }
 

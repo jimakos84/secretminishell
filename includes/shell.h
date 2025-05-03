@@ -47,6 +47,7 @@ typedef struct s_initenv
 	char	**copy_env;
 	t_env	*env;
 	char	*home;
+	int		last_status;
 }	t_initenv;
 
 typedef struct s_redir {
