@@ -24,5 +24,6 @@ int activate_shell(char *input, t_initenv *env)
 	if((status = clear_and_exit(mini)))
 		return (status);
 	return (status);
-}
+}			
 
+//hello
