@@ -24,6 +24,7 @@
 # define HDRD_CMD 5 // For input heredoc redirect command "<<"
 
 # define CACHE "cache.txt"
+# define ISSPACE3 " \f\n\r\t\v"
 
 /**
  * data node strucutre to hold the tokens extract from input, this node will make a linked list
@@ -65,7 +66,7 @@ typedef struct s_cmd
 	char 			*command;
 	char 			**args;
 	int 			num_args;
-	t_redir			*redir_list; 
+	t_redir			*redir_list;
 	struct s_cmd 	*next;
 } t_cmd;
 
