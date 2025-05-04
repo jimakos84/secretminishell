@@ -3,90 +3,128 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:42:28 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/29 12:52:31 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/04 13:16:28 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
+/*
+ * Function declaration of helper fuctions
+ */
 t_list	*list_add_back(t_list *list, char *str);
 t_list	*tokenize_input(const char *input);
+int		ft_isquoted(const char *str, int n);
+
+/*
+ * Extracts tokens from the input string and sets quote-related flags.
+ * - Tokenizes the input string into a linked list of tokens.
+ * - Returns an error if tokenization fails.
+ * - Sets flags on tokens to mark those enclosed in single quotes.
+ *
+ * Parameters:
+ * - tokens: A pointer to the token list to populate.
+ * - input: The input string to tokenize.
+ *
+ * Returns:
+ * - 0 on success, or 1 if tokenization fails.
+ */
 
 int	extract_tokens(t_list **tokens, char *input)
 {
 	*tokens = tokenize_input(input);
+	if (!*tokens)
+		return (1);
 	set_single_quote_flags(*tokens);
 	return (0);
 }
 
-static int  is_quote(char c)
-{
-	return (c == '\"' || c == '\'');
-}
+/*
+ * Extracts a single token from the input string starting at the given index.
+ * - Reads characters until it encounters unquoted whitespace.
+ * - Returns a newly allocated substring as a token.
+ * - Updates the index to the position after the extracted token.
+ *
+ * Parameters:
+ * - input: The full input string.
+ * - index: Pointer to the current index in the input string.
+ *
+ * Returns:
+ * - A new string containing the token.
+ * - Returns NULL in the evenet inpt is also NULL.
+ */
 
-static int  is_special_char(char c)
+char	*handle_token(const char *input, int *index)
 {
-	return (c == ' ' || c == '|' || c == '<' || c == '>');
-}
+	int		i;
+	int		start;
+	char	*token;
 
-static t_list *handle_token_boundary(const char *input, int *i, int *start, char quote, t_list *tokens)
-{
-	if (*i > *start)
-		tokens = list_add_back(tokens, ft_substr(input, *start, *i - *start));
-	if ((input[*i] == '>' || input[*i] == '<') && input[*i + 1] == input[*i])
+	i = *index;
+	start = *index;
+	token = NULL;
+	while (input && input[i])
 	{
-		tokens = list_add_back(tokens, ft_substr(input, *i, 2));
-		*i += 2;
+		if (ft_isspace(input[i]) && !ft_isquoted(input, i))
+			break ;
+		i++;
 	}
-	else if (input[*i] != ' ')
-	{
-		if (input[*i] == '|' && *i > 0 && input[*i - 1] == '|')
-		{
-			printf("Invalid pipe sequence\n");
-			clear_tokens(tokens);
-			return (NULL);
-		}
-		tokens = list_add_back(tokens, ft_substr(input, *i, 1));
-		(*i)++;
-	}
-	else
-		(*i)++;
-	while (input[*i] == ' ' && !quote)
-		(*i)++;
-	*start = *i;
-	return (tokens);
+	token = ft_substr(input, start, i - start);
+	*index = i;
+	return (token);
 }
 
-t_list *tokenize_input(const char *input)
-{
-	t_list	*tokens = NULL;
-	int		i = 0;
-	int		start = 0;
-	char	quote = 0;
+/*
+ * Tokenizes the full input string into a linked list of token nodes.
+ * - Iterates over the input string.
+ * - Uses `handle_token` to extract one token at a time.
+ * - Adds each token to a linked list.
+ *
+ * Parameters:
+ * - input: The full command line string.
+ *
+ * Returns:
+ * - A linked list of tokens, or NULL if allocation fails.
+ */
 
-	while (input[i])
+t_list	*tokenize_input(const char *input)
+{
+	char	*token;
+	int		i;
+	t_list	*tokens;
+
+	token = NULL;
+	tokens = NULL;
+	i = 0;
+	while (input && input[i])
 	{
-		if (is_quote(input[i]) && !quote)
-			quote = input[i];
-		else if (input[i] == quote)
-			quote = 0;
-		if (is_special_char(input[i]) && !quote)
-		{
-			tokens = handle_token_boundary(input, &i, &start, quote, tokens);
-			if (!tokens)
-				return (NULL);
-		}
-		else
+		while (input && input[i] && ft_isspace(input[i]))
 			i++;
+		if (input[i] == '\0')
+			break ;
+		token = handle_token(input, &i);
+		tokens = list_add_back(tokens, token);
+		free(token);
 	}
-	if (i > start)
-		tokens = list_add_back(tokens, ft_substr(input, start, i - start));
 	return (tokens);
 }
 
+/*
+ * Adding a new token node to the end of a linked list of tokens.
+ * - Allocates a new list node and duplicates the token string.
+ * - Initializes quote-related flags to 0.
+ * - Adds the new node to the end of the list.
+ *
+ * Parameters:
+ * - list: The existing list of tokens.
+ * - str: The token string to add.
+ *
+ * Returns:
+ * - The updated list of tokens, or NULL on allocation failure.
+ */
 
 t_list	*list_add_back(t_list *list, char *str)
 {
@@ -108,6 +146,17 @@ t_list	*list_add_back(t_list *list, char *str)
 	return (list);
 }
 
+/*
+ * Adding a command node to the end of a linked list of commands.
+ *
+ * Parameters:
+ * - cmds: The existing list of commands.
+ * - node: The command node to append.
+ *
+ * Returns:
+ * - The updated command list.
+ */
+
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node)
 {
 	t_cmd	*current;
@@ -121,4 +170,37 @@ t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node)
 		current = current->next;
 	current->next = node;
 	return (cmds);
+}
+/*
+ * Determines whether a character at a given index is inside quotes.
+ * - Iterates through the string up to the given index.
+ * - Tracks open and close states for single and double quotes.
+ * - Returns true if the character at index `n` is inside quotes.
+ *
+ * Parameters:
+ * - str: The string to check.
+ * - n: The index to evaluate.
+ *
+ * Returns:
+ * - 1 if inside quotes, 0 otherwise.
+ */
+
+int	ft_isquoted(const char *str, int n)
+{
+	int	in_single;
+	int	in_double;
+	int	i;
+
+	in_single = 0;
+	in_double = 0;
+	i = 0;
+	while (str && str[i] && i != n)
+	{
+		if (str[i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (str[i] == '"' && !in_single)
+			in_double = !in_double;
+		i++;
+	}
+	return (in_single || in_double);
 }
