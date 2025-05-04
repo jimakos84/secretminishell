@@ -25,6 +25,7 @@
 
 # define CACHE "cache.txt"
 # define ISSPACE3 " \f\n\r\t\v"
+# define SPECIALCHARS "()[]{}&;\\"
 
 /**
  * data node strucutre to hold the tokens extract from input, this node will make a linked list
