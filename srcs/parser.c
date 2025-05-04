@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:57:55 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/29 11:56:39 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/04 05:15:41 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	parse_commands(t_shell *mini, t_list *tokens);
 
 int	parse_and_expand(t_shell *mini)
 {
+	handle_dollar(mini->tokens, mini);
 	parse_commands(mini, mini->tokens);
 	return (0);
 }
