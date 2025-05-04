@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/04 14:50:23 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/04 16:15:15 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 static char	*input_preprocess(char **input);
 static int	check_syntax(char *input, char redirect_char);
 static int	check_pipe_char(char *input, char redirect_char);
+static int	check_special_char(char *input, char *charset);
+static int	check_special_occurance(char *input);
 static char	*remove_comments(char *input);
 
 /*
@@ -45,6 +47,10 @@ int	input_validate(char **input)
 		return (syntax_error(trimmed, "'newline'", 2));
 	if (check_pipe_char(trimmed, '|'))
 		return (syntax_error(trimmed, "'|'", 2));
+	if (check_special_char(trimmed, SPECIALCHARS))
+		return (syntax_error(trimmed, "'newline'", 2));
+	if (check_special_occurance(trimmed))
+		return (syntax_error(trimmed, "'newline'", 2));
 	free(trimmed);
 	return (0);
 }
@@ -117,14 +123,14 @@ static int	check_syntax(char *input, char redirect_char)
 	i = 0;
 	while (input && input[i])
 	{
-		if (input[i] == redirect_char && !ft_isquoted(input, 1))
+		if (input[i] == redirect_char && !ft_isquoted(input, i))
 		{
 			i++;
-			if (input[i] == redirect_char && !ft_isquoted(input, 1))
+			if (input[i] == redirect_char && !ft_isquoted(input, i))
 				i++;
 			while (input[i] && ft_isspace(input[i]))
 				i++;
-			if (input[i] && input[i] == redirect_char && !ft_isquoted(input, 1))
+			if (input[i] && input[i] == redirect_char && !ft_isquoted(input, i))
 				return (1);
 			if ((!input[i] || input[i] == redirect_char))
 				return (1);
@@ -170,6 +176,86 @@ static int	check_pipe_char(char *input, char redirect_char)
 		}
 		else
 			i++;
+	}
+	return (0);
+}
+
+/*
+ * Checks if the input string contains any unquoted special characters.
+ * - Scans the input for any character from the specified `charset`.
+ * - Ignores characters that appear inside quotes (single or double).
+ * - Returns 1 as soon as an unquoted special character is found.
+ * - The charset typically includes shell metacharacters, such as:
+ *   ()[]{}&;\\ (defined by the SPECIALCHARS macro).
+ *
+ * Parameters:
+ * - input: The input string to scan.
+ * - charset: A string containing special characters to look for.
+ *
+ * Returns:
+ * - 1 if an unquoted special character is found, 0 otherwise.
+ */
+
+static int	check_special_char(char *input, char *charset)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	while (charset && charset[i])
+	{
+		str = ft_strchr(input, charset[i]);
+		if (str)
+		{
+			if (!ft_isquoted(input, str - input))
+				return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+/*
+ * Checks for invalid sequences of redirection and pipe characters in the input.
+ *
+ * This function looks for specific syntax errors involving redirection:
+ * - A '<' followed by optional whitespace and then a '|' (e.g., `<   |`)
+ * - A '>' followed by optional whitespace and then either a '<' or '|'
+ * (e.g., `>   <` or `>   |`)
+ *
+ * Such sequences are generally considered invalid in shell parsing logic.
+ *
+ * Parameters:
+ * - input: The command line input string to validate.
+ *
+ * Returns:
+ * - 1 if an invalid special character sequence is found, 0 otherwise.
+ */
+
+static int	check_special_occurance(char *input)
+{
+	int	i;
+
+	i = 0;
+	while (input && input[i])
+	{
+		if (input[i] == '<')
+		{
+			i++;
+			while (input && input[i] && ft_isspace(input[i]))
+				i++;
+			if (input[i] == '|')
+				return (1);
+		}
+		if (input[i] == '>')
+		{
+			i++;
+			while (input && input[i] && ft_isspace(input[i]))
+				i++;
+			if (input[i] == '<' || input[i] == '|')
+				return (1);
+		}
+		i++;
 	}
 	return (0);
 }
