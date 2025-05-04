@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/29 10:31:15 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/04 14:44:50 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	execute(t_shell *mini)
 		int saved_stdout = dup(STDOUT_FILENO);
 		if (saved_stdin == -1 || saved_stdout == -1)
 			perror_exit("dup failed");
-	
+
 		if (handle_redirections(current) == -1)
 		{
 			fprintf(stderr, "Redirection failed, skipping command\n");
@@ -50,7 +50,7 @@ int	execute(t_shell *mini)
 		close(saved_stdout);
 		return (0);
 	}
-	
+
 	if (init_pipes(fd, limit))
 		return (1);
 	while (current)
@@ -62,7 +62,7 @@ int	execute(t_shell *mini)
 	}
 	close_fds(fd, limit);
 	wait_for_children(index, mini->initenv);
-	return (0);
+	return (mini->initenv->last_status);
 }
 
 static int	init_pipes(int fd[][2], int limit)
@@ -99,7 +99,7 @@ static int	wait_for_children(int count, t_initenv *initenv)
 		i++;
 	}
 	initenv->last_status = last_exit_status;
-	return (0);
+	return (last_exit_status);
 }
 
 static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index)
@@ -145,7 +145,7 @@ static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index
 		}
 		free_env(mini->initenv->copy_env);
 	}
-	return 0;
+	return (0);
 }
 
 

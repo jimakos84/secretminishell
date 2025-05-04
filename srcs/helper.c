@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:28:10 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/04 13:21:52 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/04 14:50:52 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,27 @@ static void	configure_mini_shell(t_shell **mini, t_initenv *env);
 int	activate_shell(char *input, t_initenv *env)
 {
 	t_shell	*mini;
+	int		status;
 
 	mini = malloc(sizeof(t_shell));
 	if (!mini)
 		return (1);
 	configure_mini_shell(&mini, env);
-	if (input_validate(&input))
-		return (1);
-	if (extract_tokens(&mini->tokens, input))
-		return (1);
-	if (parse_and_expand(mini))
-		return (1);
-	if (execute(mini))
-		return (1);
-	if (clear_and_exit(mini))
-		return (1);
+	status = input_validate(&input);
+	if (status)
+		return (status);
+	status = extract_tokens(&mini->tokens, input);
+	if (status)
+		return (status);
+	status = parse_and_expand(mini);
+	if (status)
+		return (status);
+	status = execute(mini);
+	if (status)
+		return (status);
+	status = clear_and_exit(mini);
+	if (status)
+		return (status);
 	return (0);
 }
 

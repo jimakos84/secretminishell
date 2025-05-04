@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/04 13:43:45 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/04 14:50:23 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ static int	check_syntax(char *input, char redirect_char)
 		if (input[i] == redirect_char && !ft_isquoted(input, 1))
 		{
 			i++;
-			if (input[i] == redirect_char && !ft_isquoted(input, 1) )
+			if (input[i] == redirect_char && !ft_isquoted(input, 1))
 				i++;
 			while (input[i] && ft_isspace(input[i]))
 				i++;
