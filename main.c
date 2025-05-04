@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:30:51 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/04 04:29:23 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/04 14:33:55 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ volatile sig_atomic_t	g_sig = 0;
 * Decalarion of helper functions
 */
 static void	init_env(t_initenv **initenv, char **envp);
-static void	init_shell(int status, t_initenv *initenv);
+static void	init_shell(t_initenv *initenv);
 
 /*
  * Entry point of the Minishell program.
@@ -43,14 +43,17 @@ int	main(int ac, char **av, char **envp)
 {
 	t_initenv	*initenv;
 
-	initenv = NULL;
+	initenv = malloc(sizeof(t_initenv));
+	if (!initenv)
+		return (1);
+	initenv->last_status = 0;
 	(void)av;
 	if (ac == 1)
 	{
 		init_sig();
 		init_env(&initenv, envp);
 		while (1)
-			init_shell(initenv->last_status, initenv);
+			init_shell(initenv);
 	}
 	return (initenv->last_status);
 }
@@ -69,11 +72,9 @@ int	main(int ac, char **av, char **envp)
 */
 void	init_env(t_initenv **initenv, char **envp)
 {
-	*initenv = malloc(sizeof(t_initenv));
 	(*initenv)->copy_env = NULL;
 	(*initenv)->env = NULL;
 	(*initenv)->home = NULL;
-	(*initenv)->last_status = 0;
 	list_env(&(*initenv)->env, envp);
 	(*initenv)->home = ft_strdup(extract_env_value(*initenv, "HOME"));
 }
@@ -90,11 +91,10 @@ void	init_env(t_initenv **initenv, char **envp)
 * - status: An integer representing the last command's exit status
 * - initenv: A pointer to the initialized environment structure
 */
-static void	init_shell(int status, t_initenv *initenv)
+static void	init_shell(t_initenv *initenv)
 {
 	char	*input;
 
-	(void)status;
 	input = readline("minishell> ");
 	if (!input)
 		exit (1);
@@ -104,6 +104,6 @@ static void	init_shell(int status, t_initenv *initenv)
 		return ;
 	}
 	add_history(input);
-	status = activate_shell(input, initenv);
+	initenv->last_status = activate_shell(input, initenv);
 	free(input);
 }
