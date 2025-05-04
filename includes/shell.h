@@ -79,6 +79,8 @@ typedef struct s_shell
 	int			status;
 } t_shell;
 
+
+int	ft_isquoted(const char *str, int n);
 /**
  * Implementaion in main.c
 */

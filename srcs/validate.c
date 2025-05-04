@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/04 06:07:51 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/04 13:43:45 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
  */
 static char	*input_preprocess(char **input);
 static int	check_syntax(char *input, char redirect_char);
+static int	check_pipe_char(char *input, char redirect_char);
 static char	*remove_comments(char *input);
 
 /*
@@ -42,7 +43,7 @@ int	input_validate(char **input)
 		return (syntax_error(trimmed, "'newline'", 2));
 	if (check_syntax(trimmed, '<'))
 		return (syntax_error(trimmed, "'newline'", 2));
-	if (check_syntax(trimmed, '|'))
+	if (check_pipe_char(trimmed, '|'))
 		return (syntax_error(trimmed, "'|'", 2));
 	free(trimmed);
 	return (0);
@@ -104,7 +105,7 @@ static char	*input_preprocess(char **input)
  *
  * Parameters:
  * - input: The cleaned-up command line string.
- * - redirect_char: The character to check ('<', '>', or '|').
+ * - redirect_char: The character to check ('<', '>').
  *
  * Returns:
  * 1 if a syntax error is detected, 0 otherwise.
@@ -116,14 +117,55 @@ static int	check_syntax(char *input, char redirect_char)
 	i = 0;
 	while (input && input[i])
 	{
-		if (input[i] == redirect_char)
+		if (input[i] == redirect_char && !ft_isquoted(input, 1))
 		{
 			i++;
-			if (input[i] == redirect_char)
+			if (input[i] == redirect_char && !ft_isquoted(input, 1) )
 				i++;
 			while (input[i] && ft_isspace(input[i]))
 				i++;
-			if (!input[i] || input[i] == redirect_char)
+			if (input[i] && input[i] == redirect_char && !ft_isquoted(input, 1))
+				return (1);
+			if ((!input[i] || input[i] == redirect_char))
+				return (1);
+		}
+		else
+			i++;
+	}
+	return (0);
+}
+
+/*
+ * Checks for invalid syntax patterns related to redirection or pipes.
+ * - Scans the input string for a specific redirection or pipe character.
+ * - Verifies that it is not followed by invalid patterns like nothing,
+ * space only, or repeated operator.
+ *
+ * Parameters:
+ * - input: The cleaned-up command line string.
+ * - redirect_char: The character to check '|'
+ *
+ * Returns:
+ * 1 if a syntax error is detected, 0 otherwise.
+ */
+static int	check_pipe_char(char *input, char redirect_char)
+{
+	int	i;
+
+	i = 0;
+	if (input && input[0] == redirect_char && !ft_isquoted(input, 0))
+		return (1);
+	while (input && input[i])
+	{
+		if (input[i] == redirect_char && !ft_isquoted(input, i))
+		{
+			i++;
+			if (input[i] == redirect_char && !ft_isquoted(input, i))
+				return (1);
+			i++;
+			while (input[i] && ft_isspace(input[i]))
+				i++;
+			if (input[i] == redirect_char && !ft_isquoted(input, i))
 				return (1);
 		}
 		else
