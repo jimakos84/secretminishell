@@ -14,8 +14,14 @@
 
 int	syntax_error(char *input, char *msg, int code)
 {
+	char	*std_msg;
+	char	*final;
+
+	std_msg = "minishell: syntax error near unexpected token ";
+	final = ft_strjoin(std_msg, msg);
+	ft_putendl_fd(final, 2);
+	free(final);
 	free(input);
-	ft_putendl_fd(msg, 2);
 	return (code);
 }
 
