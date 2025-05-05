@@ -18,7 +18,6 @@ static int  check_valid_value(char *value)
 
     exit_value = ft_atoi(value);
     exit_value = exit_value % 256;
-    printf("ft_atoied value: %d\n", exit_value);
     return (exit_value);
 }
 
@@ -26,12 +25,12 @@ int        exit_mini(t_shell *mini)
 {
     int     i;
     char    *arg;
-    
+
     i = 0;
-    if (mini->cmds->args[2])
+    if (mini->cmds->args[1] && mini->cmds->args[2])
     {
         mini->initenv->last_status = 1;
-        ft_putstr_fd("minishell: exit: ",2);
+        ft_putstr_fd("minishell: exit: ", 2);
         ft_putendl_fd("too many arguments", 2);
         return (1);
     }
@@ -47,12 +46,13 @@ int        exit_mini(t_shell *mini)
                 mini->initenv->last_status = 2;
                 ft_putstr_fd("minishell: exit: ", 2);
                 ft_putstr_fd(arg, 2);
-                ft_putendl_fd("numeric argument required", 2);
+                ft_putendl_fd(": numeric argument required", 2);
                 break ;
             }
         }
     }
-    mini->initenv->last_status = check_valid_value(mini->cmds->args[1]);
+    if (mini->cmds->args[1])
+        mini->initenv->last_status = check_valid_value(mini->cmds->args[1]);
     printf("exit\n");
     clear_env(mini->initenv->env);
     free(mini->initenv->home);
