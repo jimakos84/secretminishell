@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/04 16:15:15 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/05 06:11:01 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,20 +239,20 @@ static int	check_special_occurance(char *input)
 	i = 0;
 	while (input && input[i])
 	{
-		if (input[i] == '<')
+		if (input[i] == '<' && !ft_isquoted(input, i))
 		{
 			i++;
 			while (input && input[i] && ft_isspace(input[i]))
 				i++;
-			if (input[i] == '|')
+			if (input[i] == '|' && !ft_isquoted(input, i))
 				return (1);
 		}
-		if (input[i] == '>')
+		if (input[i] == '>' && !ft_isquoted(input, i))
 		{
 			i++;
 			while (input && input[i] && ft_isspace(input[i]))
 				i++;
-			if (input[i] == '<' || input[i] == '|')
+			if ((input[i] == '<' || input[i] == '|') && !ft_isquoted(input, i))
 				return (1);
 		}
 		i++;
