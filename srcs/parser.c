@@ -29,6 +29,7 @@ static char	*string_build(char *s1, char *s2);
 int	parse_and_expand(t_shell *mini)
 {
 	handle_dollar(mini->tokens, mini);
+
 	parse_commands(mini, mini->tokens);
 	return (0);
 }
@@ -253,6 +254,11 @@ void	parse_commands(t_shell *mini, t_list *tokens)
 	current = tokens;
 	while (current)
 	{
+		if (current->token == NULL || current->token[0] == '\0')
+		{
+			current = current->next;
+			continue ;
+		}
 		cmd = allocate_cmd_node();
 		if (!cmd)
 			return ;

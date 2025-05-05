@@ -75,21 +75,19 @@ void add_redir(t_redir **list, t_redir *new)
 	temp->next = new;
 }
 
-int is_valid_identifier(char *str)
+int	is_valid_identifier_len(const char *name, int len)
 {
-	int		i;
+	int	i;
 
-	i = 0;
-	if (!str || str[0] == '\0')
+	if (len == 0 || !(ft_isalpha(name[0]) || name[0] == '_'))
 		return (0);
-	if (!ft_isalpha(str[i]) && str[i] != '_')
-		return (0);
-	i++;
-	while (str[i])
+	i = 1;
+	while (i < len)
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
+		if (!(ft_isalnum(name[i]) || name[i] == '_'))
 			return (0);
 		i++;
 	}
 	return (1);
 }
+

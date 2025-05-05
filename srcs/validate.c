@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/05 06:11:01 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/06 02:29:43 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,19 @@ int	input_validate(char **input)
  */
 static char	*remove_comments(char *input)
 {
-	char	*comment_start;
-	char	*clean_input;
+	int		i;
 
-	comment_start = ft_strchr(input, '#');
-	if (comment_start)
-		clean_input = ft_strnmdup(input, 0, comment_start - input);
-	else
-		clean_input = ft_strdup(input);
-	return (clean_input);
+	if (!input)
+		return (NULL);
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '#' && !ft_isquoted(input, i))
+			break;
+		i++;
+	}
+	return (ft_strnmdup(input, 0, i));
 }
 
 /*
@@ -196,24 +200,26 @@ static int	check_pipe_char(char *input, char redirect_char)
  * - 1 if an unquoted special character is found, 0 otherwise.
  */
 
-static int	check_special_char(char *input, char *charset)
-{
-	int		i;
-	char	*str;
+ static int	check_special_char(char *input, char *charset)
+ {
+	 int		i;
+	 char	*str;
 
-	i = 0;
-	while (charset && charset[i])
-	{
-		str = ft_strchr(input, charset[i]);
-		if (str)
-		{
-			if (!ft_isquoted(input, str - input))
-				return (1);
-		}
-		i++;
-	}
-	return (0);
-}
+	 i = 0;
+	 while (charset && charset[i])
+	 {
+		 str = input;
+		 while ((str = ft_strchr(str, charset[i])))
+		 {
+			 if (!ft_isquoted(input, str - input))
+				 return (1);
+			 str++; // Move past the current char to find the next
+		 }
+		 i++;
+	 }
+	 return (0);
+ }
+
 
 /*
  * Checks for invalid sequences of redirection and pipe characters in the input.
@@ -232,30 +238,31 @@ static int	check_special_char(char *input, char *charset)
  * - 1 if an invalid special character sequence is found, 0 otherwise.
  */
 
-static int	check_special_occurance(char *input)
-{
-	int	i;
+ static int	check_special_occurance(char *input)
+ {
+	 int	i;
 
-	i = 0;
-	while (input && input[i])
-	{
-		if (input[i] == '<' && !ft_isquoted(input, i))
-		{
-			i++;
-			while (input && input[i] && ft_isspace(input[i]))
-				i++;
-			if (input[i] == '|' && !ft_isquoted(input, i))
-				return (1);
-		}
-		if (input[i] == '>' && !ft_isquoted(input, i))
-		{
-			i++;
-			while (input && input[i] && ft_isspace(input[i]))
-				i++;
-			if ((input[i] == '<' || input[i] == '|') && !ft_isquoted(input, i))
-				return (1);
-		}
-		i++;
-	}
-	return (0);
-}
+	 i = 0;
+	 while (input && input[i])
+	 {
+		 if (input[i] == '<' && !ft_isquoted(input, i))
+		 {
+			 i++;
+			 while (input && input[i] && ft_isspace(input[i]))
+				 i++;
+			 if (input[i] == '|' && !ft_isquoted(input, i))
+				 return (1);
+		 }
+		 if (input[i] == '>' && !ft_isquoted(input, i))
+		 {
+			 i++;
+			 while (input && input[i] && ft_isspace(input[i]))
+				 i++;
+			 if ((input[i] == '<' || input[i] == '|') && !ft_isquoted(input, i))
+				 return (1);
+		 }
+		 i++;
+	 }
+	 return (0);
+ }
+

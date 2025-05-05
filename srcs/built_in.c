@@ -35,7 +35,9 @@ static void	updatewd(t_shell *mini, char *newpwd, char *oldpwd)
 
 static int	print_cd_error(char *path, char *oldpwd)
 {
-	printf("minishell: cd: %s: No such file or directory\n", path);
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(path, 2);
+	ft_putendl_fd(": No such file or directory", 2);
 	free(oldpwd);
 	return (1);
 }
@@ -57,6 +59,11 @@ int	builtin_cd(t_shell *mini)
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
 		return (1);
+	if (mini->cmds->args[2])
+	{
+		ft_putendl_fd("too many arguments", 2);
+		return (1);
+	}
 	if (!mini->cmds->args[1])
 	{
 		if (!home || !home[0])
@@ -113,28 +120,16 @@ int	check_builtin(t_shell *mini)
 		{
 			if (builtin_cd(mini))
 				return (1);
-			else
-				return (2);
 		}
 		if (ft_strncmp("env", cmd, ft_strlen(cmd)) == 0)
 		{
 			if (builtin_env(mini))
 				return (1);
-			else
-				return (2);
 		}
 		if (ft_strncmp("pwd", cmd, ft_strlen(cmd)) == 0)
-			printf("%s\n", getcwd(NULL, 0));
+				printf("%s\n", getcwd(NULL, 0));
 		if (ft_strncmp("exit", cmd, ft_strlen(cmd)) == 0)
-		{
-			printf("exit\n");
-			clear_env(mini->initenv->env);
-			free(mini->initenv->home);
-			free(mini->initenv);
-			clear_and_exit(mini);
-			rl_clear_history();
-			exit (mini->status);
-		}
+			exit_mini(mini);
 		if (ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0)
 		{
 			builtin_unset(mini);
@@ -142,13 +137,13 @@ int	check_builtin(t_shell *mini)
 		}
 		if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
 		{
-			builtin_export(mini);
-			return (0);
+			if (builtin_export(mini))
+				return (1);
 		}
 		if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
 		{
-			builtin_echo(mini);
-			return (0);
+			if (builtin_echo(mini))
+				return (1);
 		}
 		else
 			return (0);

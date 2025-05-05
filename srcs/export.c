@@ -12,15 +12,28 @@
 
 #include "../includes/shell.h"
 
-void    change_env_value(t_env *env, char *var)
+int    change_env_value(t_env *env, char *var)
 {
     t_env   *current;
     char    *env_var;
+    char    *equal_sign;
+    int     name_len;
 
-    if (!is_valid_identifier(var) && !ft_strchr(var, '='))
+
+    equal_sign = ft_strrchr(var, '=');
+    if (equal_sign)
+    {
+        name_len = equal_sign - var;
+    	if (!is_valid_identifier_len(var, name_len))
+	    {
+		    ft_putendl_fd("not a valid identifier", 2);
+		    return (1);
+	    }
+    }
+    else if (!is_valid_identifier_len(var, ft_strlen(var)))
     {
         ft_putendl_fd("not a valid identifier", 2);
-        return ;
+        return (1);
     }
     current = env;
     while (current)
@@ -30,14 +43,15 @@ void    change_env_value(t_env *env, char *var)
         {
             free(current->value);
             current->value = ft_strdup(ft_strchr(var, '=') + 1);
-            return ;
+            return (0);
         }
         current = current->next;
     }
     add_to_list(&env, var);
+    return (0);
 }
 
-void    builtin_export(t_shell *mini)
+int    builtin_export(t_shell *mini)
 {
     t_env   *env;
     t_env   *current;
@@ -57,5 +71,9 @@ void    builtin_export(t_shell *mini)
         }
     }
     while (args && args[i])
-        change_env_value(env, args[i++]);
+    {
+        if (change_env_value(env, args[i++]))
+            return (1);
+    }
+    return (0);
 }

@@ -25,18 +25,25 @@ int	syntax_error(char *input, char *msg, int code)
 	return (code);
 }
 
-void	p_exe_error(char *command, int err)
+void p_exe_error(char *command, int err, t_initenv *initenv)
 {
-	if (err == ENOENT)
-	{
-		ft_putstr_fd(command, 2);
-		ft_putendl_fd(": command not found", 2);
-	}
-	else if (err == EACCES)
-	{
-		ft_putstr_fd(command, 2);
-		ft_putendl_fd(": Permission denied", 2);
-	}
+    if (err == ENOENT)
+    {
+        initenv->last_status = 127;
+        ft_putstr_fd(command, 2);
+        ft_putendl_fd(": command not found", 2);
+    }
+    else if (err == EACCES)
+    {
+        initenv->last_status = 126;
+        ft_putstr_fd(command, 2);
+        ft_putendl_fd(": Is a directory", 2);
+    }
+    else
+    {
+        // Ensure exit code is in range 0-255
+        initenv->last_status = err % 256;
+    }
 }
 
 void	perror_exit(const char *msg)

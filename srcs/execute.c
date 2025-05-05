@@ -17,6 +17,7 @@ static int	wait_for_children(int count, t_initenv *initenv);
 static int	execute_command(t_shell *mini, t_cmd *current,
 				int fd[][2], int index);
 
+
 int	execute(t_shell *mini)
 {
 	int		index;
@@ -43,14 +44,13 @@ int	execute(t_shell *mini)
 			close(saved_stdout);
 			return (1);
 		}
-		check_builtin(mini);
+		mini->initenv->last_status = check_builtin(mini);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdin);
 		close(saved_stdout);
-		return (0);
+		return (mini->initenv->last_status);
 	}
-
 	if (init_pipes(fd, limit))
 		return (1);
 	while (current)
@@ -105,8 +105,9 @@ static int	wait_for_children(int count, t_initenv *initenv)
 static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index)
 {
 	pid_t pid;
-	int limit = mini->num_cmds - 1;
+	int limit;
 
+	limit = mini->num_cmds - 1;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -133,15 +134,15 @@ static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index
 		}
 		if (current->is_builtin)
 		{
-			check_builtin(mini);
-			exit(0);
+			if (check_builtin(mini))
+				exit(mini->initenv->last_status);
 		}
 		mini->initenv->copy_env = copy_env(mini->initenv->env);
 		if (execve(current->command, current->args, mini->initenv->copy_env) == -1)
 		{
-			p_exe_error(current->args[0], errno);
+			p_exe_error(current->args[0], errno, mini->initenv);
 			free_env(mini->initenv->copy_env);
-			exit(127);
+			exit(mini->initenv->last_status);
 		}
 		free_env(mini->initenv->copy_env);
 	}

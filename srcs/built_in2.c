@@ -52,3 +52,4 @@ void	builtin_unset(t_shell *mini)
 	while (unset[i])
 		remove_env_nodes(mini, unset[i++]);
 }
+

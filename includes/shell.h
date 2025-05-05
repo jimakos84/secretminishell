@@ -10,6 +10,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../ft_libft/libft.h"
@@ -97,7 +98,7 @@ int 	input_validate(char **input);
  * Implementaion in srcs/error.c
 */
 int 	syntax_error(char *input, char *msg, int code);
-void	p_exe_error(char *command, int err);
+void	p_exe_error(char *command, int err, t_initenv *initenv);
 void	perror_exit(const char *msg);
 
 /**
@@ -184,9 +185,9 @@ int		quotes_checker(char *input, int len);
 bool	builtin_cmd(char *cmd);
 void    builtin_unset(t_shell *mini);
 int 	is_redirection_token(char *token);
-void    builtin_export(t_shell *mini);
+int		builtin_export(t_shell *mini);
 int		ft_isspace(int c);
-int		is_valid_identifier(char *str);
+int	is_valid_identifier_len(const char *name, int len);
 t_cmd 	*handle_quoted(t_shell *mini, char *token);
 bool 	contains_unquoted_char(char *str, char symbol);
 int 	check_if_quoted(const char *input);
@@ -198,9 +199,10 @@ int		ft_lst_len(t_env *env);
 char 	**quote_aware_tokenize(const char *input);
 void 	free_env(char **env);
 bool 	is_invalid_pipe_sequence(t_list *current);
-void    builtin_echo(t_shell *mini);
+int     builtin_echo(t_shell *mini);
 void 	handle_dollar(t_list *list, t_shell *mini);
 int		enclosed_in_quotes(const char *str);
 void	set_single_quote_flags(t_list *tokens);
+int     exit_mini(t_shell *mini);
 
 #endif
