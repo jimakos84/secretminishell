@@ -12,7 +12,7 @@
 
 #include "../includes/shell.h"
 
-void    builtin_echo(t_shell *mini)
+int    builtin_echo(t_shell *mini)
 {
     char    **args;
     int     i;
@@ -22,7 +22,7 @@ void    builtin_echo(t_shell *mini)
     if (!args[i])
     {
         printf("\n");
-        return ;
+        return (0);
     }
     if (ft_strncmp(args[1], "-n", 2) == 0)
     {
@@ -40,4 +40,5 @@ void    builtin_echo(t_shell *mini)
         }
         printf("\n");
     }
+    return (0);
 }
