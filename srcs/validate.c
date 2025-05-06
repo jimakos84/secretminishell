@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/06 10:19:40 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:28:58 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,10 @@
 /*
 * Function declaration of helper fuctions
 */
-static char	*input_preprocess(char **input);
 static int	check_syntax(char *input, char redirect_char);
 static int	check_pipe_char(char *input, char redirect_char);
 static int	check_special_char(char *input, char *charset);
 static int	check_special_occurance(char *input);
-static char	*remove_comments(char *input);
 
 /*
 * Validates the user input by preprocessing and checking for
@@ -56,57 +54,6 @@ int	input_validate(char **input)
 }
 
 /*
-* Removes shell-style comments from the input string.
-* A comment is considered to start at the first '#' character
-* and continues to the end of the line.
-* If no comment is found, the original string is duplicated.
-*
-* Parameters:
-* - input: The input command line string.
-*
-* Returns:
-* - A newly allocated string with the comment (if any) removed.
-*/
-static char	*remove_comments(char *input)
-{
-	int		i;
-
-	if (!input)
-		return (NULL);
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == '#' && !ft_isquoted(input, i))
-			break ;
-		i++;
-	}
-	return (ft_strnmdup(input, 0, i));
-}
-
-/*
-* Preprocesses the input string by removing comments and trimming
-* whitespace (defined as ISSPACES3 in the header file)
-* - Removes comments using `remove_comments`.
-* - Trims leading and trailing whitespace using `ft_strtrim`.
-*
-* Parameters:
-* - input: A pointer to the original input string.
-*
-* Returns:
-* - A newly allocated, cleaned-up version of the input.
-*/
-static char	*input_preprocess(char **input)
-{
-	char	*no_comments;
-	char	*trimmed;
-
-	no_comments = remove_comments(*input);
-	trimmed = ft_strtrim(no_comments, ISSPACE3);
-	free(no_comments);
-	return (trimmed);
-}
-
-/*
 * Checks for invalid syntax patterns related to redirection or pipes.
 * - Scans the input string for a specific redirection or pipe character.
 * - Verifies that it is not followed by invalid patterns like nothing,
@@ -119,6 +66,7 @@ static char	*input_preprocess(char **input)
 * Returns:
 * 1 if a syntax error is detected, 0 otherwise.
 */
+
 static int	check_syntax(char *input, char redirect_char)
 {
 	int	i;
@@ -157,6 +105,7 @@ static int	check_syntax(char *input, char redirect_char)
 * Returns:
 * 1 if a syntax error is detected, 0 otherwise.
 */
+
 static int	check_pipe_char(char *input, char redirect_char)
 {
 	int	i;
