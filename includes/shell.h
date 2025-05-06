@@ -82,6 +82,10 @@ typedef struct s_shell
 } t_shell;
 
 
+int		input_validate(char **input);
+char	*input_preprocess(char **input);
+char	*remove_comments(char *input);
+
 int	ft_isquoted(const char *str, int n);
 /**
  * Implementaion in main.c
@@ -91,7 +95,7 @@ void		printcmdtokens(t_shell *mini);
 /**
  * Implementaion in srcs/validate.c
 */
-int 	input_validate(char **input);
+
 //char 	*in_quotes(char *input);
 
 /**

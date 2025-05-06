@@ -28,6 +28,7 @@ SRCS = \
 	srcs/signal.c\
 	srcs/token.c\
 	srcs/validate.c\
+	srcs/validate2.c\
 	srcs/built_in.c\
 	srcs/envrn.c\
 	srcs/utils.c\
