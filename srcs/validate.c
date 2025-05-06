@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/04 16:15:15 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/06 02:29:43 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ static int	check_pipe_char(char *input, char redirect_char)
  {
 	 int		i;
 	 char	*str;
- 
+
 	 i = 0;
 	 while (charset && charset[i])
 	 {
@@ -219,7 +219,7 @@ static int	check_pipe_char(char *input, char redirect_char)
 	 }
 	 return (0);
  }
- 
+
 
 /*
  * Checks for invalid sequences of redirection and pipe characters in the input.
@@ -241,7 +241,7 @@ static int	check_pipe_char(char *input, char redirect_char)
  static int	check_special_occurance(char *input)
  {
 	 int	i;
- 
+
 	 i = 0;
 	 while (input && input[i])
 	 {
@@ -265,4 +265,4 @@ static int	check_pipe_char(char *input, char redirect_char)
 	 }
 	 return (0);
  }
- 
+

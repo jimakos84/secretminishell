@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:28:10 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/04 14:50:52 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/05 06:18:06 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,15 @@ int	activate_shell(char *input, t_initenv *env)
 	status = parse_and_expand(mini);
 	if (status)
 		return (status);
+	// t_list *current = mini->tokens;
+	// int i = 0;
+	// while(current)
+	// {
+	// 	printf("token [%d] : %s\n", i, current->token);
+	// 	i++;
+	// 	current = current->next;
+	// }
+	// return (0);
 	status = execute(mini);
 	if (status)
 		return (status);
