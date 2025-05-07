@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:35:17 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/07 13:12:56 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:14:20 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,16 @@ int	check_if_quoted(const char *input)
 
 int	enclosed_in_quotes(const char *input)
 {
-	int in_single_quotes = 0, in_double_quotes = 0, i = 0;
+	int	in_single_quotes;
+	int	in_double_quotes;
 
-	while(input && input[i])
+	in_single_quotes = 0;
+	in_double_quotes = 0;
+	while (input && input[i])
 	{
-		if(input[i] == '\'' && !in_double_quotes)
+		if (input[i] == '\'' && !in_double_quotes)
 			in_single_quotes = !in_single_quotes;
-		if(input[i] == '"' && !in_single_quotes)
+		if (input[i] == '"' && !in_single_quotes)
 			in_double_quotes = !in_double_quotes;
 		i++;
 	}
