@@ -18,8 +18,9 @@ int handle_redirections(t_cmd *cmd)
 {
     t_redir *r;
     int fd;
+    char    *pmpt;
 
-
+    pmpt = NULL;
     if (!cmd || !cmd->redir_list)
         return (0);  // No redirections to handle
     r = cmd->redir_list;
@@ -65,15 +66,32 @@ int handle_redirections(t_cmd *cmd)
                 return -1;
             }
         }
+        else if (r->type == HDRD_CMD)
+        {
+            fd = open(CACHE, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+            while((pmpt = readline(">")) != NULL)
+            {
+                if(ft_strncmp(r->filename, pmpt, ft_strlen(r->filename)) == 0)
+                {
+                    free(pmpt);
+                    break;
+                }
+                write(fd, pmpt, ft_strlen(pmpt));
+                write(fd, "\n", 2);
+                free(pmpt);
+            }
+            close(fd);
+            fd = open(CACHE, O_RDONLY);
+            dup2(fd, STDIN_FILENO);
+            close(fd);
+        }
         else
         {
             fprintf(stderr, "Unknown redirection type\n");
             return -1;
         }
-
         if (fd >= 0)
             close(fd);
-
         r = r->next;
     }
     return 0;

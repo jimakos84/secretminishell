@@ -33,13 +33,13 @@ int	set_type(char *token)
 {
 	int	type;
 
-	if (ft_strncmp(token, ">", 1) == 0)
+	if (ft_strncmp(token, ">", 2) == 0)
 		type = OPRD_CMD;
-	else if (ft_strncmp(token, ">>", 2) == 0)
+	else if (ft_strncmp(token, ">>", 3) == 0)
 		type = APRD_CMD;
-	else if (ft_strncmp(token, "<", 1) == 0)
+	else if (ft_strncmp(token, "<", 2) == 0)
 		type = IPRD_CMD;
-	else if (ft_strncmp(token, "<<", 2) == 0)
+	else if (ft_strncmp(token, "<<", 3) == 0)
 		type = HDRD_CMD;
 	else
 		type = 0;

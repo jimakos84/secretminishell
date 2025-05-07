@@ -98,6 +98,7 @@ static int	wait_for_children(int count, t_initenv *initenv)
 			last_exit_status = 128 + WTERMSIG(status);
 		i++;
 	}
+	unlink(CACHE);
 	initenv->last_status = last_exit_status;
 	return (last_exit_status);
 }

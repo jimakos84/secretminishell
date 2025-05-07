@@ -133,6 +133,11 @@ t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
 	current = tokens;
 	cmd->cmd = ft_strdup(current->token);
 	remove_quotes_inplace(cmd->cmd);
+	if (is_redirection_token(cmd->cmd))
+	{
+		current = handle_arg_or_redirection(cmd, current, &i);
+		return (NULL);
+	}
 	if (builtin_cmd(cmd->cmd))
 		cmd->is_builtin = 1;
 	else

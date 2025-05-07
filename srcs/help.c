@@ -44,7 +44,8 @@ int	is_redirection_token(char *token)
 	len = ft_strlen(token);
 	return (ft_strncmp(token, ">", len) == 0
 		|| ft_strncmp(token, "<", len) == 0
-		|| ft_strncmp(token, ">>", len) == 0);
+		|| ft_strncmp(token, ">>", len) == 0
+		|| ft_strncmp(token, "<<", len) == 0);
 }
 
 
