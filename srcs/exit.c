@@ -21,10 +21,25 @@ static int  check_valid_value(char *value)
     return (exit_value);
 }
 
+static void     exit_proccedure(t_shell *mini)
+{
+    int     status;
+
+    status = 0;
+    clear_env(mini->initenv->env);
+    free(mini->initenv->home);
+    status = mini->initenv->last_status;
+    free(mini->initenv);
+    clear_and_exit(mini);
+    rl_clear_history();
+    exit (status);
+}
+
 int        exit_mini(t_shell *mini)
 {
     int     i;
     char    *arg;
+    int     status;
 
     i = 0;
     if (mini->cmds->args[1] && mini->cmds->args[2])
@@ -32,32 +47,35 @@ int        exit_mini(t_shell *mini)
         mini->initenv->last_status = 1;
         ft_putstr_fd("minishell: exit: ", 2);
         ft_putendl_fd("too many arguments", 2);
-        return (1);
+        exit_proccedure(mini);
     }
     if (mini->cmds->args[1])
     {
         arg = mini->cmds->args[1];
         while (arg[i])
         {
-            if (ft_isdigit(arg[i]))
+            if (ft_isdigit(arg[i]) || arg[i] == '-' || arg[i] == '+')
                 i++;
             else
             {
                 mini->initenv->last_status = 2;
+                printf("exit\n");
                 ft_putstr_fd("minishell: exit: ", 2);
                 ft_putstr_fd(arg, 2);
                 ft_putendl_fd(": numeric argument required", 2);
+                exit_proccedure(mini);
                 break ;
             }
         }
-    }
-    if (mini->cmds->args[1])
         mini->initenv->last_status = check_valid_value(mini->cmds->args[1]);
-    printf("exit\n");
+    }
+    if (!mini->cmds->args[1])
+        printf("exit\n");
     clear_env(mini->initenv->env);
     free(mini->initenv->home);
+    status = mini->initenv->last_status;
     free(mini->initenv);
     clear_and_exit(mini);
     rl_clear_history();
-    exit (mini->initenv->last_status);
+    exit (status);
 }

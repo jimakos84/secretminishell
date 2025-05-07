@@ -169,3 +169,11 @@ void free_env(char **env)
         free(env);
     }
 }
+
+bool	is_redir_or_pipe(char c)
+{
+	if (c == '|' || c == '>' || c == '<')
+		return (true);
+	else
+		return (false);
+}

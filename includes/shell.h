@@ -203,5 +203,6 @@ void	print(t_list *list, char *msg);
 void	printcmdtokens(t_shell *mini);
 void	remove_quotes_inplace(char *str);
 void	set_single_quote_flags(t_list *tokens);
+bool	is_redir_or_pipe(char c);
 
 #endif
