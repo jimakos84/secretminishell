@@ -39,6 +39,8 @@ int	input_validate(char **input)
 	char	*trimmed;
 
 	trimmed = input_preprocess(input);
+	if (enclosed_in_quotes(trimmed))
+		return (syntax_error(trimmed, "'unclosed quotes'", 2));
 	if (check_syntax(trimmed, '>'))
 		return (syntax_error(trimmed, "'newline'", 2));
 	if (check_syntax(trimmed, '<'))

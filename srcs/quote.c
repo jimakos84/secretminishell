@@ -57,22 +57,19 @@ int	check_if_quoted(const char *input)
 * 0 otherwise.
 */
 
-int	enclosed_in_quotes(const char *str)
+int	enclosed_in_quotes(const char *input)
 {
-	char	quote;
-	int		i;
+	int in_single_quotes = 0, in_double_quotes = 0, i = 0;
 
-	if (!str || (*str != '\'' && *str != '"'))
-		return (0);
-	quote = *str;
-	i = 1;
-	while (str[i])
+	while(input && input[i])
 	{
-		if (str[i] == quote)
-			return (1);
+		if(input[i] == '\'' && !in_double_quotes)
+			in_single_quotes = !in_single_quotes;
+		if(input[i] == '"' && !in_single_quotes)
+			in_double_quotes = !in_double_quotes;
 		i++;
 	}
-	return (0);
+	return (in_single_quotes || in_double_quotes);
 }
 
 /*
