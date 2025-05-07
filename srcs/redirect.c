@@ -71,7 +71,7 @@ int handle_redirections(t_cmd *cmd)
             fd = open(CACHE, O_WRONLY | O_CREAT | O_TRUNC, 0666);
             while((pmpt = readline(">")) != NULL)
             {
-                if(ft_strncmp(r->filename, pmpt, ft_strlen(r->filename)) == 0)
+                if(ft_strncmp(r->filename, pmpt, ft_strlen(pmpt)) == 0)
                 {
                     free(pmpt);
                     break;
