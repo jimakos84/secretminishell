@@ -61,7 +61,9 @@ int	enclosed_in_quotes(const char *input)
 {
 	int	in_single_quotes;
 	int	in_double_quotes;
+	int	i;
 
+	i = 0;
 	in_single_quotes = 0;
 	in_double_quotes = 0;
 	while (input && input[i])
