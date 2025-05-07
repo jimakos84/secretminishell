@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   shell.h                                            :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 05:26:05 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/07 11:27:42 by tsomacha         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef SHELL_H
 # define SHELL_H
@@ -144,11 +144,23 @@ void	handle_dollar(t_list *list, t_shell *mini);
 int		set_type(char *token);
 t_cmd	*set_cmd(t_list *token);
 
+/**
+ * Utility functions
+*/
+int		ft_strnmcpy(char **dest, char *src, int n, int m);
+int		ft_arraylen(char **envp);
+int		ft_isempty(char *str);
+int		ft_isspace(int c);
+char	*ft_strnmdup(char const *src, int n, int m);
+int		quotes_checker(char *input, int len);
+char	*ft_strjoin_free(char *s1, char *s2);
+void	free_env(char **env);
 bool	builtin_cmd(char *cmd);
+bool	is_redir_or_pipe(char c);
+
 bool	contains_unquoted_char(char *str, char symbol);
 bool	is_invalid_pipe_sequence(t_list *current);
 char	*extract_env_value(t_initenv *initenv, char *name);
-char	*ft_strnmdup(char const *src, int n, int m);
 char	*get_command(char *token);
 char	**copy_env(t_env *env);
 char	**quote_aware_tokenize(const char *input);
@@ -168,17 +180,12 @@ int		close_fds(int fd[][2], int limit);
 int		enclosed_in_quotes(const char *str);
 int		execute(t_shell *mini);
 int		exit_mini(t_shell *mini);
-int		ft_arraylen(char **envp);
-int		ft_isempty(char *str);
 int		ft_isquoted(const char *str, int n);
-int		ft_isspace(int c);
 int		ft_lst_len(t_env *env);
-int		ft_strnmcpy(char **dest, char *src, int n, int m);
 int		get_num_args(char *token);
 int		handle_redirections(t_cmd *current);
 int		is_redirection_token(char *token);
 int		is_valid_identifier_len(const char *name, int len);
-int		quotes_checker(char *input, int len);
 int		syntax_error(char *input, char *msg, int code);
 int		tokenize(t_shell *mini, char *input);
 t_cmd	*handel_input(t_shell *mini, char *token);
@@ -194,7 +201,6 @@ void	add_redir(t_redir **list, t_redir *new);
 void	add_to_list(t_env **env, char *content);
 void	builtin_unset(t_shell *mini);
 void	clear_env(t_env *env);
-void	free_env(char **env);
 void	init_sig(void);
 void	list_env(t_env **env, char **envp);
 void	p_exe_error(char *command, int err, t_initenv *initenv);
