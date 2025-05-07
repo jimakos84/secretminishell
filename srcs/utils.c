@@ -147,3 +147,11 @@ char	*ft_strnmdup(char const *src, int n, int m)
 	dest[i] = '\0';
 	return (dest);
 }
+
+bool	is_redir_or_pipe(char c)
+{
+	if (c == '|' || c == '>' || c == '<')
+		return (true);
+	else
+		return (false);
+}

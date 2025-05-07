@@ -6,13 +6,13 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 04:14:46 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 04:22:23 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:28:11 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "../includes/shell.h"
 
-/**
+/*
  * Fnction declaration for helper funtions
 */
 char	*handle_token(const char *input, int *index);
@@ -32,22 +32,30 @@ char	*handle_token(const char *input, int *index);
  * - Returns NULL in the evenet inpt is also NULL.
  */
 
- char	*handle_token(const char *input, int *index)
- {
-	 int		i;
-	 int		start;
-	 char	*token;
+char	*handle_token(const char *input, int *index)
+{
+	int	i;
+	int	start;
 
-	 i = *index;
-	 start = *index;
-	 token = NULL;
-	 while (input && input[i])
-	 {
-		 if (ft_isspace(input[i]) && !ft_isquoted(input, i))
-			 break ;
-		 i++;
-	 }
-	 token = ft_substr(input, start, i - start);
-	 *index = i;
-	 return (token);
- }
+	i = *index;
+	start = i;
+	if (is_redir_or_pipe(input[i]) && !ft_isquoted(input, i))
+	{
+		if (input[i] == input[i + 1])
+			i += 2;
+		else
+			i += 1;
+		*index = i;
+		return (ft_substr(input, start, i - start));
+	}
+	while (input[i])
+	{
+		if (ft_isspace(input[i]) && !ft_isquoted(input, i))
+			break ;
+		if (is_redir_or_pipe(input[i]) && !ft_isquoted(input, i))
+			break ;
+		i++;
+	}
+	*index = i;
+	return (ft_substr(input, start, i - start));
+}

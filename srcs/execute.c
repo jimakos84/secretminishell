@@ -128,10 +128,7 @@ static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index
 		}
 		close_fds(fd, limit);
 		if (handle_redirections(current) == -1)
-		{
-			fprintf(stderr, "Redirection failed\n");
 			exit(1);
-		}
 		if (current->is_builtin)
 		{
 			if (check_builtin(mini))
