@@ -116,31 +116,31 @@ int	check_builtin(t_shell *mini)
 	cmd = mini->cmds->cmd;
 	if (mini->cmds->cmd)
 	{
-		if (ft_strncmp("cd", cmd, ft_strlen(cmd)) == 0)
+		if (ft_strncmp("cd", cmd, 3) == 0)
 		{
 			if (builtin_cd(mini))
 				return (1);
 		}
-		if (ft_strncmp("env", cmd, ft_strlen(cmd)) == 0)
+		if (ft_strncmp("env", cmd, 4) == 0)
 		{
 			if (builtin_env(mini))
 				return (1);
 		}
-		if (ft_strncmp("pwd", cmd, ft_strlen(cmd)) == 0)
+		if (ft_strncmp("pwd", cmd, 4) == 0)
 				printf("%s\n", getcwd(NULL, 0));
-		if (ft_strncmp("exit", cmd, ft_strlen(cmd)) == 0)
+		if (ft_strncmp("exit", cmd, 5) == 0)
 			exit_mini(mini);
-		if (ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0)
+		if (ft_strncmp("unset", cmd, 6) == 0)
 		{
 			builtin_unset(mini);
 			return (0);
 		}
-		if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
+		if (ft_strncmp("export", cmd, 7) == 0)
 		{
 			if (builtin_export(mini))
 				return (1);
 		}
-		if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
+		if (ft_strncmp("echo", cmd, 5) == 0)
 		{
 			if (builtin_echo(mini))
 				return (1);
