@@ -25,6 +25,9 @@ SRCS = \
 	srcs/helper.c\
 	srcs/heredoc.c\
 	srcs/parser.c\
+	srcs/parser2.c\
+	srcs/parser3.c\
+	srcs/parser4.c\
 	srcs/signal.c\
 	srcs/token.c\
 	srcs/token2.c\

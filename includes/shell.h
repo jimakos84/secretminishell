@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 04:44:13 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/07 05:26:05 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -123,13 +123,33 @@ char	*remove_comments(char *input);
 int		extract_tokens(t_list **tokens, char *input);
 char	*handle_token(const char *input, int *index);
 
+/**
+ * Parsing and expanding
+*/
+int		parse_and_expand(t_shell *mini);
+char	*string_build(char *s1, char *s2);
+char	*extract_value(t_shell *mini, char *token, int *index);
+t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i);
+t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
+t_cmd	*allocate_cmd_node(void);
+char	**allocate_args_array(int num_args);
+char	*set_path_name(t_shell *mini, char *token);
+char	*copy_var_value(t_shell *mini, char *token, int *index);
+char	*expand_token(char *token, t_shell *mini);
+int		count_args(t_list *tokens);
+int		ft_is_in_single(const char *str, int n);
+void	parse_commands(t_shell *mini, t_list *tokens);
+void	process_token_expansion(t_list *current, t_shell *mini);
+void	handle_dollar(t_list *list, t_shell *mini);
+int		set_type(char *token);
+t_cmd	*set_cmd(t_list *token);
+
 bool	builtin_cmd(char *cmd);
 bool	contains_unquoted_char(char *str, char symbol);
 bool	is_invalid_pipe_sequence(t_list *current);
 char	*extract_env_value(t_initenv *initenv, char *name);
 char	*ft_strnmdup(char const *src, int n, int m);
 char	*get_command(char *token);
-char	*set_path_name(t_shell *mini, char *token);
 char	**copy_env(t_env *env);
 char	**quote_aware_tokenize(const char *input);
 char	**set_arg_array(int num_args, char *token, char *cmdpath);
@@ -158,7 +178,6 @@ int		get_num_args(char *token);
 int		handle_redirections(t_cmd *current);
 int		is_redirection_token(char *token);
 int		is_valid_identifier_len(const char *name, int len);
-int		parse_and_expand(t_shell *mini);
 int		quotes_checker(char *input, int len);
 int		syntax_error(char *input, char *msg, int code);
 int		tokenize(t_shell *mini, char *input);
@@ -176,7 +195,6 @@ void	add_to_list(t_env **env, char *content);
 void	builtin_unset(t_shell *mini);
 void	clear_env(t_env *env);
 void	free_env(char **env);
-void	handle_dollar(t_list *list, t_shell *mini);
 void	init_sig(void);
 void	list_env(t_env **env, char **envp);
 void	p_exe_error(char *command, int err, t_initenv *initenv);
