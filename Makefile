@@ -27,6 +27,7 @@ SRCS = \
 	srcs/parser.c\
 	srcs/signal.c\
 	srcs/token.c\
+	srcs/token2.c\
 	srcs/validate.c\
 	srcs/validate2.c\
 	srcs/built_in.c\
