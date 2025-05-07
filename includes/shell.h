@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 11:27:42 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:17:58 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,21 @@ void	free_env(char **env);
 bool	builtin_cmd(char *cmd);
 bool	is_redir_or_pipe(char c);
 
+/**
+ * Quote Utility functions
+*/
+int		check_if_quoted(const char *input);
+int		enclosed_in_quotes(const char *str);
+void	set_single_quote_flags(t_list *tokens);
+void	remove_quotes_inplace(char *str);
 bool	contains_unquoted_char(char *str, char symbol);
+
+/**
+ * Signale handle functions
+*/
+void	init_sig(void);
+void	handler(int sig);
+
 bool	is_invalid_pipe_sequence(t_list *current);
 char	*extract_env_value(t_initenv *initenv, char *name);
 char	*get_command(char *token);
@@ -171,13 +185,11 @@ int		builtin_echo(t_shell *mini);
 int		builtin_env(t_shell *mini);
 int		builtin_export(t_shell *mini);
 int		check_builtin(t_shell *mini);
-int		check_if_quoted(const char *input);
 int		clear_and_exit(t_shell *mini);
 int		clear_array(char **array);
 int		clear_commands(t_cmd *cmds);
 int		clear_tokens(t_list *tokens);
 int		close_fds(int fd[][2], int limit);
-int		enclosed_in_quotes(const char *str);
 int		execute(t_shell *mini);
 int		exit_mini(t_shell *mini);
 int		ft_isquoted(const char *str, int n);
@@ -201,14 +213,11 @@ void	add_redir(t_redir **list, t_redir *new);
 void	add_to_list(t_env **env, char *content);
 void	builtin_unset(t_shell *mini);
 void	clear_env(t_env *env);
-void	init_sig(void);
 void	list_env(t_env **env, char **envp);
 void	p_exe_error(char *command, int err, t_initenv *initenv);
 void	perror_exit(const char *msg);
 void	print(t_list *list, char *msg);
 void	printcmdtokens(t_shell *mini);
-void	remove_quotes_inplace(char *str);
-void	set_single_quote_flags(t_list *tokens);
 bool	is_redir_or_pipe(char c);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:40 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 12:13:42 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:07:13 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
  * Function declaration of helper fuctions
- */
+*/
 t_cmd	*allocate_cmd_node(void);
 char	**allocate_args_array(int num_args);
 char	*set_path_name(t_shell *mini, char *token);
