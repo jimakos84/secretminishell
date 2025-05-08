@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 13:17:58 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 02:43:33 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,17 @@ bool	contains_unquoted_char(char *str, char symbol);
 void	init_sig(void);
 void	handler(int sig);
 
+/**
+ * Redirect handle functions
+*/
+int		handle_redirections(t_cmd *current);
+int		check_filename(t_redir *r);
+int		close_fds(int fd[][2], int limit);
+int		handle_output(t_redir *r, int fd);
+int		handle_append(t_redir *r, int fd);
+int		handle_input(t_redir *r, int fd);
+int		handle_heredoc(t_redir *r, int fd);
+
 bool	is_invalid_pipe_sequence(t_list *current);
 char	*extract_env_value(t_initenv *initenv, char *name);
 char	*get_command(char *token);
@@ -195,16 +206,10 @@ int		exit_mini(t_shell *mini);
 int		ft_isquoted(const char *str, int n);
 int		ft_lst_len(t_env *env);
 int		get_num_args(char *token);
-int		handle_redirections(t_cmd *current);
 int		is_redirection_token(char *token);
 int		is_valid_identifier_len(const char *name, int len);
 int		syntax_error(char *input, char *msg, int code);
 int		tokenize(t_shell *mini, char *input);
-t_cmd	*handel_input(t_shell *mini, char *token);
-t_cmd	*handel_output(t_shell *mini, char *token);
-t_cmd	*handel_pipe(t_shell *mini, t_list *current);
-t_cmd	*handle_heredoc(t_shell *mini, t_cmd *cmd, char *token);
-t_cmd	*handle_quoted(t_shell *mini, char *token);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
 t_env	*new_node(char *content);
 t_list	*list_add_back(t_list *list, char *str);
