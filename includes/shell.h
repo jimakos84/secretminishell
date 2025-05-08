@@ -219,5 +219,6 @@ void	perror_exit(const char *msg);
 void	print(t_list *list, char *msg);
 void	printcmdtokens(t_shell *mini);
 bool	is_redir_or_pipe(char c);
+void    check_stat(char *path);
 
 #endif

@@ -142,6 +142,7 @@ static pid_t execute_command(t_shell *mini, t_cmd *current, int fd[][2], int ind
 			exit(1);
 		if (current->is_builtin)
 			exit(check_builtin(current, mini));
+		check_stat(current->command);
 		mini->initenv->copy_env = copy_env(mini->initenv->env);
 		if (execve(current->command, current->args, mini->initenv->copy_env) == -1)
 		{

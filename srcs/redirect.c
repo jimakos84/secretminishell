@@ -31,11 +31,6 @@ int handle_redirections(t_cmd *cmd)
             fprintf(stderr, "Redirection error: missing filename\n");
             return -1;
         }
-        // if (!builtin_cmd(cmd->cmd) && access(cmd->cmd, F_OK) != 0)  // Check only non-builtins with access()
-        // {
-        //     fprintf(stderr, "%s: command not found\n", cmd->cmd);
-        //     return -1;  // Command not found, don't proceed with redirection
-        // }
         if (r->type == OPRD_CMD)  // >
         {
             fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
