@@ -39,6 +39,7 @@ SRCS = \
 	srcs/utils2.c\
 	srcs/built_in2.c\
 	srcs/redirect.c\
+	srcs/redirect2.c\
 	srcs/quote.c\
 	main.c\
 

@@ -1,4 +1,78 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirect.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/09 02:10:17 by tsomacha          #+#    #+#             */
+/*   Updated: 2025/05/09 02:36:49 by tsomacha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/shell.h"
+
+/*
+ * Function declaration of helper fuctions
+*/
+int	check_filename(t_redir *r);
+int	close_fds(int fd[][2], int limit);
+
+/*
+* Processes all redirections for a given command.
+*
+* For each redirection in the command's redir_list:
+* - Validates the filename.
+* - Handles the redirection based on its type (>, >>, <, <<).
+* - Closes any open file descriptors after use.
+*
+* Parameters:
+* - cmd: The command structure containing redirection information.
+*
+* Returns:
+* - 0 on success, -1 if an error occurs.
+*/
+
+int	handle_redirections(t_cmd *cmd)
+{
+	t_redir	*r;
+	int		fd;
+
+	fd = -1;
+	if (!cmd || !cmd->redir_list)
+		return (0);
+	r = cmd->redir_list;
+	while (r)
+	{
+		if (check_filename(r))
+			return (-1);
+		if (r->type == OPRD_CMD && handle_output(r, fd) < 0)
+			return (-1);
+		else if (r->type == APRD_CMD && handle_append(r, fd) < 0)
+			return (-1);
+		else if (r->type == IPRD_CMD && handle_input(r, fd) < 0)
+			return (-1);
+		else if (r->type == HDRD_CMD && handle_heredoc(r, fd) < 0)
+			return (-1);
+		if (fd >= 0)
+			close(fd);
+		r = r->next;
+	}
+	return (0);
+}
+
+/*
+* Closes all file descriptors in a 2D array up to a given limit.
+*
+* Typically used to clean up pipe file descriptors.
+*
+* Parameters:
+* - fd: A 2D array of file descriptors (each fd[i] is a pipe with 2 fds).
+* - limit: The number of pipe pairs to close.
+*
+* Returns:
+* - 0 after closing all descriptors.
+*/
 
 int	close_fds(int fd[][2], int limit)
 {
@@ -14,80 +88,24 @@ int	close_fds(int fd[][2], int limit)
 	return (0);
 }
 
-int handle_redirections(t_cmd *cmd)
-{
-    t_redir *r;
-    int fd;
-    char    *pmpt;
+/*
+* Checks if the filename in a redirection structure is valid (non-NULL).
+*
+* If the filename is missing, an error message is printed to stderr.
+*
+* Parameters:
+* - r: The redirection structure.
+*
+* Returns:
+* - 1 if the filename is invalid (NULL), 0 otherwise.
+*/
 
-    pmpt = NULL;
-    if (!cmd || !cmd->redir_list)
-        return (0);  // No redirections to handle
-    r = cmd->redir_list;
-    while (r)
-    {
-        if (!r->filename)
-        {
-            fprintf(stderr, "Redirection error: missing filename\n");
-            return -1;
-        }
-        if (r->type == OPRD_CMD)  // >
-        {
-            fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-            if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
-            {
-                perror("Failed to redirect stdout");
-                if (fd >= 0) close(fd);
-                return -1;
-            }
-        }
-        else if (r->type == APRD_CMD)  // >>
-        {
-            fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
-            if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
-            {
-                perror("Failed to redirect stdout (append)");
-                if (fd >= 0) close(fd);
-                return -1;
-            }
-        }
-        else if (r->type == IPRD_CMD)  // <
-        {
-            fd = open(r->filename, O_RDONLY);
-            if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
-            {
-                perror("Failed to redirect stdin");
-                if (fd >= 0) close(fd);
-                return -1;
-            }
-        }
-        else if (r->type == HDRD_CMD)
-        {
-            fd = open(CACHE, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-            while((pmpt = readline(">")) != NULL)
-            {
-                if(ft_strncmp(r->filename, pmpt, ft_strlen(pmpt)) == 0)
-                {
-                    free(pmpt);
-                    break;
-                }
-                write(fd, pmpt, ft_strlen(pmpt));
-                write(fd, "\n", 2);
-                free(pmpt);
-            }
-            close(fd);
-            fd = open(CACHE, O_RDONLY);
-            dup2(fd, STDIN_FILENO);
-            close(fd);
-        }
-        else
-        {
-            fprintf(stderr, "Unknown redirection type\n");
-            return -1;
-        }
-        if (fd >= 0)
-            close(fd);
-        r = r->next;
-    }
-    return 0;
+int	check_filename(t_redir *r)
+{
+	if (!r->filename)
+	{
+		ft_putendl_fd("Redirection error: missing filename\n", 2);
+		return (1);
+	}
+	return (0);
 }
