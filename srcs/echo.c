@@ -12,13 +12,13 @@
 
 #include "../includes/shell.h"
 
-int    builtin_echo(t_shell *mini)
+int    builtin_echo(t_cmd *cmd)
 {
     char    **args;
     int     i;
 
     i = 1;
-    args = mini->cmds->args;
+    args = cmd->args;
     if (!args[i])
     {
         printf("\n");

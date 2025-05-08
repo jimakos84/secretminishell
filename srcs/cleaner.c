@@ -6,16 +6,16 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:48:20 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/04/29 10:20:44 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:39:09 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-int	clear_commands(t_cmd *cmds);
-int	clear_tokens(t_list *tokens);
-int	clear_array(char **array);
-void free_redirections(t_redir *redir_list);
+int		clear_commands(t_cmd *cmds);
+int		clear_tokens(t_list *tokens);
+int		clear_array(char **array);
+void	free_redirections(t_redir *redir_list);
 
 void	clear_env(t_env *env)
 {
@@ -31,9 +31,9 @@ void	clear_env(t_env *env)
 	}
 }
 
-void free_redirections(t_redir *redir_list)
+void	free_redirections(t_redir *redir_list)
 {
-	t_redir *tmp;
+	t_redir	*tmp;
 
 	while (redir_list)
 	{
@@ -45,7 +45,6 @@ void free_redirections(t_redir *redir_list)
 	}
 }
 
-
 int	clear_and_exit(t_shell *mini)
 {
 	clear_commands(mini->cmds);
@@ -54,11 +53,12 @@ int	clear_and_exit(t_shell *mini)
 	return (0);
 }
 
-int clear_commands(t_cmd *cmd)
+int	clear_commands(t_cmd *cmd)
 {
-	t_cmd *tmp;
-	int i;
+	t_cmd	*tmp;
+	int		i;
 
+	i = 0;
 	while (cmd)
 	{
 		tmp = cmd->next;
@@ -66,12 +66,7 @@ int clear_commands(t_cmd *cmd)
 			free(cmd->cmd);
 		if (cmd->args)
 		{
-			for (i = 0; cmd->args[i]; i++)
-			{
-				free(cmd->args[i]);
-				cmd->args[i] = NULL;
-			}
-			free(cmd->args);
+			clear_array(cmd->args);
 		}
 		if (cmd->redir_list)
 		{
@@ -82,9 +77,8 @@ int clear_commands(t_cmd *cmd)
 		cmd = tmp;
 	}
 	cmd = NULL;
-	return 0;
+	return (0);
 }
-
 
 int	clear_tokens(t_list *tokens)
 {
@@ -112,7 +106,7 @@ int	clear_array(char **array)
 	{
 		if (array[i])
 			free(array[i]);
-		i++;
+		array[++i] = NULL;
 	}
 	if (array)
 		free(array);

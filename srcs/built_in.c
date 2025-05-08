@@ -109,12 +109,12 @@ int	builtin_pwd(void)
 	return (2);
 }
 
-int	check_builtin(t_shell *mini)
+int	check_builtin(t_cmd *current, t_shell *mini)
 {
 	char	*cmd;
 
-	cmd = mini->cmds->cmd;
-	if (mini->cmds->cmd)
+	cmd = current->cmd;
+	if (cmd)
 	{
 		if (ft_strncmp("cd", cmd, 3) == 0)
 		{
@@ -140,9 +140,9 @@ int	check_builtin(t_shell *mini)
 			if (builtin_export(mini))
 				return (1);
 		}
-		if (ft_strncmp("echo", cmd, 5) == 0)
+		if (ft_strncmp("echo", cmd, 4) == 0)
 		{
-			if (builtin_echo(mini))
+			if (builtin_echo(current))
 				return (1);
 		}
 		else

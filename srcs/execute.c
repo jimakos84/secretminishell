@@ -13,7 +13,7 @@
 #include "../includes/shell.h"
 
 static int	init_pipes(int fd[][2], int limit);
-static int	wait_for_children(int count, t_initenv *initenv);
+static int	wait_for_children(int count, t_initenv *initenv, pid_t	*pids);
 static int	execute_command(t_shell *mini, t_cmd *current,
 				int fd[][2], int index);
 
@@ -24,6 +24,8 @@ int	execute(t_shell *mini)
 	int		limit;
 	t_cmd	*current;
 	int		fd[1024][2];
+	pid_t	pids[1024];
+	pid_t	pid;
 
 	index = 0;
 	current = mini->cmds;
@@ -37,14 +39,13 @@ int	execute(t_shell *mini)
 
 		if (handle_redirections(current) == -1)
 		{
-			fprintf(stderr, "Redirection failed, skipping command\n");
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
 			close(saved_stdin);
 			close(saved_stdout);
 			return (1);
 		}
-		mini->initenv->last_status = check_builtin(mini);
+		mini->initenv->last_status = check_builtin(current, mini);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdin);
@@ -55,13 +56,15 @@ int	execute(t_shell *mini)
 		return (1);
 	while (current)
 	{
-		if (execute_command(mini, current, fd, index) == -1)
+		pid = execute_command(mini, current, fd, index);
+		if (pid == -1)
 			return (1);
+		pids[index] = pid;
 		current = current->next;
 		index++;
 	}
 	close_fds(fd, limit);
-	wait_for_children(index, mini->initenv);
+	wait_for_children(index, mini->initenv, pids);
 	return (mini->initenv->last_status);
 }
 
@@ -83,7 +86,7 @@ static int	init_pipes(int fd[][2], int limit)
 }
 
 
-static int	wait_for_children(int count, t_initenv *initenv)
+static int	wait_for_children(int count, t_initenv *initenv, pid_t	*pids)
 {
 	int	i = 0;
 	int	status;
@@ -91,11 +94,18 @@ static int	wait_for_children(int count, t_initenv *initenv)
 
 	while (i < count)
 	{
-		wait(&status);
-		if (WIFEXITED(status))
-			last_exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			last_exit_status = 128 + WTERMSIG(status);
+		if (waitpid(pids[i],&status, 0) == -1)
+		{
+			perror("waitpid failed");
+			continue ;
+		}
+		if (i == count - 1)
+		{
+			if (WIFEXITED(status))
+				last_exit_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				last_exit_status = 128 + WTERMSIG(status);
+		}
 		i++;
 	}
 	unlink(CACHE);
@@ -103,7 +113,7 @@ static int	wait_for_children(int count, t_initenv *initenv)
 	return (last_exit_status);
 }
 
-static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index)
+static pid_t execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index)
 {
 	pid_t pid;
 	int limit;
@@ -131,10 +141,7 @@ static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index
 		if (handle_redirections(current) == -1)
 			exit(1);
 		if (current->is_builtin)
-		{
-			if (check_builtin(mini))
-				exit(mini->initenv->last_status);
-		}
+			exit(check_builtin(current, mini));
 		mini->initenv->copy_env = copy_env(mini->initenv->env);
 		if (execve(current->command, current->args, mini->initenv->copy_env) == -1)
 		{
@@ -144,7 +151,7 @@ static int execute_command(t_shell *mini, t_cmd *current, int fd[][2], int index
 		}
 		free_env(mini->initenv->copy_env);
 	}
-	return (0);
+	return (pid);
 }
 
 
