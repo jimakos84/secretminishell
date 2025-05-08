@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:40 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 13:07:13 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/08 05:32:26 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,30 +83,27 @@ char	**allocate_args_array(int num_args)
 char	*set_path_name(t_shell *mini, char *token)
 {
 	char	**path_dirs;
-	char	*path;
 	char	*temp;
 	char	*full_path;
 	int		i;
 
 	i = 0;
-	path = token;
-	if (access(path, X_OK) == 0)
-		return (path);
+	if (!token || !mini->initenv)
+		return (ft_strdup(token));
 	path_dirs = ft_split(extract_env_value(mini->initenv, "PATH"), ':');
-	while (path_dirs && path_dirs[i])
+	if (!path_dirs)
+		return (ft_strdup(token));
+	while (path_dirs[i])
 	{
-		temp = ft_strjoin(path_dirs[i], "/");
-		full_path = ft_strjoin(temp, path);
-		free(temp);
-		if (access(full_path, X_OK) == 0)
-			break ;
+		temp = string_build(ft_strdup(path_dirs[i]), ft_strdup("/"));
+		full_path = string_build(temp, ft_strdup(token));
+		if (access(full_path, F_OK) == 0)
+			return (full_path);
 		free(full_path);
 		i++;
 	}
-	if (full_path)
-		path = full_path;
 	clear_array(path_dirs);
-	return (path);
+	return (ft_strdup(token));
 }
 
 /*
