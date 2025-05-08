@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:48:20 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/08 11:39:09 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/09 01:05:52 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	clear_env(t_env *env)
 	t_env	*tmp;
 
 	while (env)
-	{	
+	{
 		tmp = env->next;
 		free(env->name);
 		free(env->value);
@@ -56,9 +56,7 @@ int	clear_and_exit(t_shell *mini)
 int	clear_commands(t_cmd *cmd)
 {
 	t_cmd	*tmp;
-	int		i;
 
-	i = 0;
 	while (cmd)
 	{
 		tmp = cmd->next;
