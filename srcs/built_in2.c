@@ -6,7 +6,7 @@
 /*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:03:27 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/29 10:15:07 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:32:18 by dvlachos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,3 @@ void	builtin_unset(t_shell *mini)
 	while (unset[i])
 		remove_env_nodes(mini, unset[i++]);
 }
-
