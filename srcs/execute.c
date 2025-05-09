@@ -144,6 +144,8 @@ static pid_t execute_command(t_shell *mini, t_cmd *current, int fd[][2], int ind
 			exit(check_builtin(current, mini));
 		check_stat(current->command);
 		mini->initenv->copy_env = copy_env(mini->initenv->env);
+		if (!current->command)
+			exit (1);
 		if (execve(current->command, current->args, mini->initenv->copy_env) == -1)
 		{
 			p_exe_error(current->args[0], errno, mini->initenv);

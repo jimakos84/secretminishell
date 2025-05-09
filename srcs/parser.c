@@ -136,7 +136,7 @@ t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
 	if (is_redirection_token(cmd->cmd))
 	{
 		current = handle_arg_or_redirection(cmd, current, &i);
-		return (NULL);
+		return (current);
 	}
 	if (builtin_cmd(cmd->cmd))
 		cmd->is_builtin = 1;

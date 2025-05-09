@@ -42,7 +42,7 @@ int	builtin_echo(t_cmd *cmd)
 	args = cmd->args;
 	if (!args[i])
 	{
-		printf("\n");
+		write(1, "\n", 1);
 		return (0);
 	}
 	else
@@ -54,7 +54,7 @@ int	builtin_echo(t_cmd *cmd)
 		}
 		print_args(args, &i);
 		if (!set_n)
-			printf("\n");
+			write(1, "\n", 1);
 	}
 	return (0);
 }
@@ -75,8 +75,9 @@ void	print_args(char **args, int *index)
 	i = *index;
 	while (args && args[i])
 	{
-		printf("%s", args[i++]);
+		write(1, args[i], ft_strlen(args[i]));
+		i++;
 		if (args[i])
-			printf(" ");
+			write(1, " ", 1);
 	}
 }

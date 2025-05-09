@@ -117,7 +117,7 @@ int	builtin_cd(t_shell *mini)
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
 		return (1);
-	if (mini->cmds->args[2])
+	if (mini->cmds->args[1] && mini->cmds->args[2])
 		return (echo_error("too many arguments"));
 	if (!mini->cmds->args[1])
 	{

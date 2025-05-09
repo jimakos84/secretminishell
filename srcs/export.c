@@ -49,7 +49,9 @@ int	builtin_export(t_shell *mini)
 	{
 		while (current)
 		{
-			printf("declare -x %s=\"%s\"\n", current->name, current->value);
+			printf("declare -x %s:", current->name);
+			if (current->value)
+				printf("=\"%s\"\n", current->value);
 			current = current->next;
 		}
 	}
@@ -109,7 +111,7 @@ int	change_env_value(t_env *env, char *var)
 	current = env;
 	while (current)
 	{
-		if (ft_strncmp(var, current->name, ft_strlen(var)) == 0)
+		if (ft_strncmp(var, current->name, ft_strlen(current->name)) == 0)
 		{
 			free(current->value);
 			current->value = ft_strdup(ft_strchr(var, '=') + 1);

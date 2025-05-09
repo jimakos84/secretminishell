@@ -63,6 +63,8 @@ void	check_stat(char *path)
 {
 	struct stat	sb;
 
+	if (!path)
+		return ;
 	if (stat(path, &sb) == -1)
 	{
 		ft_putstr_fd(path, 2);

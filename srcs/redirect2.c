@@ -36,6 +36,16 @@ int	handle_heredoc(t_redir *r, int fd);
 int	handle_output(t_redir *r, int fd)
 {
 	fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (fd == -1)
+	{
+		if (r->filename[0] == '\0')
+		{
+			ft_putendl_fd("No such file or directory", 2);
+			return (-1);
+		}
+		ft_putendl_fd("Permission denied", 2);
+		return (-1);
+	}
 	if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
 	{
 		perror("Failed to redirect stdout");
@@ -63,6 +73,16 @@ int	handle_output(t_redir *r, int fd)
 int	handle_append(t_redir *r, int fd)
 {
 	fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	if (fd == -1)
+	{
+		if (r->filename[0] == '\0')
+		{
+			ft_putendl_fd("No such file or directory", 2);
+			return (-1);
+		}
+		ft_putendl_fd("Permission denied", 2);
+		return (-1);
+	}
 	if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
 	{
 		perror("Failed to redirect stdout (append)");
@@ -89,6 +109,16 @@ int	handle_append(t_redir *r, int fd)
 int	handle_input(t_redir *r, int fd)
 {
 	fd = open(r->filename, O_RDONLY);
+	if (fd == -1)
+	{
+		if (r->filename[0] == '\0')
+		{
+			ft_putendl_fd("No such file or directory", 2);
+			return (-1);
+		}
+		ft_putendl_fd("Permission denied", 2);
+		return (-1);
+	}
 	if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
 	{
 		perror("Failed to redirect stdin");
