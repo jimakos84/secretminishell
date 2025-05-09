@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 05:19:15 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 05:46:30 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,12 @@ void	remove_env_nodes(t_shell *mini, char *unset);
 int		builtin_unset(t_shell *mini);
 int		builtin_env(t_shell *mini);
 int		builtin_pwd(void);
+
+/**
+ * Built_in echo
+*/
+int		builtin_echo(t_cmd *cmd);
+void	print_args(char **args, int *index);
 
 char	*extract_env_value(t_initenv *initenv, char *name);
 char	**copy_env(t_env *env);
