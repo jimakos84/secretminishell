@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 02:43:33 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 03:17:43 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,16 @@ int		handle_append(t_redir *r, int fd);
 int		handle_input(t_redir *r, int fd);
 int		handle_heredoc(t_redir *r, int fd);
 
+/**
+ * Helper functions
+*/
+int		ft_lst_len(t_env *env);
+int		is_redirection_token(char *token);
+int		is_valid_identifier_len(const char *name, int len);
+void	add_redir(t_redir **list, t_redir *new);
+t_redir	*create_redir_node(int type, const char *filename);
 bool	is_invalid_pipe_sequence(t_list *current);
+
 char	*extract_env_value(t_initenv *initenv, char *name);
 char	*get_command(char *token);
 char	**copy_env(t_env *env);
@@ -204,17 +213,12 @@ int		close_fds(int fd[][2], int limit);
 int		execute(t_shell *mini);
 int		exit_mini(t_shell *mini);
 int		ft_isquoted(const char *str, int n);
-int		ft_lst_len(t_env *env);
 int		get_num_args(char *token);
-int		is_redirection_token(char *token);
-int		is_valid_identifier_len(const char *name, int len);
 int		syntax_error(char *input, char *msg, int code);
 int		tokenize(t_shell *mini, char *input);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
 t_env	*new_node(char *content);
 t_list	*list_add_back(t_list *list, char *str);
-t_redir	*create_redir_node(int type, const char *filename);
-void	add_redir(t_redir **list, t_redir *new);
 void	add_to_list(t_env **env, char *content);
 void	builtin_unset(t_shell *mini);
 void	clear_env(t_env *env);
@@ -224,6 +228,6 @@ void	perror_exit(const char *msg);
 void	print(t_list *list, char *msg);
 void	printcmdtokens(t_shell *mini);
 bool	is_redir_or_pipe(char c);
-void    check_stat(char *path);
+void	check_stat(char *path);
 
 #endif

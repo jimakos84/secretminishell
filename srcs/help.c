@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   help.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 11:13:11 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/08 11:34:37 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/09 03:11:07 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
+
+/*
+* Calculates the length of a linked list of environment variables.
+*
+* Parameters:
+* - env: Pointer to the head of the environment list.
+*
+* Returns:
+* - The number of elements in the list.
+*/
 
 int	ft_lst_len(t_env *env)
 {
@@ -27,6 +37,16 @@ int	ft_lst_len(t_env *env)
 	return (len);
 }
 
+/*
+* Checks for an invalid pipe sequence: two consecutive unquoted pipe characters.
+*
+* Parameters:
+* - current: The current token node.
+*
+* Returns:
+* - true if there are two consecutive unquoted pipes, false otherwise.
+*/
+
 bool	is_invalid_pipe_sequence(t_list *current)
 {
 	if (!current || !current->next)
@@ -37,16 +57,42 @@ bool	is_invalid_pipe_sequence(t_list *current)
 	return (false);
 }
 
+/*
+* Determines whether a token string represents a redirection operator.
+*
+* Valid tokens: ">", ">>", "<", "<<"
+*
+* Parameters:
+* - token: The token string to check.
+*
+* Returns:
+* - 1 if the token is a redirection operator, 0 otherwise.
+*/
+
 int	is_redirection_token(char *token)
 {
-	size_t	len;
-
-	len = ft_strlen(token);
-	return (ft_strncmp(token, ">", len) == 0
-		|| ft_strncmp(token, "<", len) == 0
-		|| ft_strncmp(token, ">>", len) == 0
-		|| ft_strncmp(token, "<<", len) == 0);
+	if (ft_strncmp(token, ">", 2) == 0)
+		return (1);
+	if (ft_strncmp(token, ">>", 3) == 0)
+		return (1);
+	if (ft_strncmp(token, "<", 2) == 0)
+		return (1);
+	if (ft_strncmp(token, "<<", 3) == 0)
+		return (1);
+	return (0);
 }
+/*
+* Creates a new redirection node with the given type and filename.
+*
+* Quotes are removed from the filename during initialization.
+*
+* Parameters:
+* - type: The redirection type (e.g., OPRD_CMD, IPRD_CMD).
+* - filename: The target filename for the redirection.
+*
+* Returns:
+* - A pointer to the new t_redir node, or NULL on failure.
+*/
 
 t_redir	*create_redir_node(int type, const char *filename)
 {
@@ -62,6 +108,14 @@ t_redir	*create_redir_node(int type, const char *filename)
 	return (new);
 }
 
+/*
+* Appends a new redirection node to the end of a redirection list.
+*
+* Parameters:
+* - list: A pointer to the head of the redirection list.
+* - new: The redirection node to be added.
+*/
+
 void	add_redir(t_redir **list, t_redir *new)
 {
 	t_redir	*temp;
@@ -75,20 +129,4 @@ void	add_redir(t_redir **list, t_redir *new)
 	while (temp->next)
 		temp = temp->next;
 	temp->next = new;
-}
-
-int	is_valid_identifier_len(const char *name, int len)
-{
-	int	i;
-
-	if (len == 0 || !(ft_isalpha(name[0]) || name[0] == '_'))
-		return (0);
-	i = 1;
-	while (i < len)
-	{
-		if (!(ft_isalnum(name[i]) || name[i] == '_'))
-			return (0);
-		i++;
-	}
-	return (1);
 }

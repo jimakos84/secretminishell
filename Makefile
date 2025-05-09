@@ -18,10 +18,11 @@ SRCS = \
 	srcs/exit.c\
 	srcs/echo.c\
 	srcs/export.c\
-	srcs/help.c\
 	srcs/cleaner.c\
 	srcs/error.c\
 	srcs/execute.c\
+	srcs/help.c\
+	srcs/help2.c\
 	srcs/helper.c\
 	srcs/heredoc.c\
 	srcs/parser.c\
