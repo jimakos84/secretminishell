@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 17:37:14 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/09 05:48:09 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 06:50:31 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ int	builtin_echo(t_cmd *cmd)
 *
 * Parameters:
 * - args: NULL-terminated array of argument strings.
-* - index: Pointer to the starting index (typically 1 for skipping the command name).
+* - index: Pointer to the starting index
+* (typically 1 for skipping the command name).
 */
 
 void	print_args(char **args, int *index)
