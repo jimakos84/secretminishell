@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 03:42:31 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 04:16:47 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,11 +201,17 @@ int		builtin_export(t_shell *mini);
 int		echo_error(char *msg);
 int		change_env_value(t_env *env, char *var);
 
+/**
+ * Error handle in general
+*/
+int		syntax_error(char *input, char *msg, int code);
+void	check_stat(char *path);
+void	perror_exit(const char *msg);
+void	stat_error(char *path, char c);
+void	p_exe_error(char *command, int err, t_initenv *initenv);
+
 char	*extract_env_value(t_initenv *initenv, char *name);
-char	*get_command(char *token);
 char	**copy_env(t_env *env);
-char	**quote_aware_tokenize(const char *input);
-char	**set_arg_array(int num_args, char *token, char *cmdpath);
 int		activate_shell(char *input, t_initenv *env);
 int		builtin_cd(t_shell *mini);
 int		builtin_echo(t_cmd *cmd);
@@ -213,27 +219,13 @@ int		builtin_env(t_shell *mini);
 int		check_builtin(t_cmd *current, t_shell *mini);
 int		clear_and_exit(t_shell *mini);
 int		clear_array(char **array);
-int		clear_commands(t_cmd *cmds);
-int		clear_tokens(t_list *tokens);
-int		close_fds(int fd[][2], int limit);
 int		execute(t_shell *mini);
 int		exit_mini(t_shell *mini);
 int		ft_isquoted(const char *str, int n);
-int		get_num_args(char *token);
-int		syntax_error(char *input, char *msg, int code);
-int		tokenize(t_shell *mini, char *input);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
-t_env	*new_node(char *content);
-t_list	*list_add_back(t_list *list, char *str);
 void	add_to_list(t_env **env, char *content);
 void	builtin_unset(t_shell *mini);
 void	clear_env(t_env *env);
 void	list_env(t_env **env, char **envp);
-void	p_exe_error(char *command, int err, t_initenv *initenv);
-void	perror_exit(const char *msg);
-void	print(t_list *list, char *msg);
-void	printcmdtokens(t_shell *mini);
-bool	is_redir_or_pipe(char c);
-void	check_stat(char *path);
 
 #endif
