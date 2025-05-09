@@ -6,44 +6,29 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:48:20 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 01:05:52 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 04:36:32 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
+/*
+* Function declaration of helper fuctions
+*/
+int		clear_and_exit(t_shell *mini);
 int		clear_commands(t_cmd *cmds);
 int		clear_tokens(t_list *tokens);
 int		clear_array(char **array);
-void	free_redirections(t_redir *redir_list);
 
-void	clear_env(t_env *env)
-{
-	t_env	*tmp;
-
-	while (env)
-	{
-		tmp = env->next;
-		free(env->name);
-		free(env->value);
-		free(env);
-		env = tmp;
-	}
-}
-
-void	free_redirections(t_redir *redir_list)
-{
-	t_redir	*tmp;
-
-	while (redir_list)
-	{
-		tmp = redir_list->next;
-		if (redir_list->filename)
-			free(redir_list->filename);
-		free(redir_list);
-		redir_list = tmp;
-	}
-}
+/*
+* Frees all shell command structures, tokens, and the shell context.
+*
+* Parameters:
+* - mini: Pointer to the shell context to be cleared.
+*
+* Returns:
+* - Always returns 0.
+*/
 
 int	clear_and_exit(t_shell *mini)
 {
@@ -52,6 +37,17 @@ int	clear_and_exit(t_shell *mini)
 	free(mini);
 	return (0);
 }
+
+/*
+* Frees a linked list of t_cmd structures, including command strings,
+* arguments, and redirection lists.
+*
+* Parameters:
+* - cmd: Pointer to the head of the command list.
+*
+* Returns:
+* - Always returns 0.
+*/
 
 int	clear_commands(t_cmd *cmd)
 {
@@ -78,6 +74,16 @@ int	clear_commands(t_cmd *cmd)
 	return (0);
 }
 
+/*
+* Frees a linked list of token nodes and their strings.
+*
+* Parameters:
+* - tokens: Pointer to the head of the token list.
+*
+* Returns:
+* - Always returns 0.
+*/
+
 int	clear_tokens(t_list *tokens)
 {
 	t_list	*current;
@@ -94,6 +100,16 @@ int	clear_tokens(t_list *tokens)
 	}
 	return (0);
 }
+
+/*
+* Frees a NULL-terminated array of strings.
+*
+* Parameters:
+* - array: The array to free.
+*
+* Returns:
+* - Always returns 0.
+*/
 
 int	clear_array(char **array)
 {
