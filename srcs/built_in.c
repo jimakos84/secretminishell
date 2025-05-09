@@ -3,16 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:18:12 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/29 10:14:13 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/09 05:13:11 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-static void	updatewd(t_shell *mini, char *newpwd, char *oldpwd)
+/*
+* Function declaration of helper fuctions
+*/
+void	updatewd(t_shell *mini, char *newpwd, char *oldpwd);
+int		print_cd_error(char *path, char *oldpwd);
+int		try_change_dir(t_shell *mini, char *target, char *oldpwd);
+int		builtin_cd(t_shell *mini);
+int		check_builtin(t_cmd *current, t_shell *mini);
+
+/*
+* Updates the PWD and OLDPWD environment variables in the shell.
+*
+* Parameters:
+* - mini: Pointer to the shell context.
+* - newpwd: The new working directory path.
+* - oldpwd: The previous working directory path.
+*/
+
+void	updatewd(t_shell *mini, char *newpwd, char *oldpwd)
 {
 	t_env	*env;
 
@@ -33,7 +51,18 @@ static void	updatewd(t_shell *mini, char *newpwd, char *oldpwd)
 	}
 }
 
-static int	print_cd_error(char *path, char *oldpwd)
+/*
+* Prints an error message when `cd` fails to change directory, then frees oldpwd.
+*
+* Parameters:
+* - path: The path that caused the error.
+* - oldpwd: The previous working directory (to be freed).
+*
+* Returns:
+* - Always returns 1 (error code).
+*/
+
+int	print_cd_error(char *path, char *oldpwd)
 {
 	ft_putstr_fd("minishell: cd: ", 2);
 	ft_putstr_fd(path, 2);
@@ -42,13 +71,42 @@ static int	print_cd_error(char *path, char *oldpwd)
 	return (1);
 }
 
-static int	try_change_dir(t_shell *mini, char *target, char *oldpwd)
+/*
+* Attempts to change the working directory to the given target.
+*
+* If successful, updates PWD and OLDPWD. If not, prints an error message.
+*
+* Parameters:
+* - mini: Pointer to the shell context.
+* - target: Target directory to switch to.
+* - oldpwd: The old working directory (to be freed after update).
+*
+* Returns:
+* - 0 on success, 1 on failure.
+*/
+
+int	try_change_dir(t_shell *mini, char *target, char *oldpwd)
 {
 	if (chdir(target) != 0)
 		return (print_cd_error(target, oldpwd));
 	updatewd(mini, getcwd(NULL, 0), oldpwd);
 	return (0);
 }
+
+/*
+* Implements the `cd` built-in command.
+*
+* Behavior:
+* - No arguments: attempts to go to HOME.
+* - One argument: changes to the specified directory.
+* - More than one argument: prints an error.
+*
+* Parameters:
+* - mini: Pointer to the shell context.
+*
+* Returns:
+* - 0 on success, 1 on failure.
+*/
 
 int	builtin_cd(t_shell *mini)
 {
@@ -60,10 +118,7 @@ int	builtin_cd(t_shell *mini)
 	if (!oldpwd)
 		return (1);
 	if (mini->cmds->args[2])
-	{
-		ft_putendl_fd("too many arguments", 2);
-		return (1);
-	}
+		return (echo_error("too many arguments"));
 	if (!mini->cmds->args[1])
 	{
 		if (!home || !home[0])
@@ -80,34 +135,18 @@ int	builtin_cd(t_shell *mini)
 	return (try_change_dir(mini, mini->cmds->args[1], oldpwd));
 }
 
-int	builtin_env(t_shell *mini)
-{
-	t_env	*temp;
-
-	temp = mini->initenv->env;
-	if (!mini->cmds->args[1])
-	{
-		while (temp)
-		{
-			printf("%s", temp->name);
-			printf("=");
-			printf("%s\n", temp->value);
-			temp = temp->next;
-		}
-		return (0);
-	}
-	else
-		return (1);
-}
-
-int	builtin_pwd(void)
-{
-	char	*pwd;
-
-	pwd = getcwd(NULL, 0);
-	printf("%s\n", pwd);
-	return (2);
-}
+/*
+* Executes a built-in shell command if matched.
+*
+* Supported built-ins: cd, env, pwd, exit, unset, export, echo.
+*
+* Parameters:
+* - current: The command node containing the user input.
+* - mini: Pointer to the shell context.
+*
+* Returns:
+* - The result of the built-in command, or 0 if the command is not built-in.
+*/
 
 int	check_builtin(t_cmd *current, t_shell *mini)
 {
@@ -117,34 +156,19 @@ int	check_builtin(t_cmd *current, t_shell *mini)
 	if (cmd)
 	{
 		if (ft_strncmp("cd", cmd, 3) == 0)
-		{
-			if (builtin_cd(mini))
-				return (1);
-		}
+			return (builtin_cd(mini));
 		if (ft_strncmp("env", cmd, 4) == 0)
-		{
-			if (builtin_env(mini))
-				return (1);
-		}
+			return (builtin_env(mini));
 		if (ft_strncmp("pwd", cmd, 4) == 0)
-				printf("%s\n", getcwd(NULL, 0));
+			printf("%s\n", getcwd(NULL, 0));
 		if (ft_strncmp("exit", cmd, 5) == 0)
 			exit_mini(mini);
 		if (ft_strncmp("unset", cmd, 6) == 0)
-		{
-			builtin_unset(mini);
-			return (0);
-		}
+			return (builtin_unset(mini));
 		if (ft_strncmp("export", cmd, 7) == 0)
-		{
-			if (builtin_export(mini))
-				return (1);
-		}
+			return (builtin_export(mini));
 		if (ft_strncmp("echo", cmd, 4) == 0)
-		{
-			if (builtin_echo(current))
-				return (1);
-		}
+			return (builtin_echo(current));
 		else
 			return (0);
 	}
