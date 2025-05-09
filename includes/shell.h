@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 06:13:18 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 06:48:44 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,7 @@ int		clear_tokens(t_list *tokens);
 int		clear_array(char **array);
 void	clear_env(t_env *env);
 void	free_redirections(t_redir *redir_list);
+int		cleanup_and_exit(t_shell *mini);
 
 /**
  * Built_in funtions
@@ -248,9 +249,17 @@ void	list_env(t_env **env, char **envp);
 char	**copy_env(t_env *env);
 char	*extract_env_value(t_initenv *initenv, char *name);
 
+/**
+ * Built in exit
+*/
+int		check_valid_value(char *value);
+int		handle_too_many_args(t_shell *mini);
+int		validate_exit_argument(t_shell *mini, char *arg);
+int		exit_mini(t_shell *mini);
+void	exit_proccedure(t_shell *mini);
+
 int		activate_shell(char *input, t_initenv *env);
 int		execute(t_shell *mini);
-int		exit_mini(t_shell *mini);
 int		ft_isquoted(const char *str, int n);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
 

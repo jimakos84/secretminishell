@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:18:12 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/09 05:13:11 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 06:51:39 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,9 +160,9 @@ int	check_builtin(t_cmd *current, t_shell *mini)
 		if (ft_strncmp("env", cmd, 4) == 0)
 			return (builtin_env(mini));
 		if (ft_strncmp("pwd", cmd, 4) == 0)
-			printf("%s\n", getcwd(NULL, 0));
+			return (builtin_pwd());
 		if (ft_strncmp("exit", cmd, 5) == 0)
-			exit_mini(mini);
+			return (exit_mini(mini));
 		if (ft_strncmp("unset", cmd, 6) == 0)
 			return (builtin_unset(mini));
 		if (ft_strncmp("export", cmd, 7) == 0)
