@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 03:17:43 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 03:42:31 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,13 @@ void	add_redir(t_redir **list, t_redir *new);
 t_redir	*create_redir_node(int type, const char *filename);
 bool	is_invalid_pipe_sequence(t_list *current);
 
+/**
+ * Built in export
+*/
+int		builtin_export(t_shell *mini);
+int		echo_error(char *msg);
+int		change_env_value(t_env *env, char *var);
+
 char	*extract_env_value(t_initenv *initenv, char *name);
 char	*get_command(char *token);
 char	**copy_env(t_env *env);
@@ -203,7 +210,6 @@ int		activate_shell(char *input, t_initenv *env);
 int		builtin_cd(t_shell *mini);
 int		builtin_echo(t_cmd *cmd);
 int		builtin_env(t_shell *mini);
-int		builtin_export(t_shell *mini);
 int		check_builtin(t_cmd *current, t_shell *mini);
 int		clear_and_exit(t_shell *mini);
 int		clear_array(char **array);
