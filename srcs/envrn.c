@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   envrn.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:21:01 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/04/29 10:22:29 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/09 06:11:04 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
+
+/*
+* Function declaration of helper fuctions
+*/
+t_env	*new_node(char *content);
+void	add_to_list(t_env **env, char *content);
+void	list_env(t_env **env, char **envp);
+char	**copy_env(t_env *env);
+char	*extract_env_value(t_initenv *initenv, char *name);
+
+/*
+* Creates a new environment variable node from a "KEY=VALUE" string.
+*
+* Parameters:
+* - content: The environment string to parse.
+*
+* Returns:
+* - A pointer to the newly created t_env node, or NULL on failure.
+*/
 
 t_env	*new_node(char *content)
 {
@@ -34,6 +53,14 @@ t_env	*new_node(char *content)
 	return (node);
 }
 
+/*
+* Adds a new environment variable node to the end of the environment list.
+*
+* Parameters:
+* - env: Pointer to the head of the environment list.
+* - content: The "KEY=VALUE" string to be added.
+*/
+
 void	add_to_list(t_env **env, char *content)
 {
 	t_env	*new;
@@ -53,22 +80,41 @@ void	add_to_list(t_env **env, char *content)
 	}
 }
 
+/*
+* Builds a linked list of environment variables from an array of strings.
+*
+* Parameters:
+* - env: Pointer to the environment list to populate.
+* - envp: Array of "KEY=VALUE" strings (typically from main).
+*/
+
 void	list_env(t_env **env, char **envp)
 {
 	while (envp && *envp)
 		add_to_list(env, *envp++);
 }
 
+/*
+* Creates a deep copy of the environment list as a NULL-terminated
+* array of strings.
+*
+* Each string is in the format "KEY=VALUE".
+*
+* Parameters:
+* - env: Pointer to the head of the environment list.
+*
+* Returns:
+* - A newly allocated array of environment strings, or NULL on failure.
+*/
+
 char	**copy_env(t_env *env)
 {
-	int		len;
 	int		i;
 	char	**copy;
 	t_env	*tmp;
 
 	tmp = env;
-	len = ft_lst_len(env);
-	copy = (char **)malloc((len + 1) * sizeof(char *));
+	copy = (char **)malloc(((ft_lst_len(env)) + 1) * sizeof(char *));
 	if (!copy)
 		return (NULL);
 	i = 0;
@@ -76,21 +122,30 @@ char	**copy_env(t_env *env)
 	{
 		if (tmp->name)
 		{
+			copy[i] = ft_strdup(tmp->name);
 			if (tmp->value)
 			{
-				copy[i] = ft_strdup(tmp->name);
-				copy[i] = ft_strjoin(copy[i], "=");
-				copy[i] = ft_strjoin(copy[i], tmp->value);
+				copy[i] = string_build(copy[i], "=");
+				copy[i] = string_build(copy[i], tmp->value);
 			}
-			else
-				copy[i] = ft_strdup(tmp->name);
-		}	
+		}
 		tmp = tmp->next;
 		i++;
 	}
 	copy[i] = NULL;
 	return (copy);
 }
+
+/*
+* Retrieves the value of a named environment variable from the initenv struct.
+*
+* Parameters:
+* - initenv: Pointer to the initialized environment structure.
+* - name: The name of the environment variable to retrieve.
+*
+* Returns:
+* - The value associated with the variable name, or an empty string if not found.
+*/
 
 char	*extract_env_value(t_initenv *initenv, char *name)
 {
@@ -105,4 +160,3 @@ char	*extract_env_value(t_initenv *initenv, char *name)
 	}
 	return ("");
 }
-

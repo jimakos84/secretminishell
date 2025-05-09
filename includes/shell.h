@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 05:46:30 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 06:13:18 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,14 +239,19 @@ int		builtin_pwd(void);
 int		builtin_echo(t_cmd *cmd);
 void	print_args(char **args, int *index);
 
-char	*extract_env_value(t_initenv *initenv, char *name);
+/**
+ * Handle enviornment
+*/
+t_env	*new_node(char *content);
+void	add_to_list(t_env **env, char *content);
+void	list_env(t_env **env, char **envp);
 char	**copy_env(t_env *env);
+char	*extract_env_value(t_initenv *initenv, char *name);
+
 int		activate_shell(char *input, t_initenv *env);
 int		execute(t_shell *mini);
 int		exit_mini(t_shell *mini);
 int		ft_isquoted(const char *str, int n);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
-void	add_to_list(t_env **env, char *content);
-void	list_env(t_env **env, char **envp);
 
 #endif
