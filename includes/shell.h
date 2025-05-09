@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 04:37:46 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/09 05:19:15 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,19 +220,27 @@ int		clear_array(char **array);
 void	clear_env(t_env *env);
 void	free_redirections(t_redir *redir_list);
 
+/**
+ * Built_in funtions
+*/
+void	updatewd(t_shell *mini, char *newpwd, char *oldpwd);
+int		print_cd_error(char *path, char *oldpwd);
+int		try_change_dir(t_shell *mini, char *target, char *oldpwd);
+int		builtin_cd(t_shell *mini);
+int		check_builtin(t_cmd *current, t_shell *mini);
+void	remove_env_nodes(t_shell *mini, char *unset);
+int		builtin_unset(t_shell *mini);
+int		builtin_env(t_shell *mini);
+int		builtin_pwd(void);
+
 char	*extract_env_value(t_initenv *initenv, char *name);
 char	**copy_env(t_env *env);
 int		activate_shell(char *input, t_initenv *env);
-int		builtin_cd(t_shell *mini);
-int		builtin_echo(t_cmd *cmd);
-int		builtin_env(t_shell *mini);
-int		check_builtin(t_cmd *current, t_shell *mini);
 int		execute(t_shell *mini);
 int		exit_mini(t_shell *mini);
 int		ft_isquoted(const char *str, int n);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
 void	add_to_list(t_env **env, char *content);
-void	builtin_unset(t_shell *mini);
 void	list_env(t_env **env, char **envp);
 
 #endif

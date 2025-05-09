@@ -3,16 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   built_in2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:03:27 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/08 11:32:18 by dvlachos         ###   ########.fr       */
+/*   Updated: 2025/05/09 05:16:31 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-static void	remove_env_nodes(t_shell *mini, char *unset)
+/*
+* Function declaration of helper fuctions
+*/
+void	remove_env_nodes(t_shell *mini, char *unset);
+int		builtin_unset(t_shell *mini);
+int		builtin_env(t_shell *mini);
+int		builtin_pwd(void);
+
+/*
+* Removes a node from the environment list that matches the given variable name.
+*
+* Parameters:
+* - mini: Pointer to the shell context containing the environment list.
+* - unset: The name of the variable to remove.
+*/
+
+void	remove_env_nodes(t_shell *mini, char *unset)
 {
 	t_env	*current;
 	t_env	*prev;
@@ -40,7 +56,19 @@ static void	remove_env_nodes(t_shell *mini, char *unset)
 	}
 }
 
-void	builtin_unset(t_shell *mini)
+/*
+* Implements the `unset` built-in command.
+*
+* Iterates over arguments and removes matching environment variables.
+*
+* Parameters:
+* - mini: Pointer to the shell context.
+*
+* Returns:
+* - 0 on success, 1 if argument list is empty.
+*/
+
+int	builtin_unset(t_shell *mini)
 {
 	int		i;
 	char	**unset;
@@ -48,7 +76,60 @@ void	builtin_unset(t_shell *mini)
 	unset = mini->cmds->args;
 	i = 1;
 	if (!unset)
-		return ;
+		return (1);
 	while (unset[i])
 		remove_env_nodes(mini, unset[i++]);
+	return (0);
+}
+
+/*
+* Implements the `env` built-in command.
+*
+* Prints the current environment variables in the format NAME=VALUE.
+*
+* Parameters:
+* - mini: Pointer to the shell context.
+*
+* Returns:
+* - 0 if no extra arguments are passed and environment is printed.
+* - 1 if unexpected arguments are provided.
+*/
+
+int	builtin_env(t_shell *mini)
+{
+	t_env	*temp;
+
+	temp = mini->initenv->env;
+	if (!mini->cmds->args[1])
+	{
+		while (temp)
+		{
+			printf("%s", temp->name);
+			printf("=");
+			printf("%s\n", temp->value);
+			temp = temp->next;
+		}
+		return (0);
+	}
+	else
+		return (1);
+}
+
+/*
+* Implements the `pwd` built-in command.
+*
+* Prints the current working directory to stdout.
+*
+* Returns:
+* - 0 on success.
+*/
+
+int	builtin_pwd(void)
+{
+	char	*pwd;
+
+	pwd = getcwd(NULL, 0);
+	printf("%s\n", pwd);
+	free(pwd);
+	return (0);
 }
