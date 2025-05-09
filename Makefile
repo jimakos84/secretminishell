@@ -19,6 +19,7 @@ SRCS = \
 	srcs/echo.c\
 	srcs/export.c\
 	srcs/cleaner.c\
+	srcs/cleaner2.c\
 	srcs/error.c\
 	srcs/execute.c\
 	srcs/help.c\
