@@ -22,10 +22,11 @@ SRCS = \
 	srcs/cleaner2.c\
 	srcs/error.c\
 	srcs/execute.c\
+	srcs/execute2.c\
+	srcs/execute3.c\
 	srcs/help.c\
 	srcs/help2.c\
 	srcs/helper.c\
-	srcs/heredoc.c\
 	srcs/parser.c\
 	srcs/parser2.c\
 	srcs/parser3.c\
