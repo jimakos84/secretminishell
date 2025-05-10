@@ -104,10 +104,10 @@ int	change_env_value(t_env *env, char *var)
 	if (equal_sign)
 	{
 		if (!is_valid_identifier_len(var, (equal_sign - var)))
-			return (echo_error("not a valid identifier"));
+			return (echo_error(" not a valid identifier"));
 	}
 	else if (!is_valid_identifier_len(var, ft_strlen(var)))
-		return (echo_error("not a valid identifier"));
+		return (echo_error(" not a valid identifier"));
 	current = env;
 	while (current)
 	{

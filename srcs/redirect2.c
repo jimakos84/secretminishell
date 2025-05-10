@@ -43,7 +43,7 @@ int	handle_output(t_redir *r, int fd)
 			ft_putendl_fd("No such file or directory", 2);
 			return (-1);
 		}
-		ft_putendl_fd("Permission denied", 2);
+		ft_putendl_fd(" Permission denied", 2);
 		return (-1);
 	}
 	if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
@@ -80,7 +80,7 @@ int	handle_append(t_redir *r, int fd)
 			ft_putendl_fd("No such file or directory", 2);
 			return (-1);
 		}
-		ft_putendl_fd("Permission denied", 2);
+		ft_putendl_fd(" Permission denied", 2);
 		return (-1);
 	}
 	if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
@@ -108,12 +108,14 @@ int	handle_append(t_redir *r, int fd)
 
 int	handle_input(t_redir *r, int fd)
 {
+	struct stat	sb;
+
 	fd = open(r->filename, O_RDONLY);
 	if (fd == -1)
 	{
-		if (r->filename[0] == '\0')
+		if (r->filename[0] == '\0' || stat(r->filename, &sb) == -1)
 		{
-			ft_putendl_fd("No such file or directory", 2);
+			ft_putendl_fd(" No such file or directory", 2);
 			return (-1);
 		}
 		ft_putendl_fd("Permission denied", 2);
