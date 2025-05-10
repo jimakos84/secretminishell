@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 06:48:44 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/10 07:18:26 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,8 +258,22 @@ int		validate_exit_argument(t_shell *mini, char *arg);
 int		exit_mini(t_shell *mini);
 void	exit_proccedure(t_shell *mini);
 
-int		activate_shell(char *input, t_initenv *env);
+/**
+ * Execution funtions
+*/
+void	free_fds(int **fd, int count);
+void	close_fds2(int **fd, int limit);
+void	pre_execute(t_shell *mini, t_cmd *cmd);
+int		**alloc_fds(int limit);
+int		init_pipes(int **fd, int limit);
 int		execute(t_shell *mini);
+int		handle_builtin(t_shell *mini, t_cmd *current);
+int		wait_for_children(int count, t_initenv *initenv, pid_t	*pids);
+int		execution(t_shell *mini, t_cmd *cmd);
+pid_t	*run_commands(t_shell *mini, t_cmd *current, int **fd, int *index);
+pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index);
+
+int		activate_shell(char *input, t_initenv *env);
 int		ft_isquoted(const char *str, int n);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
 
