@@ -35,6 +35,7 @@ int	clear_and_exit(t_shell *mini)
 	clear_commands(mini->cmds);
 	clear_tokens(mini->tokens);
 	free(mini);
+	mini = NULL;
 	return (0);
 }
 
@@ -58,9 +59,12 @@ int	clear_commands(t_cmd *cmd)
 		tmp = cmd->next;
 		if (cmd->cmd)
 			free(cmd->cmd);
+		if (cmd->command)
+			free(cmd->command);
 		if (cmd->args)
 		{
 			clear_array(cmd->args);
+			cmd->args = NULL;
 		}
 		if (cmd->redir_list)
 		{
@@ -74,7 +78,7 @@ int	clear_commands(t_cmd *cmd)
 	return (0);
 }
 
-/*
+/*	
 * Frees a linked list of token nodes and their strings.
 *
 * Parameters:
@@ -116,13 +120,13 @@ int	clear_array(char **array)
 	int	i;
 
 	i = 0;
-	while (array && array[i])
+	if (!array)
+		return (1);
+	while (array[i])
 	{
-		if (array[i])
-			free(array[i]);
-		array[++i] = NULL;
+		free(array[i]);
+		i++;
 	}
-	if (array)
-		free(array);
+	free(array);
 	return (0);
 }

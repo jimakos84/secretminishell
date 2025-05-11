@@ -58,3 +58,10 @@ int	echo_error(char *msg)
 	ft_putendl_fd(msg, 2);
 	return (1);
 }
+
+void	clear_path_dirs(char **path_dirs, int i)
+{
+	while (path_dirs[i])
+		free(path_dirs[i++]);
+	free(path_dirs);
+}

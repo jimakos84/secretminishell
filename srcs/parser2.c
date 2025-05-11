@@ -59,10 +59,14 @@ t_cmd	*allocate_cmd_node(void)
 char	**allocate_args_array(int num_args)
 {
 	char	**args;
+	int		i;
 
+	i = 0;
 	args = malloc(sizeof(char *) * (num_args + 1));
 	if (!args)
 		return (NULL);
+	while (i <= num_args)
+		args[i++] = NULL;
 	return (args);
 }
 
@@ -89,21 +93,24 @@ char	*set_path_name(t_shell *mini, char *token)
 
 	i = 0;
 	if (!token || !mini->initenv)
-		return (ft_strdup(token));
+		return (token);
 	path_dirs = ft_split(extract_env_value(mini->initenv, "PATH"), ':');
 	if (!path_dirs)
-		return (ft_strdup(token));
+		return (token);
 	while (path_dirs[i])
 	{
-		temp = string_build(ft_strdup(path_dirs[i]), ft_strdup("/"));
-		full_path = string_build(temp, ft_strdup(token));
+		temp = string_build(ft_strdup(path_dirs[i]), "/");
+		full_path = string_build(temp, token);
 		if (access(full_path, F_OK) == 0)
+		{
+			clear_path_dirs(path_dirs, i);
 			return (full_path);
+		}
 		free(full_path);
-		i++;
+		free(path_dirs[i++]);
 	}
-	clear_array(path_dirs);
-	return (ft_strdup(token));
+	free(path_dirs);
+	return (token);
 }
 
 /*

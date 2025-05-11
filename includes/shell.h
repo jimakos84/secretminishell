@@ -211,7 +211,7 @@ void	stat_error(char *path, char c);
 void	p_exe_error(char *command, int err, t_initenv *initenv);
 
 /**
- * Clenaer funtions
+ * Cleaner funtions
 */
 int		clear_and_exit(t_shell *mini);
 int		clear_commands(t_cmd *cmds);
@@ -220,6 +220,7 @@ int		clear_array(char **array);
 void	clear_env(t_env *env);
 void	free_redirections(t_redir *redir_list);
 int		cleanup_and_exit(t_shell *mini);
+void	clear_path_dirs(char **path_dirs, int i);
 
 /**
  * Built_in funtions

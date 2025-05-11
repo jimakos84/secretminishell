@@ -102,7 +102,7 @@ pid_t	*run_commands(t_shell *mini, t_cmd *current, int **fd, int *index)
 	pid_t	*pids;
 
 	i = *index;
-	pids = malloc(sizeof(pid_t) * (mini->num_cmds - 1));
+	pids = malloc(sizeof(pid_t) * (mini->num_cmds));
 	if (!pids)
 		return (NULL);
 	while (current)
