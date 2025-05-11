@@ -42,3 +42,19 @@ int	is_valid_identifier_len(const char *name, int len)
 	}
 	return (1);
 }
+
+/*
+* Prints an error message to stderr and returns 1.
+*
+* Parameters:
+* - msg: The error message to display.
+*
+* Returns:
+* - Always returns 1.
+*/
+
+int	echo_error(char *msg)
+{
+	ft_putendl_fd(msg, 2);
+	return (1);
+}

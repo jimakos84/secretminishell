@@ -34,6 +34,18 @@ int	change_env_value(t_env *env, char *var);
 * - 0 on success, 1 if any variable is invalid.
 */
 
+static void	print_export(t_env *current)
+{
+	while (current)
+	{
+		printf("declare -x %s", current->name);
+		if (current->value)
+			printf("=\"%s\"", current->value);
+		printf("\n");
+		current = current->next;
+	}
+}
+
 int	builtin_export(t_shell *mini)
 {
 	t_env	*env;
@@ -46,37 +58,13 @@ int	builtin_export(t_shell *mini)
 	env = mini->initenv->env;
 	current = env;
 	if (!args[i])
-	{
-		while (current)
-		{
-			printf("declare -x %s:", current->name);
-			if (current->value)
-				printf("=\"%s\"\n", current->value);
-			current = current->next;
-		}
-	}
+		print_export(current);
 	while (args && args[i])
 	{
 		if (change_env_value(env, args[i++]))
 			return (1);
 	}
 	return (0);
-}
-
-/*
-* Prints an error message to stderr and returns 1.
-*
-* Parameters:
-* - msg: The error message to display.
-*
-* Returns:
-* - Always returns 1.
-*/
-
-int	echo_error(char *msg)
-{
-	ft_putendl_fd(msg, 2);
-	return (1);
 }
 
 /*
@@ -95,30 +83,63 @@ int	echo_error(char *msg)
 * - 0 on success, 1 on invalid identifier.
 */
 
-int	change_env_value(t_env *env, char *var)
+static int	export_validity(char *var)
 {
-	t_env	*current;
 	char	*equal_sign;
+	size_t	name_len;
 
-	equal_sign = ft_strrchr(var, '=');
+	equal_sign = ft_strchr(var, '=');
 	if (equal_sign)
 	{
-		if (!is_valid_identifier_len(var, (equal_sign - var)))
+		name_len = equal_sign - var;
+		if (!is_valid_identifier_len(var, name_len))
 			return (echo_error(" not a valid identifier"));
 	}
-	else if (!is_valid_identifier_len(var, ft_strlen(var)))
-		return (echo_error(" not a valid identifier"));
-	current = env;
+	else
+	{
+		name_len = ft_strlen(var);
+		if (!is_valid_identifier_len(var, name_len))
+			return (echo_error(" not a valid identifier"));
+	}
+	return (0);
+}
+
+static int	modify_already_existing(t_env *current, char *var,
+			char *equal_sign, size_t name_len)
+{
 	while (current)
 	{
-		if (ft_strncmp(var, current->name, ft_strlen(current->name)) == 0)
+		if (ft_strncmp(var, current->name, name_len) == 0
+			&& ft_strlen(current->name) == name_len)
 		{
-			free(current->value);
-			current->value = ft_strdup(ft_strchr(var, '=') + 1);
+			if (equal_sign)
+			{
+				if (current->value)
+					free(current->value);
+				current->value = ft_strdup(equal_sign + 1);
+			}
 			return (0);
 		}
 		current = current->next;
 	}
-	add_to_list(&env, var);
+	return (1);
+}
+
+int	change_env_value(t_env *env, char *var)
+{
+	t_env	*current;
+	char	*equal_sign;
+	size_t	name_len;
+
+	if (export_validity(var))
+		return (1);
+	equal_sign = ft_strchr(var, '=');
+	if (equal_sign)
+		name_len = equal_sign - var;
+	else
+		name_len = ft_strlen(var);
+	current = env;
+	if (modify_already_existing(current, var, equal_sign, name_len))
+		add_to_list(&env, var);
 	return (0);
 }
