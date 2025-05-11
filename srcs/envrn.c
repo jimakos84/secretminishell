@@ -48,7 +48,7 @@ t_env	*new_node(char *content)
 			return (NULL);
 	}
 	else
-		node->value = ft_strdup("");
+		node->value = NULL;
 	node->next = NULL;
 	return (node);
 }
@@ -154,7 +154,7 @@ char	*extract_env_value(t_initenv *initenv, char *name)
 	temp = initenv->env;
 	while (temp)
 	{
-		if (ft_strncmp(name, temp->name, sizeof(name)) == 0)
+		if (ft_strncmp(name, temp->name, ft_strlen(temp->name)) == 0)
 			return (temp->value);
 		temp = temp->next;
 	}
