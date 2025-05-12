@@ -87,11 +87,17 @@ int	print_cd_error(char *path, char *oldpwd)
 
 int	try_change_dir(t_shell *mini, char *target, char *oldpwd)
 {
+	char *newpwd;
+
 	if (chdir(target) != 0)
 		return (print_cd_error(target, oldpwd));
-	updatewd(mini, getcwd(NULL, 0), oldpwd);
+	newpwd = getcwd(NULL, 0);
+	updatewd(mini, newpwd, oldpwd);
+	free(newpwd);
+	free(oldpwd);
 	return (0);
 }
+
 
 /*
 * Implements the `cd` built-in command.
@@ -112,6 +118,7 @@ int	builtin_cd(t_shell *mini)
 {
 	char	*oldpwd;
 	char	*home;
+	char	*newpwd;
 
 	home = extract_env_value(mini->initenv, "HOME");
 	oldpwd = getcwd(NULL, 0);
@@ -129,7 +136,10 @@ int	builtin_cd(t_shell *mini)
 		}
 		if (chdir(home) != 0)
 			return (print_cd_error(home, oldpwd));
-		updatewd(mini, getcwd(NULL, 0), oldpwd);
+		newpwd = getcwd(NULL, 0);
+		updatewd(mini, newpwd, oldpwd);
+		free(oldpwd);
+		free(newpwd);
 		return (0);
 	}
 	return (try_change_dir(mini, mini->cmds->args[1], oldpwd));

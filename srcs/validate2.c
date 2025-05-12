@@ -96,5 +96,6 @@ int	check_expansion(char *input, t_initenv *env, int i)
 	ft_putstr_fd("minishell: $", 2);
 	ft_putstr_fd(var, 2);
 	ft_putendl_fd(": ambiguous redirect", 2);
+	free(input);
 	return (1);
 }

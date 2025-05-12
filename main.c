@@ -42,7 +42,9 @@ static void	init_shell(t_initenv *initenv);
 int	main(int ac, char **av, char **envp)
 {
 	t_initenv	*initenv;
+	int			status;
 
+	initenv = NULL;
 	initenv = malloc(sizeof(t_initenv));
 	if (!initenv)
 		return (1);
@@ -55,7 +57,9 @@ int	main(int ac, char **av, char **envp)
 		while (1)
 			init_shell(initenv);
 	}
-	return (initenv->last_status);
+	status = initenv->last_status;
+	clear_env(initenv->env);
+	return (status);
 }
 
 /*
@@ -74,9 +78,7 @@ void	init_env(t_initenv **initenv, char **envp)
 {
 	(*initenv)->copy_env = NULL;
 	(*initenv)->env = NULL;
-	(*initenv)->home = NULL;
 	list_env(&(*initenv)->env, envp);
-	(*initenv)->home = ft_strdup(extract_env_value(*initenv, "HOME"));
 }
 
 /*

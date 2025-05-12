@@ -36,6 +36,12 @@ static void	configure_mini_shell(t_shell **mini, t_initenv *env);
  * Returns:
  * - 0 on success, or 1 if an error occurs during any stage.
  */
+static int	free_mini_and_return(t_shell *mini, int status)
+{
+	clear_and_exit(mini);
+	return (status);
+}
+
 int	activate_shell(char *input, t_initenv *env)
 {
 	t_shell	*mini;
@@ -47,16 +53,16 @@ int	activate_shell(char *input, t_initenv *env)
 	configure_mini_shell(&mini, env);
 	status = input_validate(&input, env);
 	if (status)
-		return (status);
+		return (free_mini_and_return(mini, status));
 	status = extract_tokens(&mini->tokens, input);
 	if (status)
-		return (status);
+		return (free_mini_and_return(mini, status));
 	status = parse_and_expand(mini);
 	if (status)
-		return (status);
+		return (free_mini_and_return(mini, status));
 	status = execute(mini);
 	if (status)
-		return (status);
+		return (free_mini_and_return(mini, status));
 	status = clear_and_exit(mini);
 	if (status)
 		return (status);

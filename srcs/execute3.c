@@ -80,5 +80,8 @@ void	pre_execute(t_shell *mini, t_cmd *cmd)
 	check_stat(cmd->command);
 	mini->initenv->copy_env = copy_env(mini->initenv->env);
 	if (!cmd->command)
+	{
+		free_env(mini->initenv->copy_env);
 		exit (1);
+	}
 }
