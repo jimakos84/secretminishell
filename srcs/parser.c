@@ -99,7 +99,10 @@ t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
 		if (!current->next)
 			return (current);
 		type = set_type(current->token);
-		redir = create_redir_node(type, current->next->token);
+		if (current->next->token[0])
+			redir = create_redir_node(type, current->next->token);
+		else
+			return(NULL);
 		add_redir(&cmd->redir_list, redir);
 		current = current->next;
 	}
@@ -124,30 +127,76 @@ t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
  * - The token node following the end of the current command.
  */
 
+char	*find_cmd(t_shell *mini, t_list *tokens)
+{
+	char	*cmd;
+
+	while (tokens)
+	{
+		cmd = set_path_name(mini, tokens->token);
+		if (ft_strchr(cmd, '/'))
+			return (ft_strrchr(cmd, '/') + 1);
+		tokens = tokens->next;
+	}
+	if (!cmd[0])
+		return (NULL);
+	return (cmd);
+}
+
+void	init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
+{
+	remove_quotes_inplace(tokens->token);
+	cmd->cmd = ft_strdup(tokens->token);
+	if (!cmd->cmd)
+		return ;
+	if (builtin_cmd(cmd->cmd))
+		cmd->is_builtin = 1;
+	else
+		cmd->command = set_path_name(mini, cmd->cmd);
+	cmd->args[(*i)++] = ft_strdup(cmd->cmd);
+}
+
+t_list	*process_redirections(t_cmd *cmd, t_list *tokens, int *i)
+{
+	t_list	*current;
+
+	current = tokens;
+	while (current && is_redirection_token(current->token))
+	{
+		current = handle_arg_or_redirection(cmd, current, i);
+		if (!current)
+			break;
+	}
+	return (current);
+}
+
+t_list	*fill_remaining_args(t_cmd *cmd, t_list *tokens, int *i)
+{
+	t_list	*current;
+
+	current = tokens;
+	while (current && !contains_unquoted_char(current->token, '|'))
+		current = handle_arg_or_redirection(cmd, current, i);
+	cmd->args[*i] = NULL;
+	cmd->num_args = *i;
+	return (current);
+}
+
 t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
 {
 	int		i;
 	t_list	*current;
 
 	i = 0;
-	current = tokens;
-	cmd->cmd = ft_strdup(current->token);
-	remove_quotes_inplace(cmd->cmd);
-	if (is_redirection_token(cmd->cmd))
+	current = process_redirections(cmd, tokens, &i);
+	if (!current)
+		return (NULL);
+	if (!is_redirection_token(current->token))
 	{
-		current = handle_arg_or_redirection(cmd, current, &i);
-		return (current);
+		init_cmd_from_token(cmd, current, mini, &i);
+		current = current->next;
 	}
-	if (builtin_cmd(cmd->cmd))
-		cmd->is_builtin = 1;
-	else
-		cmd->command = set_path_name(mini, cmd->cmd);
-	cmd->args[i++] = ft_strdup(cmd->cmd);
-	current = current->next;
-	while (current && !contains_unquoted_char(current->token, '|'))
-		current = handle_arg_or_redirection(cmd, current, &i);
-	cmd->args[i] = NULL;
-	cmd->num_args = i;
+	current = fill_remaining_args(cmd, current, &i);
 	return (current);
 }
 
