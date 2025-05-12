@@ -143,6 +143,9 @@ void	process_token_expansion(t_list *current, t_shell *mini);
 void	handle_dollar(t_list *list, t_shell *mini);
 int		set_type(char *token);
 t_cmd	*set_cmd(t_list *token);
+char	*find_cmd(t_shell *mini, t_list *tokens);
+void	init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
+t_list	*process_redirections(t_cmd *cmd, t_list *tokens, int *i);
 
 /**
  * Utility functions

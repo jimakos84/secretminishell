@@ -84,3 +84,46 @@ t_cmd	*set_cmd(t_list *token)
 	}
 	return (cmd);
 }
+
+char	*find_cmd(t_shell *mini, t_list *tokens)
+{
+	char	*cmd;
+
+	while (tokens)
+	{
+		cmd = set_path_name(mini, tokens->token);
+		if (ft_strchr(cmd, '/'))
+			return (ft_strrchr(cmd, '/') + 1);
+		tokens = tokens->next;
+	}
+	if (!cmd[0])
+		return (NULL);
+	return (cmd);
+}
+
+void	init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
+{
+	remove_quotes_inplace(tokens->token);
+	cmd->cmd = ft_strdup(tokens->token);
+	if (!cmd->cmd)
+		return ;
+	if (builtin_cmd(cmd->cmd))
+		cmd->is_builtin = 1;
+	else
+		cmd->command = set_path_name(mini, cmd->cmd);
+	cmd->args[(*i)++] = ft_strdup(cmd->cmd);
+}
+
+t_list	*process_redirections(t_cmd *cmd, t_list *tokens, int *i)
+{
+	t_list	*current;
+
+	current = tokens;
+	while (current && is_redirection_token(current->token))
+	{
+		current = handle_arg_or_redirection(cmd, current, i);
+		if (!current)
+			break ;
+	}
+	return (current);
+}

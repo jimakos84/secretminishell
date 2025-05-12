@@ -65,3 +65,23 @@ void	clear_path_dirs(char **path_dirs, int i)
 		free(path_dirs[i++]);
 	free(path_dirs);
 }
+
+/*
+ * Concatenates two strings and frees the first one.
+ *
+ * Parameters:
+ * - s1: First string (will be freed).
+ * - s2: Second string.
+ *
+ * Returns:
+ * - A new string resulting from the concatenation.
+ */
+
+char	*string_build(char *s1, char *s2)
+{
+	char	*joined;
+
+	joined = ft_strjoin(s1, s2);
+	free(s1);
+	return (joined);
+}
