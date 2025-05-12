@@ -149,7 +149,7 @@ void	handle_dollar(t_list *list, t_shell *mini)
 	while (current)
 	{
 		str = ft_strchr(current->token, '$');
-		if (str && !ft_is_in_single(current->token, str - current->token))
+		if (str)
 			process_token_expansion(current, mini);
 		current = current->next;
 	}

@@ -169,10 +169,10 @@ char	*expand_token(char *token, t_shell *mini)
 
 	i = 0;
 	start = 0;
-	result = ft_strdup("");
+	result = NULL;
 	while (token && token[i])
 	{
-		if (token[i] == '$' && !ft_is_in_single(token, i))
+		if (token[i] == '$')
 		{
 			result = string_build(result, ft_strnmdup(token, start, i));
 			i++;

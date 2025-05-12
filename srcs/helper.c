@@ -45,7 +45,7 @@ int	activate_shell(char *input, t_initenv *env)
 	if (!mini)
 		return (1);
 	configure_mini_shell(&mini, env);
-	status = input_validate(&input);
+	status = input_validate(&input, env);
 	if (status)
 		return (status);
 	status = extract_tokens(&mini->tokens, input);

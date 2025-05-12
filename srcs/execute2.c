@@ -70,6 +70,8 @@ pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index)
 	}
 	else if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		if (index > 0 && (dup2(fd[index - 1][0], STDIN_FILENO) == -1))
 			perror_exit("dup2 stdin");
 		if (index < limit && (dup2(fd[index][1], STDOUT_FILENO) == -1))

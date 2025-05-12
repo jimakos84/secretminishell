@@ -15,7 +15,7 @@
 /*
 * Function declaration of helper fuctions
 */
-static int	check_syntax(char *input, char redirect_char);
+static int	check_syntax(char *input, char redirect_char, t_initenv *env);
 static int	check_pipe_char(char *input, char redirect_char);
 static int	check_special_char(char *input, char *charset);
 static int	check_special_occurance(char *input);
@@ -34,16 +34,20 @@ static int	check_special_occurance(char *input);
 * - 0 if the input is valid, or a non-zero value if a syntax error
 * is detected.
 */
-int	input_validate(char **input)
+int	input_validate(char **input, t_initenv *env)
 {
 	char	*trimmed;
 
 	trimmed = input_preprocess(input);
 	if (enclosed_in_quotes(trimmed))
 		return (syntax_error(trimmed, "'unclosed quotes'", 2));
-	if (check_syntax(trimmed, '>'))
+	if (check_syntax(trimmed, '>', env) == 2)
+		return (2);
+	if (check_syntax(trimmed, '>', env) == 1)
 		return (syntax_error(trimmed, "'newline'", 2));
-	if (check_syntax(trimmed, '<'))
+	if (check_syntax(trimmed, '<', env) == 2)
+		return (2);
+	if (check_syntax(trimmed, '<', env) == 1)
 		return (syntax_error(trimmed, "'newline'", 2));
 	if (check_pipe_char(trimmed, '|'))
 		return (syntax_error(trimmed, "'|'", 2));
@@ -69,7 +73,7 @@ int	input_validate(char **input)
 * 1 if a syntax error is detected, 0 otherwise.
 */
 
-static int	check_syntax(char *input, char redirect_char)
+static int	check_syntax(char *input, char redirect_char, t_initenv *env)
 {
 	int	i;
 
@@ -87,6 +91,8 @@ static int	check_syntax(char *input, char redirect_char)
 				return (1);
 			if ((!input[i] || input[i] == redirect_char))
 				return (1);
+			if (input[i] == '$' && check_expansion(input, env, i))
+				return (2);
 		}
 		else
 			i++;

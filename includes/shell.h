@@ -113,9 +113,10 @@ typedef struct s_shell
 /**
  * Validation
 */
-int		input_validate(char **input);
+int		input_validate(char **input, t_initenv *env);
 char	*input_preprocess(char **input);
 char	*remove_comments(char *input);
+int		check_expansion(char *input, t_initenv *env, int i);
 
 /**
  * Tokenization

@@ -98,6 +98,8 @@ t_redir	*create_redir_node(int type, const char *filename)
 {
 	t_redir	*new;
 
+	if (!filename)
+		return (NULL);
 	new = ft_calloc(1, sizeof(t_redir));
 	if (!new)
 		return (NULL);
