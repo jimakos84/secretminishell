@@ -2,7 +2,7 @@ TARGET = minishell
 
 CMD = cc
 
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address,undefined
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address,undefined
 
 LDFLAGS = -lreadline
 
@@ -26,6 +26,7 @@ SRCS = \
 	srcs/execute3.c\
 	srcs/help.c\
 	srcs/help2.c\
+	srcs/help3.c\
 	srcs/helper.c\
 	srcs/parser.c\
 	srcs/parser2.c\
