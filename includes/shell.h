@@ -237,6 +237,7 @@ void	remove_env_nodes(t_shell *mini, char *unset);
 int		builtin_unset(t_shell *mini);
 int		builtin_env(t_shell *mini);
 int		builtin_pwd(void);
+int		home_not_set(char *oldpwd);
 
 /**
  * Built_in echo

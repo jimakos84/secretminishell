@@ -87,7 +87,7 @@ int	print_cd_error(char *path, char *oldpwd)
 
 int	try_change_dir(t_shell *mini, char *target, char *oldpwd)
 {
-	char *newpwd;
+	char	*newpwd;
 
 	if (chdir(target) != 0)
 		return (print_cd_error(target, oldpwd));
@@ -97,7 +97,6 @@ int	try_change_dir(t_shell *mini, char *target, char *oldpwd)
 	free(oldpwd);
 	return (0);
 }
-
 
 /*
 * Implements the `cd` built-in command.
@@ -129,14 +128,12 @@ int	builtin_cd(t_shell *mini)
 	if (!mini->cmds->args[1])
 	{
 		if (!home || !home[0])
-		{
-			printf("cd: HOME not set\n");
-			free(oldpwd);
-			return (1);
-		}
+			return (home_not_set(oldpwd));
 		if (chdir(home) != 0)
 			return (print_cd_error(home, oldpwd));
 		newpwd = getcwd(NULL, 0);
+		if (!newpwd)
+			return (1);
 		updatewd(mini, newpwd, oldpwd);
 		free(oldpwd);
 		free(newpwd);
