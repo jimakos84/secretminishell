@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/10 07:18:26 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:11:39 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,6 @@ char	*handle_token(const char *input, int *index);
  * Parsing and expanding
 */
 int		parse_and_expand(t_shell *mini);
-char	*string_build(char *s1, char *s2);
 char	*extract_value(t_shell *mini, char *token, int *index);
 t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i);
 t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
@@ -196,6 +195,9 @@ int		ft_lst_len(t_env *env);
 int		is_redirection_token(char *token);
 int		is_valid_identifier_len(const char *name, int len);
 void	add_redir(t_redir **list, t_redir *new);
+char	*string_build(char *s1, char *s2);
+char	*string_build2(char *s1, char *s2);
+char	**get_path_values(t_shell *mini);
 t_redir	*create_redir_node(int type, const char *filename);
 bool	is_invalid_pipe_sequence(t_list *current);
 

@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:48:20 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 04:36:32 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:25:04 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	clear_commands(t_cmd *cmd)
 	return (0);
 }
 
-/*	
+/*
 * Frees a linked list of token nodes and their strings.
 *
 * Parameters:
@@ -96,7 +96,7 @@ int	clear_tokens(t_list *tokens)
 	while (current)
 	{
 		next = current->next;
-		if (current->token)
+		if (current->token && current->token[0] != '\0')
 			free(current->token);
 		free(current);
 		current = next;

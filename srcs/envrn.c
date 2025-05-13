@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:21:01 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/09 06:11:04 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:25:16 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,13 +150,20 @@ char	**copy_env(t_env *env)
 char	*extract_env_value(t_initenv *initenv, char *name)
 {
 	t_env	*temp;
+	char	*value;
 
+	value = NULL;
 	temp = initenv->env;
 	while (temp)
 	{
 		if (ft_strncmp(name, temp->name, ft_strlen(temp->name)) == 0)
-			return (temp->value);
+		{
+			value = ft_strdup(temp->value);
+			break ;
+		}
 		temp = temp->next;
 	}
-	return ("");
+	if (!value)
+		value = ft_strdup("");
+	return (value);
 }

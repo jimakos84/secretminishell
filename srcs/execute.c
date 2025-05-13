@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/10 07:15:53 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:22:49 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,25 @@ int	execute(t_shell *mini)
 	int		**fd;
 	t_cmd	*current;
 	pid_t	*pids;
+	int		limit;
 
+	if (mini->num_cmds > 1)
+		limit = mini->num_cmds;
+	else
+		limit = 1;
 	current = mini->cmds;
 	index = 0;
 	if (mini->num_cmds == 1 && current->is_builtin)
 		return (handle_builtin(mini, current));
-	fd = alloc_fds(mini->num_cmds - 1);
-	if (init_pipes(fd, mini->num_cmds - 1))
+	fd = alloc_fds(limit - 1);
+	if (init_pipes(fd, limit - 1))
 		return (1);
 	pids = run_commands(mini, current, fd, &index);
 	if (!pids)
 		return (0);
-	close_fds2(fd, mini->num_cmds - 1);
+	close_fds2(fd, limit - 1);
 	wait_for_children(index, mini->initenv, pids);
-	free_fds(fd, mini->num_cmds - 1);
+	free_fds(fd, limit - 1);
 	free(pids);
 	return (mini->initenv->last_status);
 }
