@@ -85,4 +85,6 @@ static void	configure_mini_shell(t_shell **mini, t_initenv *env)
 	(*mini)->initenv = env;
 	(*mini)->status = 0;
 	(*mini)->cmds = NULL;
+	(*mini)->_stdin = -1;
+	(*mini)->_stdout = -1;
 }

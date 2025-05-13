@@ -78,6 +78,10 @@ int	cleanup_and_exit(t_shell *mini)
 	status = mini->initenv->last_status;
 	clear_env(mini->initenv->env);
 	free(mini->initenv);
+	if (mini->_stdin != -1)
+		close(mini->_stdin);
+	if (mini->_stdout != -1)
+		close(mini->_stdout);
 	clear_and_exit(mini);
 	rl_clear_history();
 	exit(status);
