@@ -85,3 +85,10 @@ char	*string_build(char *s1, char *s2)
 	free(s1);
 	return (joined);
 }
+
+int	home_not_set(char *oldpwd)
+{
+	printf("cd: HOME not set\n");
+	free(oldpwd);
+	return (1);
+}
