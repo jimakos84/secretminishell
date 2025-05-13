@@ -93,10 +93,10 @@ char	*set_path_name(t_shell *mini, char *token)
 
 	i = 0;
 	if (!token || !mini->initenv)
-		return (token);
+		return (ft_strdup(token));
 	path_dirs = ft_split(extract_env_value(mini->initenv, "PATH"), ':');
 	if (!path_dirs)
-		return (token);
+		return (ft_strdup(token));
 	while (path_dirs[i])
 	{
 		temp = string_build(ft_strdup(path_dirs[i]), "/");
@@ -110,7 +110,7 @@ char	*set_path_name(t_shell *mini, char *token)
 		free(path_dirs[i++]);
 	}
 	free(path_dirs);
-	return (token);
+	return (ft_strdup(token));
 }
 
 /*
@@ -169,7 +169,7 @@ char	*expand_token(char *token, t_shell *mini)
 
 	i = 0;
 	start = 0;
-	result = NULL;
+	result = strdup("");
 	while (token && token[i])
 	{
 		if (token[i] == '$')

@@ -2,7 +2,7 @@ TARGET = minishell
 
 CMD = cc
 
-CFLAGS = -Werror -Wall -Wextra
+CFLAGS = -Wall -Wextra -Werror
 
 LDFLAGS = -lreadline
 

@@ -32,10 +32,10 @@ int		clear_array(char **array);
 
 int	clear_and_exit(t_shell *mini)
 {
-	clear_commands(mini->cmds);
 	clear_tokens(mini->tokens);
+	if (mini->cmds)
+		clear_commands(mini->cmds);
 	free(mini);
-	mini = NULL;
 	return (0);
 }
 
@@ -74,7 +74,6 @@ int	clear_commands(t_cmd *cmd)
 		free(cmd);
 		cmd = tmp;
 	}
-	cmd = NULL;
 	return (0);
 }
 
@@ -121,10 +120,11 @@ int	clear_array(char **array)
 
 	i = 0;
 	if (!array)
-		return (1);
+		return (0);
 	while (array[i])
 	{
 		free(array[i]);
+		array[i] = NULL;
 		i++;
 	}
 	free(array);

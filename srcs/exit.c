@@ -49,7 +49,6 @@ void	exit_proccedure(t_shell *mini)
 
 	status = 0;
 	clear_env(mini->initenv->env);
-	free(mini->initenv->home);
 	status = mini->initenv->last_status;
 	free(mini->initenv);
 	clear_and_exit(mini);
