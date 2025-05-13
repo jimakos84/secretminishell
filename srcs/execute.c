@@ -138,6 +138,8 @@ int	handle_builtin(t_shell *mini, t_cmd *current)
 
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
+	mini->_stdin = saved_stdin;
+	mini->_stdout = saved_stdout;
 	if (saved_stdin == -1 || saved_stdout == -1)
 		perror_exit("dup failed");
 	if (handle_redirections(current) == -1)

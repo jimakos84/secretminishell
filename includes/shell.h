@@ -107,6 +107,8 @@ typedef struct s_shell
 	t_list		*tokens;
 	t_initenv	*initenv;
 	int			status;
+	int			_stdin;
+	int			_stdout;
 }	t_shell;
 
 /**

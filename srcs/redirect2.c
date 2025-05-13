@@ -146,6 +146,14 @@ int	handle_input(t_redir *r, int fd)
 * - 0 on success.
 */
 
+static void	null_heredoc(char *filename)
+{
+	ft_putstr_fd("minishell: warning: here-document"
+		" delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(filename, 2);
+	ft_putendl_fd("')", 2);
+}
+
 int	handle_heredoc(t_redir *r, int fd)
 {
 	char	*pmpt;
@@ -153,7 +161,7 @@ int	handle_heredoc(t_redir *r, int fd)
 	pmpt = NULL;
 	fd = open(CACHE, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	pmpt = readline(">");
-	while (pmpt != NULL)
+	while (pmpt)
 	{
 		if (ft_strncmp(r->filename, pmpt, ft_strlen(pmpt)) == 0)
 		{
@@ -165,6 +173,8 @@ int	handle_heredoc(t_redir *r, int fd)
 		free(pmpt);
 		pmpt = readline(">");
 	}
+	if (!pmpt)
+		null_heredoc(r->filename);
 	close(fd);
 	fd = open(CACHE, O_RDONLY);
 	dup2(fd, STDIN_FILENO);
