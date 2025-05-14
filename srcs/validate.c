@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/06 10:28:58 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/14 06:42:42 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int	input_validate(char **input, t_initenv *env)
 	trimmed = input_preprocess(input);
 	if (enclosed_in_quotes(trimmed))
 		return (syntax_error(trimmed, "'unclosed quotes'", 2));
+	if (check_special_char(trimmed, SPECIALCHARS))
+		return (syntax_error(trimmed, "'newline'", 2));
 	if (check_special_occurance(trimmed))
 		return (syntax_error(trimmed, "'newline'", 2));
 	if (check_pipe_char(trimmed, '|'))
@@ -52,8 +54,6 @@ int	input_validate(char **input, t_initenv *env)
 	if (check_syntax(trimmed, '<', env) == 2)
 		return (2);
 	if (check_syntax(trimmed, '<', env) == 1)
-		return (syntax_error(trimmed, "'newline'", 2));
-	if (check_special_char(trimmed, SPECIALCHARS))
 		return (syntax_error(trimmed, "'newline'", 2));
 	free(trimmed);
 	return (0);
@@ -199,28 +199,17 @@ static int	check_special_char(char *input, char *charset)
 
 static int	check_special_occurance(char *input)
 {
-	int	i;
+	int	len;
 
-	i = 0;
-	while (input && input[i])
-	{
-		if (input[i] == '<' && !ft_isquoted(input, i))
-		{
-			i++;
-			while (input && input[i] && ft_isspace(input[i]))
-				i++;
-			if (input[i] == '|' && !ft_isquoted(input, i))
-				return (1);
-		}
-		if (input[i] == '>' && !ft_isquoted(input, i))
-		{
-			i++;
-			while (input && input[i] && ft_isspace(input[i]))
-				i++;
-			if ((input[i] == '<' || input[i] == '|') && !ft_isquoted(input, i))
-				return (1);
-		}
-		i++;
-	}
+	len = ft_strlen(input);
+	if (len == 1)
+		if (validation_for_onechar(input))
+			return (1);
+	if (len == 2)
+		if (validation_for_twochar(input))
+			return (1);
+	if (len == 3)
+		if (validation_for_threechar(input))
+			return (1);
 	return (0);
 }

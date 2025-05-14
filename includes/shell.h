@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/13 17:11:39 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/14 06:43:44 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,9 @@ int		input_validate(char **input, t_initenv *env);
 char	*input_preprocess(char **input);
 char	*remove_comments(char *input);
 int		check_expansion(char *input, t_initenv *env, int i);
+int		validation_for_onechar(char *input);
+int		validation_for_twochar(char *input);
+int		validation_for_threechar(char *input);
 
 /**
  * Tokenization

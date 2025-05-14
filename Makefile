@@ -37,6 +37,7 @@ SRCS = \
 	srcs/token2.c\
 	srcs/validate.c\
 	srcs/validate2.c\
+	srcs/validate3.c\
 	srcs/built_in.c\
 	srcs/envrn.c\
 	srcs/utils.c\
