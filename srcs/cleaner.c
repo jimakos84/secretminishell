@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:48:20 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/13 16:25:04 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/14 04:33:43 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ int	clear_array(char **array)
 		return (0);
 	while (array[i])
 	{
-		free(array[i]);
+		if (array[i])
+			free(array[i]);
 		array[i] = NULL;
 		i++;
 	}

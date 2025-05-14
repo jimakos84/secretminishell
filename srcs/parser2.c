@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:40 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/14 03:22:03 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/14 04:17:29 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,9 +142,13 @@ char	*copy_var_value(t_shell *mini, char *token, int *i)
 	while (token[*i] && ((ft_isalnum(token[*i]) || token[*i] == '_')))
 		(*i)++;
 	key = ft_strnmdup(token, start, *i);
-	value = extract_env_value(mini->initenv, key);
-	if (!value)
-		value = ft_strdup("");
+	value = ft_strdup(extract_env_value(mini->initenv, key));
+	if (!value || value[0] == '\0')
+	{
+		if (value)
+			free(value);
+		value = NULL;
+	}
 	free(key);
 	return (value);
 }
