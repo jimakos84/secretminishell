@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:47 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 12:13:49 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/14 04:29:10 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,14 @@ void	process_token_expansion(t_list *current, t_shell *mini)
 		return ;
 	old_token = current->token;
 	new_token = expand_token(old_token, mini);
-	if (!new_token)
+	if (!new_token || new_token[0] == '\0')
+	{
+		if (new_token)
+			free(new_token);
+		current->token = NULL;
+		free(old_token);
 		return ;
+	}
 	current->token = ft_strdup(new_token);
 	free(old_token);
 	free(new_token);

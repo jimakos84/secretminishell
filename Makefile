@@ -2,7 +2,7 @@ TARGET = minishell
 
 CMD = cc
 
-CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address,undefined
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address,undefined
 
 LDFLAGS = -lreadline
 
