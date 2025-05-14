@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:40 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/08 05:32:26 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/14 03:22:03 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,16 +174,16 @@ char	*expand_token(char *token, t_shell *mini)
 	{
 		if (token[i] == '$')
 		{
-			result = string_build(result, ft_strnmdup(token, start, i));
+			result = string_build2(result, ft_strnmdup(token, start, i));
 			i++;
 			value = copy_var_value(mini, token, &i);
-			result = string_build(result, value);
+			result = string_build2(result, value);
 			start = i;
 		}
 		else
 			i++;
 	}
 	if (token[start])
-		result = string_build(result, ft_strnmdup(token, start, i));
+		result = string_build2(result, ft_strnmdup(token, start, i));
 	return (result);
 }
