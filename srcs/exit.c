@@ -72,10 +72,17 @@ int	handle_too_many_args(t_shell *mini)
 {
 	if (mini->cmds->args[1] && mini->cmds->args[2])
 	{
+		if (!is_numerical(mini->cmds->args[1]))
+		{
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putendl_fd("numeric argument required", 2);
+			mini->initenv->last_status = 2;
+			exit_proccedure(mini);
+			return (1);
+		}
 		mini->initenv->last_status = 1;
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putendl_fd("too many arguments", 2);
-		exit_proccedure(mini);
 		return (1);
 	}
 	return (0);

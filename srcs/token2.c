@@ -67,8 +67,6 @@ void	expansion_preprocess(t_list *tokens)
 	current = tokens;
 	while (current)
 	{
-		if (!(check_if_quoted(tokens->token) && ft_strlen(tokens->token) == 2))
-			remove_quotes_inplace(current->token);
 		if (ft_strncmp(current->token, "<<", 2) == 0)
 		{
 			if (current->next)
@@ -77,4 +75,3 @@ void	expansion_preprocess(t_list *tokens)
 		current = current->next;
 	}
 }
-

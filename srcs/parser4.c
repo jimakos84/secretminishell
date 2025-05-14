@@ -103,9 +103,7 @@ char	*find_cmd(t_shell *mini, t_list *tokens)
 
 void	init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 {
-	printf("token:%s\n", tokens->token);
-	if (!(check_if_quoted(tokens->token) && ft_strlen(tokens->token) == 2))
-		remove_quotes_inplace(tokens->token);
+	remove_quotes_inplace(tokens->token);
 	cmd->cmd = ft_strdup(tokens->token);
 	if (!cmd->cmd)
 		return ;

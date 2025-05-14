@@ -41,3 +41,19 @@ char	**get_path_values(t_shell *mini)
 	free(value);
 	return (dirs);
 }
+
+bool	is_numerical(char *str)
+{
+	int		i;
+
+	i = 0;
+	if (!str)
+		return (false);
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}
