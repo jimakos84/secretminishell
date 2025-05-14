@@ -48,6 +48,7 @@ typedef struct s_list
 {
 	char			*token;
 	int				in_single_quotes;
+	int				prev_heredoc;
 	struct s_list	*next;
 }	t_list;
 
@@ -150,6 +151,8 @@ t_cmd	*set_cmd(t_list *token);
 char	*find_cmd(t_shell *mini, t_list *tokens);
 void	init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
 t_list	*process_redirections(t_cmd *cmd, t_list *tokens, int *i);
+void	expansion_preprocess(t_list *tokens);
+
 
 /**
  * Utility functions
@@ -208,7 +211,7 @@ bool	is_invalid_pipe_sequence(t_list *current);
  * Built in export
 */
 int		builtin_export(t_shell *mini);
-int		echo_error(char *msg);
+int		echo_error(char *msg, char *oldpwd);
 int		change_env_value(t_env *env, char *var);
 
 /**

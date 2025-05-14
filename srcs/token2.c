@@ -59,3 +59,22 @@ char	*handle_token(const char *input, int *index)
 	*index = i;
 	return (ft_substr(input, start, i - start));
 }
+
+void	expansion_preprocess(t_list *tokens)
+{
+	t_list	*current;
+
+	current = tokens;
+	while (current)
+	{
+		if (!(check_if_quoted(tokens->token) && ft_strlen(tokens->token) == 2))
+			remove_quotes_inplace(current->token);
+		if (ft_strncmp(current->token, "<<", 2) == 0)
+		{
+			if (current->next)
+				current->next->prev_heredoc = 1;
+		}
+		current = current->next;
+	}
+}
+

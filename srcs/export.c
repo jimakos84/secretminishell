@@ -15,7 +15,7 @@
 /*
 * Function declaration of helper fuctions
 */
-int	echo_error(char *msg);
+int	echo_error(char *msg, char *oldpwd);
 int	change_env_value(t_env *env, char *var);
 
 /*
@@ -93,13 +93,13 @@ static int	export_validity(char *var)
 	{
 		name_len = equal_sign - var;
 		if (!is_valid_identifier_len(var, name_len))
-			return (echo_error(" not a valid identifier"));
+			return (echo_error(" not a valid identifier", NULL));
 	}
 	else
 	{
 		name_len = ft_strlen(var);
 		if (!is_valid_identifier_len(var, name_len))
-			return (echo_error(" not a valid identifier"));
+			return (echo_error(" not a valid identifier", NULL));
 	}
 	return (0);
 }

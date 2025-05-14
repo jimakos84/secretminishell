@@ -90,6 +90,11 @@ void	add_to_list(t_env **env, char *content)
 
 void	list_env(t_env **env, char **envp)
 {
+	if (!*envp)
+	{
+		add_to_list(env, "SHLVL=1");
+		add_to_list(env, "_=/usr/bin/env");
+	}
 	while (envp && *envp)
 		add_to_list(env, *envp++);
 }
@@ -156,7 +161,7 @@ char	*extract_env_value(t_initenv *initenv, char *name)
 	temp = initenv->env;
 	while (temp)
 	{
-		if (ft_strncmp(name, temp->name, ft_strlen(temp->name)) == 0)
+		if (ft_strncmp(name, temp->name, ft_strlen(name)) == 0)
 		{
 			value = temp->value;
 			break ;

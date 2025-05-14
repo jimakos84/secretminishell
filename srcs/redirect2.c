@@ -163,10 +163,15 @@ int	handle_heredoc(t_redir *r, int fd)
 	pmpt = readline(">");
 	while (pmpt)
 	{
-		if (ft_strncmp(r->filename, pmpt, ft_strlen(pmpt)) == 0)
+		if (ft_strncmp(r->filename, pmpt, ft_strlen(r->filename)) == 0)
 		{
-			free(pmpt);
-			break ;
+			if (pmpt[0] == '\0')
+				continue ;
+			else
+			{	
+				free(pmpt);
+				break ;
+			}
 		}
 		write(fd, pmpt, ft_strlen(pmpt));
 		write(fd, "\n", 2);

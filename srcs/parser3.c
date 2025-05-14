@@ -155,7 +155,7 @@ void	handle_dollar(t_list *list, t_shell *mini)
 	while (current)
 	{
 		str = ft_strchr(current->token, '$');
-		if (str)
+		if (str && !current->prev_heredoc)
 			process_token_expansion(current, mini);
 		current = current->next;
 	}

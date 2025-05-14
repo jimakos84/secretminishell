@@ -55,6 +55,11 @@ int	activate_shell(char *input, t_initenv *env)
 	if (status)
 		return (free_mini_and_return(mini, status));
 	status = extract_tokens(&mini->tokens, input);
+	// while (mini->tokens)
+	// {
+	// 	printf("mini->tokens:%s\n", mini->tokens->token);
+	// 	mini->tokens = mini->tokens->next;
+	// }
 	if (status)
 		return (free_mini_and_return(mini, status));
 	status = parse_and_expand(mini);
