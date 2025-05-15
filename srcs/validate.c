@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/14 06:42:42 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/15 05:53:42 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,21 @@ int	input_validate(char **input, t_initenv *env)
 
 	trimmed = input_preprocess(input);
 	if (enclosed_in_quotes(trimmed))
-		return (syntax_error(trimmed, "'unclosed quotes'", 2));
+		return (syntax_error(trimmed, 2));
 	if (check_special_char(trimmed, SPECIALCHARS))
-		return (syntax_error(trimmed, "'newline'", 2));
+		return (syntax_error(trimmed, 2));
 	if (check_special_occurance(trimmed))
-		return (syntax_error(trimmed, "'newline'", 2));
+		return (syntax_error(trimmed, 2));
 	if (check_pipe_char(trimmed, '|'))
-		return (syntax_error(trimmed, "'|'", 2));
+		return (syntax_error(trimmed, 2));
 	if (check_syntax(trimmed, '>', env) == 2)
 		return (2);
 	if (check_syntax(trimmed, '>', env) == 1)
-		return (syntax_error(trimmed, "'newline'", 2));
+		return (syntax_error(trimmed, 2));
 	if (check_syntax(trimmed, '<', env) == 2)
 		return (2);
 	if (check_syntax(trimmed, '<', env) == 1)
-		return (syntax_error(trimmed, "'newline'", 2));
+		return (syntax_error(trimmed, 2));
 	free(trimmed);
 	return (0);
 }

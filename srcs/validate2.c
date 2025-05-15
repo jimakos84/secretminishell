@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:22:33 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/06 10:28:41 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/15 05:50:51 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 * Function declaration of helper fuctions
 */
 char	*input_preprocess(char **input);
-char	*remove_comments(char *input);
+void	remove_comments(char **input);
 
 /*
 * Removes shell-style comments from the input string.
@@ -31,20 +31,29 @@ char	*remove_comments(char *input);
 * - A newly allocated string with the comment (if any) removed.
 */
 
-char	*remove_comments(char *input)
+void	remove_comments(char **input)
 {
 	int		i;
+	char	*str;
+	char	*result;
 
-	if (!input)
-		return (NULL);
+	if (!input || !*input)
+		return ;
 	i = 0;
-	while (input[i])
+	str = *input;
+	while (str[i])
 	{
-		if (input[i] == '#' && !ft_isquoted(input, i))
+		if (str[i] == '#' && !ft_isquoted(str, i))
 			break ;
 		i++;
 	}
-	return (ft_strnmdup(input, 0, i));
+	result = (char *)malloc(i + 1);
+	if (!result)
+		return ;
+	ft_memcpy(result, str, i);
+	result[i] = '\0';
+	free(str);
+	*input = result;
 }
 
 /*
@@ -62,12 +71,9 @@ char	*remove_comments(char *input)
 
 char	*input_preprocess(char **input)
 {
-	char	*no_comments;
 	char	*trimmed;
 
-	no_comments = remove_comments(*input);
-	trimmed = ft_strtrim(no_comments, ISSPACE3);
-	free(no_comments);
+	trimmed = ft_strtrim(*input, ISSPACE3);
 	return (trimmed);
 }
 

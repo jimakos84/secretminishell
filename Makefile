@@ -48,7 +48,6 @@ SRCS = \
 	srcs/quote.c\
 	main.c\
 
-
 OBJS = $(SRCS:.c=.o)
 
 all : $(TARGET)
