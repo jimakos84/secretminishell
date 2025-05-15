@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/14 06:43:44 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/15 05:43:29 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ typedef struct s_shell
 */
 int		input_validate(char **input, t_initenv *env);
 char	*input_preprocess(char **input);
-char	*remove_comments(char *input);
+void	remove_comments(char **input);
 int		check_expansion(char *input, t_initenv *env, int i);
 int		validation_for_onechar(char *input);
 int		validation_for_twochar(char *input);
@@ -214,7 +214,7 @@ int		change_env_value(t_env *env, char *var);
 /**
  * Error handle in general
 */
-int		syntax_error(char *input, char *msg, int code);
+int		syntax_error(char *input, int code);
 void	check_stat(char *path);
 void	perror_exit(const char *msg);
 void	stat_error(char *path, char c);

@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:30:51 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/04 14:33:55 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/15 05:51:15 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ static void	init_shell(t_initenv *initenv)
 		return ;
 	}
 	add_history(input);
+	remove_comments(&input);
 	initenv->last_status = activate_shell(input, initenv);
 	free(input);
 }

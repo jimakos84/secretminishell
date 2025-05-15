@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:23:57 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/09 04:03:34 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/15 05:55:16 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 * Function declaration of helper fuctions
 */
-int		syntax_error(char *input, char *msg, int code);
+int		syntax_error(char *input, int code);
 void	check_stat(char *path);
 void	perror_exit(const char *msg);
 void	stat_error(char *path, char c);
@@ -35,15 +35,9 @@ void	p_exe_error(char *command, int err, t_initenv *initenv);
 * - The provided error code.
 */
 
-int	syntax_error(char *input, char *msg, int code)
+int	syntax_error(char *input, int code)
 {
-	char	*std_msg;
-	char	*final;
-
-	std_msg = "minishell: syntax error near unexpected token ";
-	final = ft_strjoin(std_msg, msg);
-	ft_putendl_fd(final, 2);
-	free(final);
+	ft_putendl_fd("minishell: syntax error !", 2);
 	free(input);
 	return (code);
 }
