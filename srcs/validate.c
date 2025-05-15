@@ -16,7 +16,7 @@
 * Function declaration of helper fuctions
 */
 static int	check_syntax(char *input, char redirect_char, t_initenv *env);
-static int	check_pipe_char(char *input, char redirect_char);
+static int	check_pipe_char(char *input, char redirect_char, t_initenv *env);
 static int	check_special_char(char *input, char *charset);
 static int	check_special_occurance(char *input);
 
@@ -45,7 +45,7 @@ int	input_validate(char **input, t_initenv *env)
 		return (syntax_error(trimmed, 2));
 	if (check_special_occurance(trimmed))
 		return (syntax_error(trimmed, 2));
-	if (check_pipe_char(trimmed, '|'))
+	if (check_pipe_char(trimmed, '|', env))
 		return (syntax_error(trimmed, 2));
 	if (check_syntax(trimmed, '>', env) == 2)
 		return (2);
@@ -114,7 +114,7 @@ static int	check_syntax(char *input, char redirect_char, t_initenv *env)
 * 1 if a syntax error is detected, 0 otherwise.
 */
 
-static int	check_pipe_char(char *input, char redirect_char)
+static int	check_pipe_char(char *input, char redirect_char, t_initenv *initenv)
 {
 	int	i;
 
@@ -131,7 +131,9 @@ static int	check_pipe_char(char *input, char redirect_char)
 			i++;
 			while (input[i] && ft_isspace(input[i]))
 				i++;
-			if (input[i] == redirect_char && !ft_isquoted(input, i))
+			if ((input[i] == redirect_char && !ft_isquoted(input, i))
+				|| (input[i] == '$' && !ft_isquoted(input, i)
+					&& check_expansion2(input, initenv, i)))
 				return (1);
 		}
 		else

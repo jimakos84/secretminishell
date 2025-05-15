@@ -37,7 +37,7 @@ void	remove_comments(char **input)
 	char	*str;
 	char	*result;
 
-	if (!input || !*input)
+	if (!input || !*input || !ft_strchr(*input, '#'))
 		return ;
 	i = 0;
 	str = *input;
@@ -103,5 +103,31 @@ int	check_expansion(char *input, t_initenv *env, int i)
 	ft_putstr_fd(var, 2);
 	ft_putendl_fd(": ambiguous redirect", 2);
 	free(input);
+	return (1);
+}
+
+int	check_expansion2(char *input, t_initenv *env, int i)
+{
+	char	var[1024];
+	int		j;
+	t_env	*envi;
+
+	envi = env->env;
+	j = 0;
+	i++;
+	while (input[i] && input[i] != ' ')
+		var[j++] = input[i++];
+	var[j] = '\0';
+	if (is_valid_identifier_len(var, j))
+	{
+		j = 0;
+		while (envi)
+		{
+			if (ft_strncmp(var, envi->name, ft_strlen(envi->name)) == 0)
+				return (0);
+			envi = envi->next;
+		}
+	}
+	ft_putendl_fd("minishell: empty variable between pipes", 2);
 	return (1);
 }

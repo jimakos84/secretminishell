@@ -12,6 +12,7 @@
 
 #include "../includes/shell.h"
 
+extern int	g_sig;
 /*
 * Function declaration of helper fuctions
 */

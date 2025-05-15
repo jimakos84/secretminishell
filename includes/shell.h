@@ -119,6 +119,7 @@ int		input_validate(char **input, t_initenv *env);
 char	*input_preprocess(char **input);
 void	remove_comments(char **input);
 int		check_expansion(char *input, t_initenv *env, int i);
+int		check_expansion2(char *input, t_initenv *env, int i);
 int		validation_for_onechar(char *input);
 int		validation_for_twochar(char *input);
 int		validation_for_threechar(char *input);
@@ -167,6 +168,7 @@ void	free_env(char **env);
 bool	builtin_cmd(char *cmd);
 bool	is_redir_or_pipe(char c);
 bool	is_numerical(char *str);
+int		ft_strcmp(const char *s1, const char *s2);
 
 /**
  * Quote Utility functions

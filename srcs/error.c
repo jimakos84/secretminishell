@@ -37,7 +37,7 @@ void	p_exe_error(char *command, int err, t_initenv *initenv);
 
 int	syntax_error(char *input, int code)
 {
-	ft_putendl_fd("minishell: syntax error !", 2);
+	ft_putendl_fd("minishell: syntax error near unexpected token", 2);
 	free(input);
 	return (code);
 }

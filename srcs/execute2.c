@@ -12,6 +12,7 @@
 
 #include "../includes/shell.h"
 
+extern int	g_sig;
 /*
 * Function declaration of helper fuctions
 */
@@ -79,7 +80,6 @@ pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index)
 		close_fds2(fd, limit);
 		pre_execute(mini, cmd);
 		execution(mini, cmd);
-		free_env(mini->initenv->copy_env);
 	}
 	return (pid);
 }

@@ -12,6 +12,8 @@
 
 #include "../includes/shell.h"
 
+extern int	g_sig;
+
 /*
  * Function declaration of helper fuctions
 */
@@ -29,6 +31,7 @@ void	handler(int sig);
 
 void	handler(int sig)
 {
+	g_sig = sig;
 	if (sig == SIGINT)
 	{
 		rl_replace_line("", 0);
@@ -44,7 +47,7 @@ void	handler(int sig)
 */
 
 void	init_sig(void)
-{
+{	
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
 }

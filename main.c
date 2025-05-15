@@ -100,7 +100,11 @@ static void	init_shell(t_initenv *initenv)
 
 	input = readline("minishell> ");
 	if (!input)
+	{
+		clear_env(initenv->env);
+		free(initenv);
 		exit (1);
+	}
 	if (ft_isempty(input))
 	{
 		free(input);
