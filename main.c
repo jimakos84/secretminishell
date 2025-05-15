@@ -44,21 +44,22 @@ int	main(int ac, char **av, char **envp)
 	t_initenv	*initenv;
 	int			status;
 
-	initenv = NULL;
-	initenv = malloc(sizeof(t_initenv));
-	if (!initenv)
-		return (1);
-	initenv->last_status = 0;
-	(void)av;
+	status = 0;
 	if (ac == 1)
 	{
+		initenv = NULL;
+		initenv = malloc(sizeof(t_initenv));
+		if (!initenv)
+			return (1);
+		initenv->last_status = 0;
+		(void)av;
 		init_sig();
 		init_env(&initenv, envp);
 		while (1)
 			init_shell(initenv);
+		status = initenv->last_status;
+		clear_env(initenv->env);
 	}
-	status = initenv->last_status;
-	clear_env(initenv->env);
 	return (status);
 }
 

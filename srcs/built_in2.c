@@ -18,7 +18,7 @@
 void	remove_env_nodes(t_shell *mini, char *unset);
 int		builtin_unset(t_shell *mini);
 int		builtin_env(t_shell *mini);
-int		builtin_pwd(void);
+int		builtin_pwd(t_initenv *env);
 
 /*
 * Removes a node from the environment list that matches the given variable name.
@@ -124,11 +124,13 @@ int	builtin_env(t_shell *mini)
 * - 0 on success.
 */
 
-int	builtin_pwd(void)
+int	builtin_pwd(t_initenv *env)
 {
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		pwd = ft_strdup(extract_env_value(env, "PWD"));
 	printf("%s\n", pwd);
 	free(pwd);
 	return (0);

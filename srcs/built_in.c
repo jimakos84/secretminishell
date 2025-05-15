@@ -37,12 +37,12 @@ void	updatewd(t_shell *mini, char *newpwd, char *oldpwd)
 	env = mini->initenv->env;
 	while (env)
 	{
-		if (ft_strncmp("PWD", env->name, 3) == 0)
+		if (ft_strncmp("PWD", env->name, 3) == 0 && newpwd)
 		{
 			free(env->value);
 			env->value = ft_strdup(newpwd);
 		}
-		if (ft_strncmp("OLDPWD", env->name, 6) == 0)
+		if (ft_strncmp("OLDPWD", env->name, 6) == 0 && oldpwd)
 		{
 			free(env->value);
 			env->value = ft_strdup(oldpwd);
@@ -92,6 +92,8 @@ int	try_change_dir(t_shell *mini, char *target, char *oldpwd)
 	if (chdir(target) != 0)
 		return (print_cd_error(target, oldpwd));
 	newpwd = getcwd(NULL, 0);
+	if (!newpwd)
+		perror("getcwd");
 	updatewd(mini, newpwd, oldpwd);
 	free(newpwd);
 	free(oldpwd);
@@ -122,9 +124,9 @@ int	builtin_cd(t_shell *mini)
 	home = extract_env_value(mini->initenv, "HOME");
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
-		return (1);
+		oldpwd = ft_strdup(extract_env_value(mini->initenv, "PWD"));
 	if (mini->cmds->args[1] && mini->cmds->args[2])
-		return (echo_error(" too many arguments"));
+		return (echo_error(" too many arguments", oldpwd));
 	if (!mini->cmds->args[1])
 	{
 		if (!home || !home[0])
@@ -167,7 +169,7 @@ int	check_builtin(t_cmd *current, t_shell *mini)
 		if (ft_strncmp("env", cmd, 4) == 0)
 			return (builtin_env(mini));
 		if (ft_strncmp("pwd", cmd, 4) == 0)
-			return (builtin_pwd());
+			return (builtin_pwd(mini->initenv));
 		if (ft_strncmp("exit", cmd, 5) == 0)
 			return (exit_mini(mini));
 		if (ft_strncmp("unset", cmd, 6) == 0)

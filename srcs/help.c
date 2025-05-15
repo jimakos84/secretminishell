@@ -71,6 +71,8 @@ bool	is_invalid_pipe_sequence(t_list *current)
 
 int	is_redirection_token(char *token)
 {
+	if (!token)
+		return (0);
 	if (ft_strncmp(token, ">", 2) == 0)
 		return (1);
 	if (ft_strncmp(token, ">>", 3) == 0)

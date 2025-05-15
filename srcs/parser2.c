@@ -101,7 +101,7 @@ char	*set_path_name(t_shell *mini, char *token)
 	{
 		temp = string_build(ft_strdup(path_dirs[i]), "/");
 		full_path = string_build(temp, token);
-		if (access(full_path, F_OK) == 0)
+		if (access(full_path, F_OK) == 0 && token[0] && token[0] != '.')
 		{
 			clear_path_dirs(path_dirs, i);
 			return (full_path);

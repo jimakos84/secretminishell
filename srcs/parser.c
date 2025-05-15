@@ -32,6 +32,7 @@ t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
 
 int	parse_and_expand(t_shell *mini)
 {
+	expansion_preprocess(mini->tokens);
 	handle_dollar(mini->tokens, mini);
 	parse_commands(mini, mini->tokens);
 	return (0);

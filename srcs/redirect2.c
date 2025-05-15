@@ -46,13 +46,14 @@ int	handle_output(t_redir *r, int fd)
 		ft_putendl_fd(" Permission denied", 2);
 		return (-1);
 	}
-	if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
+	if (dup2(fd, STDOUT_FILENO) < 0)
 	{
 		perror("Failed to redirect stdout");
 		if (fd >= 0)
 			close(fd);
 		return (-1);
 	}
+	close(fd);
 	return (0);
 }
 
@@ -83,13 +84,14 @@ int	handle_append(t_redir *r, int fd)
 		ft_putendl_fd(" Permission denied", 2);
 		return (-1);
 	}
-	if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
+	if (dup2(fd, STDOUT_FILENO) < 0)
 	{
 		perror("Failed to redirect stdout (append)");
 		if (fd >= 0)
 			close(fd);
 		return (-1);
 	}
+	close(fd);
 	return (0);
 }
 
@@ -121,13 +123,14 @@ int	handle_input(t_redir *r, int fd)
 		ft_putendl_fd("Permission denied", 2);
 		return (-1);
 	}
-	if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
+	if (dup2(fd, STDIN_FILENO) < 0)
 	{
 		perror("Failed to redirect stdin");
 		if (fd >= 0)
 			close(fd);
 		return (-1);
 	}
+	close(fd);
 	return (0);
 }
 
@@ -165,8 +168,13 @@ int	handle_heredoc(t_redir *r, int fd)
 	{
 		if (ft_strncmp(r->filename, pmpt, ft_strlen(pmpt)) == 0)
 		{
-			free(pmpt);
-			break ;
+			if (pmpt[0] == '\0')
+				continue ;
+			else
+			{	
+				free(pmpt);
+				break ;
+			}
 		}
 		write(fd, pmpt, ft_strlen(pmpt));
 		write(fd, "\n", 2);

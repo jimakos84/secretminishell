@@ -156,6 +156,8 @@ bool	contains_unquoted_char(char *str, char symbol)
 	i = 0;
 	in_single = false;
 	in_double = false;
+	if (!str)
+		return (false);
 	while (str[i])
 	{
 		if (str[i] == '\'' && !in_double)

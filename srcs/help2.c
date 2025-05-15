@@ -53,8 +53,10 @@ int	is_valid_identifier_len(const char *name, int len)
 * - Always returns 1.
 */
 
-int	echo_error(char *msg)
+int	echo_error(char *msg, char *oldpwd)
 {
+	if (oldpwd)
+		free(oldpwd);
 	ft_putendl_fd(msg, 2);
 	return (1);
 }

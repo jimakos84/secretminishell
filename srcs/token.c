@@ -102,6 +102,7 @@ t_list	*list_add_back(t_list *list, char *str)
 	node->next = NULL;
 	node->token = ft_strdup(str);
 	node->in_single_quotes = 0;
+	node->prev_heredoc = 0;
 	if (!list)
 		return (node);
 	current = list;

@@ -96,7 +96,7 @@ int	clear_tokens(t_list *tokens)
 	while (current)
 	{
 		next = current->next;
-		if (current->token && current->token[0] != '\0')
+		if (current->token)
 			free(current->token);
 		free(current);
 		current = next;
