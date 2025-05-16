@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:33:04 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 02:39:49 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 04:54:53 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,38 +149,13 @@ int	handle_input(t_redir *r, int fd)
 * - 0 on success.
 */
 
-static int	null_heredoc(char *filename)
-{
-	ft_putstr_fd("minishell: warning: here-document"
-		" delimited by end-of-file (wanted `", 2);
-	ft_putstr_fd(filename, 2);
-	ft_putendl_fd("')", 2);
-	return (0);
-}
-
 int	handle_heredoc(t_redir *r, int fd)
 {
 	char	*pmpt;
 
 	pmpt = NULL;
 	fd = open(CACHE, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	pmpt = readline(">");
-	if (!pmpt)
-		return (null_heredoc(r->filename));
-	while (pmpt || ft_isempty(pmpt))
-	{
-		if (ft_strcmp(r->filename, pmpt) == 0)
-		{
-			free(pmpt);
-			break ;
-		}
-		write(fd, pmpt, ft_strlen(pmpt));
-		write(fd, "\n", 2);
-		free(pmpt);
-		pmpt = readline(">");
-		if (!pmpt)
-			return (null_heredoc(r->filename));
-	}
+	heredoc_interaction(r, &fd, pmpt);
 	close(fd);
 	fd = open(CACHE, O_RDONLY);
 	dup2(fd, STDIN_FILENO);

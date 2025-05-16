@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:03:08 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 13:09:25 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 04:55:33 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	handler(int sig)
 */
 
 void	init_sig(void)
-{	
+{
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
 }

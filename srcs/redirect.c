@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:10:17 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 02:36:49 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 04:38:07 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,7 @@ int	close_fds(int fd[][2], int limit);
 int	handle_redirections(t_cmd *cmd)
 {
 	t_redir	*r;
-	int		fd;
 
-	fd = -1;
 	if (!cmd || !cmd->redir_list)
 		return (0);
 	r = cmd->redir_list;
@@ -46,16 +44,14 @@ int	handle_redirections(t_cmd *cmd)
 	{
 		if (check_filename(r))
 			return (-1);
-		if (r->type == OPRD_CMD && handle_output(r, fd) < 0)
+		if (r->type == OPRD_CMD && handle_output(r, -1) < 0)
 			return (-1);
-		else if (r->type == APRD_CMD && handle_append(r, fd) < 0)
+		else if (r->type == APRD_CMD && handle_append(r, -1) < 0)
 			return (-1);
-		else if (r->type == IPRD_CMD && handle_input(r, fd) < 0)
+		else if (r->type == IPRD_CMD && handle_input(r, -1) < 0)
 			return (-1);
-		else if (r->type == HDRD_CMD && handle_heredoc(r, fd) < 0)
+		else if (r->type == HDRD_CMD && handle_heredoc(r, -1) < 0)
 			return (-1);
-		if (fd >= 0)
-			close(fd);
 		r = r->next;
 	}
 	return (0);
