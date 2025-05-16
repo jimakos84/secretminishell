@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:28:10 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/09 03:12:40 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 05:14:39 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,5 @@ static void	configure_mini_shell(t_shell **mini, t_initenv *env)
 	(*mini)->cmds = NULL;
 	(*mini)->_stdin = -1;
 	(*mini)->_stdout = -1;
+	(*mini)->chache = set_cache_file_name();
 }

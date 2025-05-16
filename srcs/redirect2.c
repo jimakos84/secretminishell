@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:33:04 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 04:54:53 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 05:18:06 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 int	handle_output(t_redir *r, int fd);
 int	handle_append(t_redir *r, int fd);
 int	handle_input(t_redir *r, int fd);
-int	handle_heredoc(t_redir *r, int fd);
+int	handle_heredoc(t_shell *mini, t_redir *r, int fd);
 
 /*
 * Handles output redirection ('>').
@@ -149,15 +149,15 @@ int	handle_input(t_redir *r, int fd)
 * - 0 on success.
 */
 
-int	handle_heredoc(t_redir *r, int fd)
+int	handle_heredoc(t_shell *mini, t_redir *r, int fd)
 {
 	char	*pmpt;
 
 	pmpt = NULL;
-	fd = open(CACHE, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	fd = open(mini->chache, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	heredoc_interaction(r, &fd, pmpt);
 	close(fd);
-	fd = open(CACHE, O_RDONLY);
+	fd = open(mini->chache, O_RDONLY);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	return (0);

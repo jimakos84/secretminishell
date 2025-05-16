@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:48:20 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/14 04:33:43 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 05:23:20 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	clear_and_exit(t_shell *mini)
 	clear_tokens(mini->tokens);
 	if (mini->cmds)
 		clear_commands(mini->cmds);
+	free(mini->chache);
 	free(mini);
 	return (0);
 }
