@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/15 05:43:29 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 03:45:42 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,7 @@ int		handle_output(t_redir *r, int fd);
 int		handle_append(t_redir *r, int fd);
 int		handle_input(t_redir *r, int fd);
 int		handle_heredoc(t_redir *r, int fd);
+int		heredoc_interaction(t_redir *r, int *fd, char *pmpt);
 
 /**
  * Helper functions
