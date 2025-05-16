@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 05:20:15 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 06:16:49 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <signal.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <errno.h>
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -28,7 +29,6 @@
 # include "../ft_libft/libft.h"
 # include "../ft_libft/ft_printf.h"
 # include "../ft_libft/get_next_line.h"
-# include <errno.h>
 
 # define SMPL_CMD 1 // For simple command
 # define OPRD_CMD 2 // For output redirect command ">"
@@ -36,7 +36,6 @@
 # define IPRD_CMD 4 // For input redirect command "<"
 # define HDRD_CMD 5 // For input heredoc redirect command "<<"
 
-# define CACHE "cache.txt"
 # define ISSPACE3 " \f\n\r\t\v"
 # define SPECIALCHARS "()[]{}&;\\"
 
@@ -78,6 +77,7 @@ typedef struct s_initenv
 typedef struct s_redir
 {
 	int				type;
+	int				was_quoted;
 	char			*filename;
 	struct s_redir	*next;
 }	t_redir;
@@ -196,7 +196,7 @@ int		handle_output(t_redir *r, int fd);
 int		handle_append(t_redir *r, int fd);
 int		handle_input(t_redir *r, int fd);
 int		handle_heredoc(t_shell *mini, t_redir *r, int fd);
-int		heredoc_interaction(t_redir *r, int *fd, char *pmpt);
+int		heredoc_interaction(t_shell *mini, t_redir *r, int *fd, char *pmpt);
 char	*set_cache_file_name(void);
 
 /**

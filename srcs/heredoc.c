@@ -6,11 +6,28 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 05:24:34 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 06:31:12 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
+
+char	*expand_pmpt(t_shell *mini, char *pmpt, t_redir *r)
+{
+	char	*expanded;
+
+	if (ft_strchr(pmpt, '$') && !r->was_quoted)
+	{
+		expanded = expand_token(pmpt, mini);
+		free(pmpt);
+	}
+	else
+	{
+		expanded = ft_strdup(pmpt);
+		free(pmpt);
+	}
+	return (expanded);
+}
 
 static int	null_heredoc(char *filename)
 {
@@ -21,7 +38,7 @@ static int	null_heredoc(char *filename)
 	return (0);
 }
 
-int	heredoc_interaction(t_redir *r, int *fd, char *pmpt)
+int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd, char *pmpt)
 {
 	pmpt = readline(">");
 	if (!pmpt)
@@ -33,6 +50,7 @@ int	heredoc_interaction(t_redir *r, int *fd, char *pmpt)
 			free(pmpt);
 			break ;
 		}
+		pmpt = expand_pmpt(mini, pmpt, r);
 		write(*fd, pmpt, ft_strlen(pmpt));
 		write(*fd, "\n", 1);
 		free(pmpt);

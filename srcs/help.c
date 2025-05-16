@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 11:13:11 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/09 03:11:07 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 06:38:29 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,10 @@ t_redir	*create_redir_node(int type, const char *filename)
 	if (!new)
 		return (NULL);
 	new->type = type;
+	if (ft_strchr(filename, '\'') || ft_strchr(filename, '"'))
+		new->was_quoted = 1;
+	else
+		new->was_quoted = 0;
 	new->filename = ft_strdup(filename);
 	remove_quotes_inplace(new->filename);
 	new->next = NULL;
