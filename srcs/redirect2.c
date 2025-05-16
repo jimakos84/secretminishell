@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:33:04 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 05:18:06 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 05:59:10 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int	handle_heredoc(t_shell *mini, t_redir *r, int fd)
 
 	pmpt = NULL;
 	fd = open(mini->chache, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	heredoc_interaction(r, &fd, pmpt);
+	heredoc_interaction(mini, r, &fd, pmpt);
 	close(fd);
 	fd = open(mini->chache, O_RDONLY);
 	dup2(fd, STDIN_FILENO);
