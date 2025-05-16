@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 03:45:42 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 05:20:15 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_shell
 	int			status;
 	int			_stdin;
 	int			_stdout;
+	char		*chache;
 }	t_shell;
 
 /**
@@ -188,14 +189,15 @@ void	handler(int sig);
 /**
  * Redirect handle functions
 */
-int		handle_redirections(t_cmd *current);
+int		handle_redirections(t_shell *mini, t_cmd *current);
 int		check_filename(t_redir *r);
 int		close_fds(int fd[][2], int limit);
 int		handle_output(t_redir *r, int fd);
 int		handle_append(t_redir *r, int fd);
 int		handle_input(t_redir *r, int fd);
-int		handle_heredoc(t_redir *r, int fd);
+int		handle_heredoc(t_shell *mini, t_redir *r, int fd);
 int		heredoc_interaction(t_redir *r, int *fd, char *pmpt);
+char	*set_cache_file_name(void);
 
 /**
  * Helper functions
@@ -286,7 +288,7 @@ int		**alloc_fds(int limit);
 int		init_pipes(int **fd, int limit);
 int		execute(t_shell *mini);
 int		handle_builtin(t_shell *mini, t_cmd *current);
-int		wait_for_children(int count, t_initenv *initenv, pid_t	*pids);
+int		wait_for_children(t_shell *mini, int n, t_initenv *env, pid_t *pids);
 int		execution(t_shell *mini, t_cmd *cmd);
 pid_t	*run_commands(t_shell *mini, t_cmd *current, int **fd, int *index);
 pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index);

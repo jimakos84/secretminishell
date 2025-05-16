@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 07:03:51 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/10 07:08:57 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 05:16:00 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	close_fds2(int **fd, int limit)
 
 void	pre_execute(t_shell *mini, t_cmd *cmd)
 {
-	if (handle_redirections(cmd) == -1)
+	if (handle_redirections(mini, cmd) == -1)
 		exit(1);
 	if (cmd->is_builtin)
 		exit(check_builtin(cmd, mini));

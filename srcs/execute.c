@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/16 04:09:43 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/16 05:22:20 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		execute(t_shell *mini);
 int		**alloc_fds(int limit);
 int		init_pipes(int **fd, int limit);
 int		handle_builtin(t_shell *mini, t_cmd *current);
-int		wait_for_children(int count, t_initenv *initenv, pid_t	*pids);
+int		wait_for_children(t_shell *mini, int n, t_initenv *env, pid_t *pids);
 
 /*
 * Main execution function for the shell.
@@ -59,7 +59,7 @@ int	execute(t_shell *mini)
 	if (!pids)
 		return (0);
 	close_fds2(fd, limit - 1);
-	wait_for_children(index, mini->initenv, pids);
+	wait_for_children(mini, index, mini->initenv, pids);
 	free_fds(fd, limit - 1);
 	free(pids);
 	return (mini->initenv->last_status);
@@ -148,7 +148,7 @@ int	handle_builtin(t_shell *mini, t_cmd *current)
 	mini->_stdout = saved_stdout;
 	if (saved_stdin == -1 || saved_stdout == -1)
 		perror_exit("dup failed");
-	if (handle_redirections(current) == -1)
+	if (handle_redirections(mini, current) == -1)
 	{
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
@@ -178,7 +178,7 @@ int	handle_builtin(t_shell *mini, t_cmd *current)
 * - Exit status of the last command.
 */
 
-int	wait_for_children(int count, t_initenv *initenv, pid_t	*pids)
+int	wait_for_children(t_shell *mini, int n, t_initenv *env, pid_t *pids)
 {
 	int	i;
 	int	status;
@@ -186,14 +186,14 @@ int	wait_for_children(int count, t_initenv *initenv, pid_t	*pids)
 
 	i = 0;
 	last_exit_status = 0;
-	while (i < count)
+	while (i < n)
 	{
 		if (waitpid(pids[i], &status, 0) == -1)
 		{
 			perror("waitpid failed");
 			continue ;
 		}
-		if (i == count - 1)
+		if (i == n - 1)
 		{
 			if (WIFEXITED(status))
 				last_exit_status = WEXITSTATUS(status);
@@ -202,7 +202,7 @@ int	wait_for_children(int count, t_initenv *initenv, pid_t	*pids)
 		}
 		i++;
 	}
-	unlink(CACHE);
-	initenv->last_status = last_exit_status;
+	unlink(mini->chache);
+	env->last_status = last_exit_status;
 	return (last_exit_status);
 }
