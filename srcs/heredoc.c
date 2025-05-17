@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/17 02:40:52 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 04:47:27 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ static int	null_heredoc(char *filename)
 	return (0);
 }
 
-int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd, char *pmpt)
+int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd)
 {
+	char	*pmpt;
+
 	pmpt = readline(">");
 	if (!pmpt)
 		return (null_heredoc(r->filename));
@@ -59,4 +61,44 @@ int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd, char *pmpt)
 			return (null_heredoc(r->filename));
 	}
 	return (0);
+}
+
+void	execute_heredoc(t_shell *mini, t_redir *r, int fd)
+{
+	char	*cache;
+
+	cache = set_cache_file_name();
+	fd = open(cache, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (fd < 0)
+	{
+		perror("open");
+		return ;
+	}
+	heredoc_interaction(mini, r, &fd);
+	close(fd);
+	free(r->filename);
+	r->filename = ft_strdup(cache);
+	free(cache);
+}
+
+void	preprocessing_heredocs(t_shell *mini)
+{
+	t_cmd	*current;
+	t_redir	*node;
+
+	current = mini->cmds;
+	while (current)
+	{
+		if (current->redir_list)
+		{
+			node = current->redir_list;
+			while (node)
+			{
+				if (node->type == 5)
+					execute_heredoc(mini, node, -1);
+				node = node->next;
+			}
+		}
+		current = current->next;
+	}
 }
