@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:10:17 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 05:16:42 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 04:53:49 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	close_fds(int fd[][2], int limit);
 * - 0 on success, -1 if an error occurs.
 */
 
-int	handle_redirections(t_shell *mini, t_cmd *cmd)
+int	handle_redirections(t_cmd *cmd)
 {
 	t_redir	*r;
 
@@ -50,7 +50,7 @@ int	handle_redirections(t_shell *mini, t_cmd *cmd)
 			return (-1);
 		else if (r->type == IPRD_CMD && handle_input(r, -1) < 0)
 			return (-1);
-		else if (r->type == HDRD_CMD && handle_heredoc(mini, r, -1) < 0)
+		else if (r->type == HDRD_CMD && handle_heredoc(r, -1) < 0)
 			return (-1);
 		r = r->next;
 	}

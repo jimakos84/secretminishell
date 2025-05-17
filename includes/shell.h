@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/17 02:48:11 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 04:59:32 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,15 +192,17 @@ void	handler(int sig);
 /**
  * Redirect handle functions
 */
-int		handle_redirections(t_shell *mini, t_cmd *current);
+int		handle_redirections(t_cmd *current);
 int		check_filename(t_redir *r);
 int		close_fds(int fd[][2], int limit);
 int		handle_output(t_redir *r, int fd);
 int		handle_append(t_redir *r, int fd);
 int		handle_input(t_redir *r, int fd);
-int		handle_heredoc(t_shell *mini, t_redir *r, int fd);
-int		heredoc_interaction(t_shell *mini, t_redir *r, int *fd, char *pmpt);
+int		handle_heredoc(t_redir *r, int fd);
+int		heredoc_interaction(t_shell *mini, t_redir *r, int *fd);
 char	*set_cache_file_name(void);
+void	execute_heredoc(t_shell *mini, t_redir *r, int fd);
+void	preprocessing_heredocs(t_shell *mini);
 
 /**
  * Helper functions

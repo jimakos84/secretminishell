@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/17 02:43:50 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 04:55:49 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ int	handle_builtin(t_shell *mini, t_cmd *current)
 	mini->_stdout = saved_stdout;
 	if (saved_stdin == -1 || saved_stdout == -1)
 		perror_exit("dup failed");
-	if (handle_redirections(mini, current) == -1)
+	if (handle_redirections(current) == -1)
 	{
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
