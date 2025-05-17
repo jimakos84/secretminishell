@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 06:16:49 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 02:48:11 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ typedef struct s_shell
 	int			status;
 	int			_stdin;
 	int			_stdout;
-	char		*chache;
 }	t_shell;
 
 /**
@@ -170,6 +169,10 @@ bool	builtin_cmd(char *cmd);
 bool	is_redir_or_pipe(char c);
 bool	is_numerical(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
+int		ft_getpid(void);
+int		ft_rand(void);
+char	*random_filename(void);
+char	*set_cache_file_name(void);
 
 /**
  * Quote Utility functions
@@ -288,7 +291,7 @@ int		**alloc_fds(int limit);
 int		init_pipes(int **fd, int limit);
 int		execute(t_shell *mini);
 int		handle_builtin(t_shell *mini, t_cmd *current);
-int		wait_for_children(t_shell *mini, int n, t_initenv *env, pid_t *pids);
+int		wait_for_children(int n, t_initenv *env, pid_t *pids);
 int		execution(t_shell *mini, t_cmd *cmd);
 pid_t	*run_commands(t_shell *mini, t_cmd *current, int **fd, int *index);
 pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index);

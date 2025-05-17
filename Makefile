@@ -43,6 +43,7 @@ SRCS = \
 	srcs/envrn.c\
 	srcs/utils.c\
 	srcs/utils2.c\
+	srcs/utils3.c\
 	srcs/built_in2.c\
 	srcs/redirect.c\
 	srcs/redirect2.c\
