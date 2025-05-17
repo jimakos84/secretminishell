@@ -203,6 +203,7 @@ int		heredoc_interaction(t_shell *mini, t_redir *r, int *fd);
 char	*set_cache_file_name(void);
 void	execute_heredoc(t_shell *mini, t_redir *r, int fd);
 void	preprocessing_heredocs(t_shell *mini);
+int		check_heredoc_no_cmd(t_shell *mini, int last_exit_status);
 
 /**
  * Helper functions
@@ -293,7 +294,7 @@ int		**alloc_fds(int limit);
 int		init_pipes(int **fd, int limit);
 int		execute(t_shell *mini);
 int		handle_builtin(t_shell *mini, t_cmd *current);
-int		wait_for_children(int n, t_initenv *env, pid_t *pids);
+int		wait_for_children(int n, t_shell *mini, pid_t *pids);
 int		execution(t_shell *mini, t_cmd *cmd);
 pid_t	*run_commands(t_shell *mini, t_cmd *current, int **fd, int *index);
 pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index);

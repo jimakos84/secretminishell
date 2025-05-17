@@ -67,3 +67,19 @@ int	ft_strcmp(const char *s1, const char *s2)
 	}
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
+
+int	check_heredoc_no_cmd(t_shell *mini, int last_exit_status)
+{
+	if (mini)
+	{
+		if (mini->cmds)
+		{
+			if (!mini->cmds->command && mini->cmds->redir_list
+				&& mini->cmds->redir_list->type == 5)
+				return (0);
+			else
+				return (last_exit_status);
+		}
+	}
+	return (0);
+}

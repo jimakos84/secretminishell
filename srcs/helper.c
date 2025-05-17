@@ -12,6 +12,7 @@
 
 #include "../includes/shell.h"
 
+extern int	g_sig;
 /*
  * Function declaration of helper fuctions
  */
@@ -38,8 +39,22 @@ static void	configure_mini_shell(t_shell **mini, t_initenv *env);
  */
 static int	free_mini_and_return(t_shell *mini, int status)
 {
+	if(mini->initenv->last_status == 139)
+	{
+		ft_putstr_fd("☠️ minishell: segmentation fault (CORE DUMPED)☠️  ", 2);
+		ft_putendl_fd(mini->cmds->command, 2);
+	}
 	clear_and_exit(mini);
 	return (status);
+}
+
+static void	check_sigint(t_initenv *initenv)
+{
+	if (g_sig == SIGINT)
+	{
+		initenv->last_status = 130;
+		g_sig = 0;
+	}
 }
 
 int	activate_shell(char *input, t_initenv *env)
@@ -50,6 +65,7 @@ int	activate_shell(char *input, t_initenv *env)
 	mini = malloc(sizeof(t_shell));
 	if (!mini)
 		return (1);
+	check_sigint(env);
 	configure_mini_shell(&mini, env);
 	status = input_validate(&input, env);
 	if (status)
