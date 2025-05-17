@@ -103,7 +103,7 @@ static void	init_shell(t_initenv *initenv)
 	{
 		clear_env(initenv->env);
 		free(initenv);
-		exit (1);
+		exit (0);
 	}
 	if (ft_isempty(input))
 	{
