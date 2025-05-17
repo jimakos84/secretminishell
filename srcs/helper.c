@@ -39,7 +39,7 @@ static void	configure_mini_shell(t_shell **mini, t_initenv *env);
  */
 static int	free_mini_and_return(t_shell *mini, int status)
 {
-	if(mini->initenv->last_status == 139)
+	if (mini->initenv->last_status == 139)
 	{
 		ft_putstr_fd("☠️ minishell: segmentation fault (CORE DUMPED)☠️  ", 2);
 		ft_putendl_fd(mini->cmds->command, 2);
