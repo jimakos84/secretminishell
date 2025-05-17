@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:33:04 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 05:59:10 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 02:47:29 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,13 +152,22 @@ int	handle_input(t_redir *r, int fd)
 int	handle_heredoc(t_shell *mini, t_redir *r, int fd)
 {
 	char	*pmpt;
+	char	*cache;
 
+	cache = set_cache_file_name();
 	pmpt = NULL;
-	fd = open(mini->chache, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	fd = open(cache, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (fd < 0)
+	{
+		perror("open");
+		return (-1);
+	}
 	heredoc_interaction(mini, r, &fd, pmpt);
 	close(fd);
-	fd = open(mini->chache, O_RDONLY);
+	fd = open(cache, O_RDONLY);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
+	unlink(cache);
+	free(cache);
 	return (0);
 }

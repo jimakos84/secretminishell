@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:31 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 12:14:41 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 01:55:50 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*extract_value(t_shell *mini, char *token, int *index)
 	if (token && token[*index] == '$')
 	{
 		(*index)++;
-		value = ft_itoa(getpid());
+		value = ft_itoa(ft_getpid());
 		return (value);
 	}
 	if (!token[*index] || token[*index] == '"' || token[*index] == ' ')

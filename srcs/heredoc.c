@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 06:31:12 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 02:40:52 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,4 @@ int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd, char *pmpt)
 			return (null_heredoc(r->filename));
 	}
 	return (0);
-}
-
-char	*set_cache_file_name(void)
-{
-	char	*name;
-
-	name = string_build2(ft_itoa(getpid()), ft_strdup(".dts.cache"));
-	if (!name)
-		return (NULL);
-	return (name);
 }

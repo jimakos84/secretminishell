@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/16 05:22:20 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/17 02:43:50 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		execute(t_shell *mini);
 int		**alloc_fds(int limit);
 int		init_pipes(int **fd, int limit);
 int		handle_builtin(t_shell *mini, t_cmd *current);
-int		wait_for_children(t_shell *mini, int n, t_initenv *env, pid_t *pids);
+int		wait_for_children(int n, t_initenv *env, pid_t *pids);
 
 /*
 * Main execution function for the shell.
@@ -59,7 +59,7 @@ int	execute(t_shell *mini)
 	if (!pids)
 		return (0);
 	close_fds2(fd, limit - 1);
-	wait_for_children(mini, index, mini->initenv, pids);
+	wait_for_children(index, mini->initenv, pids);
 	free_fds(fd, limit - 1);
 	free(pids);
 	return (mini->initenv->last_status);
@@ -178,7 +178,7 @@ int	handle_builtin(t_shell *mini, t_cmd *current)
 * - Exit status of the last command.
 */
 
-int	wait_for_children(t_shell *mini, int n, t_initenv *env, pid_t *pids)
+int	wait_for_children(int n, t_initenv *env, pid_t *pids)
 {
 	int	i;
 	int	status;
@@ -202,7 +202,6 @@ int	wait_for_children(t_shell *mini, int n, t_initenv *env, pid_t *pids)
 		}
 		i++;
 	}
-	unlink(mini->chache);
 	env->last_status = last_exit_status;
 	return (last_exit_status);
 }
