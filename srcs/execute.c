@@ -20,7 +20,7 @@ int		execute(t_shell *mini);
 int		**alloc_fds(int limit);
 int		init_pipes(int **fd, int limit);
 int		handle_builtin(t_shell *mini, t_cmd *current);
-int		wait_for_children(int n, t_initenv *env, pid_t *pids);
+int		wait_for_children(int n, t_shell *mini, pid_t *pids);
 
 /*
 * Main execution function for the shell.
@@ -59,7 +59,7 @@ int	execute(t_shell *mini)
 	if (!pids)
 		return (0);
 	close_fds2(fd, limit - 1);
-	wait_for_children(index, mini->initenv, pids);
+	wait_for_children(index, mini, pids);
 	free_fds(fd, limit - 1);
 	free(pids);
 	return (mini->initenv->last_status);
@@ -178,7 +178,7 @@ int	handle_builtin(t_shell *mini, t_cmd *current)
 * - Exit status of the last command.
 */
 
-int	wait_for_children(int n, t_initenv *env, pid_t *pids)
+int	wait_for_children(int n, t_shell *mini, pid_t *pids)
 {
 	int	i;
 	int	status;
@@ -202,6 +202,7 @@ int	wait_for_children(int n, t_initenv *env, pid_t *pids)
 		}
 		i++;
 	}
-	env->last_status = last_exit_status;
+	last_exit_status = check_heredoc_no_cmd(mini, last_exit_status);
+	mini->initenv->last_status = last_exit_status;
 	return (last_exit_status);
 }
