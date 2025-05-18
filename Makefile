@@ -29,6 +29,7 @@ SRCS = \
 	srcs/help3.c\
 	srcs/helper.c\
 	srcs/heredoc.c\
+	srcs/heredoc2.c\
 	srcs/parser.c\
 	srcs/parser2.c\
 	srcs/parser3.c\

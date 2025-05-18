@@ -6,13 +6,13 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/18 15:14:11 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 15:37:21 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-extern	int	g_sig;
+extern int	g_sig;
 
 char	*expand_pmpt(t_shell *mini, char *pmpt, t_redir *r)
 {
@@ -63,7 +63,7 @@ int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd)
 		write(*fd, "\n", 1);
 		free(pmpt);
 	}
-	return(0);
+	return (0);
 }
 
 int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
@@ -75,46 +75,16 @@ int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 	cache = set_cache_file_name();
 	fd = open(cache, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd < 0)
-	{
-		perror("open");
-		return (-1);
-	}
+		return (perror("open"), -1);
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork");
-		close(fd);
-		return (-1);
-	}
+		return (perror("fork"), close(fd), -1);
 	else if (pid == 0)
-	{
-		init_sig_heredoc();
-		status = heredoc_interaction(mini, r, &fd);
-		close(fd);
-		exit(status);
-	}
+		handle_child_process(mini, r, fd);
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	signal(SIGINT, SIG_DFL);
-	if (WIFSIGNALED(status))
-	{
-		close(fd);
-		unlink(cache);
-		free(cache);
-		return (130);
-	}
-	if (WEXITSTATUS(status) != 0)
-	{
-		close(fd);
-		unlink(cache);
-		free(cache);
-		return (WEXITSTATUS(status));
-	}
-	close(fd);
-	free(r->filename);
-	r->filename = ft_strdup(cache);
-	free(cache);
-	return (0);
+	return (handle_heredoc_status(status, cache, fd, r));
 }
 
 int	preprocessing_heredocs(t_shell *mini)
