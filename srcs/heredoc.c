@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/17 04:47:27 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 11:42:52 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd)
 	return (0);
 }
 
-void	execute_heredoc(t_shell *mini, t_redir *r, int fd)
+int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 {
 	char	*cache;
 
@@ -72,20 +72,23 @@ void	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 	if (fd < 0)
 	{
 		perror("open");
-		return ;
+		return (-1);
 	}
 	heredoc_interaction(mini, r, &fd);
 	close(fd);
 	free(r->filename);
 	r->filename = ft_strdup(cache);
 	free(cache);
+	return (0);
 }
 
-void	preprocessing_heredocs(t_shell *mini)
+int	preprocessing_heredocs(t_shell *mini)
 {
 	t_cmd	*current;
 	t_redir	*node;
+	int		status;
 
+	status = 0;
 	current = mini->cmds;
 	while (current)
 	{
@@ -95,10 +98,15 @@ void	preprocessing_heredocs(t_shell *mini)
 			while (node)
 			{
 				if (node->type == 5)
-					execute_heredoc(mini, node, -1);
+				{
+					status = execute_heredoc(mini, node, -1);
+					if (status)
+						return (status);
+				}
 				node = node->next;
 			}
 		}
 		current = current->next;
 	}
+	return (0);
 }

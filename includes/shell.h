@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/17 04:59:32 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 11:34:26 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,8 +201,8 @@ int		handle_input(t_redir *r, int fd);
 int		handle_heredoc(t_redir *r, int fd);
 int		heredoc_interaction(t_shell *mini, t_redir *r, int *fd);
 char	*set_cache_file_name(void);
-void	execute_heredoc(t_shell *mini, t_redir *r, int fd);
-void	preprocessing_heredocs(t_shell *mini);
+int		execute_heredoc(t_shell *mini, t_redir *r, int fd);
+int		preprocessing_heredocs(t_shell *mini);
 int		check_heredoc_no_cmd(t_shell *mini, int last_exit_status);
 
 /**
