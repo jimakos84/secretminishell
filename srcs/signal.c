@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:03:08 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/16 04:55:33 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 15:15:06 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,34 @@ void	handler(int sig)
 * Sets a custom handler for SIGINT (interrupt signal).
 */
 
+
+void	handler_heredoc(int sig, siginfo_t *info, void *context)
+{
+	(void)context;
+	g_sig = sig;
+	if (sig == SIGINT)
+	{
+		rl_replace_line("", 0);
+		printf("\n");
+		kill(info->si_pid, SIGINT);
+		exit(130);
+	}
+}
+
 void	init_sig(void)
 {
 	signal(SIGINT, handler);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	init_sig_heredoc(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_sigaction = handler_heredoc;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_SIGINFO | SA_RESTART;
+	sigaction(SIGINT, &sa, NULL);
+	//signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
 }

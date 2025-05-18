@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/17 04:55:49 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 12:52:43 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,13 +186,11 @@ int	wait_for_children(int n, t_shell *mini, pid_t *pids)
 
 	i = 0;
 	last_exit_status = 0;
+	signal(SIGINT, SIG_IGN);
 	while (i < n)
 	{
 		if (waitpid(pids[i], &status, 0) == -1)
-		{
-			perror("waitpid failed");
 			continue ;
-		}
 		if (i == n - 1)
 		{
 			if (WIFEXITED(status))
@@ -202,6 +200,7 @@ int	wait_for_children(int n, t_shell *mini, pid_t *pids)
 		}
 		i++;
 	}
+	signal(SIGINT, handler);
 	last_exit_status = check_heredoc_no_cmd(mini, last_exit_status);
 	mini->initenv->last_status = last_exit_status;
 	return (last_exit_status);

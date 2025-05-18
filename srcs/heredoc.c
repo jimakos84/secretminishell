@@ -6,11 +6,13 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/18 11:42:52 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 15:14:11 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
+
+extern	int	g_sig;
 
 char	*expand_pmpt(t_shell *mini, char *pmpt, t_redir *r)
 {
@@ -42,11 +44,15 @@ int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd)
 {
 	char	*pmpt;
 
-	pmpt = readline(">");
-	if (!pmpt)
-		return (null_heredoc(r->filename));
-	while (pmpt || ft_isempty(pmpt))
+	while (true)
 	{
+		pmpt = readline(">");
+		if (!pmpt)
+		{
+			close(*fd);
+			unlink(r->filename);
+			return (null_heredoc(r->filename));
+		}
 		if (ft_strcmp(r->filename, pmpt) == 0)
 		{
 			free(pmpt);
@@ -56,15 +62,14 @@ int	heredoc_interaction(t_shell *mini, t_redir *r, int *fd)
 		write(*fd, pmpt, ft_strlen(pmpt));
 		write(*fd, "\n", 1);
 		free(pmpt);
-		pmpt = readline(">");
-		if (!pmpt)
-			return (null_heredoc(r->filename));
 	}
-	return (0);
+	return(0);
 }
 
 int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 {
+	pid_t	pid;
+	int		status;
 	char	*cache;
 
 	cache = set_cache_file_name();
@@ -74,7 +79,37 @@ int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 		perror("open");
 		return (-1);
 	}
-	heredoc_interaction(mini, r, &fd);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		close(fd);
+		return (-1);
+	}
+	else if (pid == 0)
+	{
+		init_sig_heredoc();
+		status = heredoc_interaction(mini, r, &fd);
+		close(fd);
+		exit(status);
+	}
+	signal(SIGINT, SIG_IGN);
+	waitpid(pid, &status, 0);
+	signal(SIGINT, SIG_DFL);
+	if (WIFSIGNALED(status))
+	{
+		close(fd);
+		unlink(cache);
+		free(cache);
+		return (130);
+	}
+	if (WEXITSTATUS(status) != 0)
+	{
+		close(fd);
+		unlink(cache);
+		free(cache);
+		return (WEXITSTATUS(status));
+	}
 	close(fd);
 	free(r->filename);
 	r->filename = ft_strdup(cache);
