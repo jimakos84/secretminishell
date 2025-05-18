@@ -16,7 +16,7 @@ extern int	g_sig;
 /*
  * Function declaration of helper fuctions
  */
-static void	configure_mini_shell(t_shell **mini, t_initenv *env);
+static t_shell	*configure_mini_shell(t_initenv *env);
 
 /*
  * Handles the main logic of processing a single shell input command.
@@ -59,14 +59,11 @@ static void	check_sigint(t_initenv *initenv)
 
 int	activate_shell(char *input, t_initenv *env)
 {
-	t_shell	*mini;
 	int		status;
+	t_shell	*mini;
 
-	mini = malloc(sizeof(t_shell));
-	if (!mini)
-		return (1);
 	check_sigint(env);
-	configure_mini_shell(&mini, env);
+	mini = configure_mini_shell(env);
 	status = input_validate(&input, env);
 	if (status)
 		return (free_mini_and_return(mini, status));
@@ -96,14 +93,20 @@ int	activate_shell(char *input, t_initenv *env)
  * - env: A pointer to the initialized environment structure to link with
  * the shell.
  */
-static void	configure_mini_shell(t_shell **mini, t_initenv *env)
+static t_shell	*configure_mini_shell(t_initenv *env)
 {
-	(*mini)->num_cmds = 0;
-	(*mini)->tokens = NULL;
-	(*mini)->cmds = NULL;
-	(*mini)->initenv = env;
-	(*mini)->status = 0;
-	(*mini)->cmds = NULL;
-	(*mini)->_stdin = -1;
-	(*mini)->_stdout = -1;
+	t_shell	*mini;
+
+	mini = malloc(sizeof(t_shell));
+	if (!mini)
+		return (NULL);
+	mini->num_cmds = 0;
+	mini->tokens = NULL;
+	mini->cmds = NULL;
+	mini->initenv = env;
+	mini->status = 0;
+	mini->cmds = NULL;
+	mini->_stdin = -1;
+	mini->_stdout = -1;
+	return (mini);
 }
