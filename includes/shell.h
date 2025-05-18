@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/18 11:34:26 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 15:07:42 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,8 @@ bool	contains_unquoted_char(char *str, char symbol);
 */
 void	init_sig(void);
 void	handler(int sig);
+void	init_sig_heredoc(void);
+void	handler_heredoc(int sig, siginfo_t *info, void *context);
 
 /**
  * Redirect handle functions
