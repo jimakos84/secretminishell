@@ -35,7 +35,7 @@ void	handler(int sig)
 	if (sig == SIGINT)
 	{
 		rl_replace_line("", 0);
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
 	}
@@ -48,13 +48,13 @@ void	handler(int sig)
 
 void	handler_heredoc(int sig, siginfo_t *info, void *context)
 {
+	(void)info;
 	(void)context;
 	g_sig = sig;
 	if (sig == SIGINT)
 	{
 		rl_replace_line("", 0);
 		printf("\n");
-		kill(info->si_pid, SIGINT);
 		exit(130);
 	}
 }

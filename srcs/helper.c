@@ -44,6 +44,7 @@ static int	free_mini_and_return(t_shell *mini, int status)
 		ft_putstr_fd("☠️ minishell: segmentation fault (CORE DUMPED)☠️  ", 2);
 		ft_putendl_fd(mini->cmds->command, 2);
 	}
+	init_sig();
 	clear_and_exit(mini);
 	return (status);
 }
@@ -108,5 +109,6 @@ static t_shell	*configure_mini_shell(t_initenv *env)
 	mini->cmds = NULL;
 	mini->_stdin = -1;
 	mini->_stdout = -1;
+	mini->pids = NULL;
 	return (mini);
 }

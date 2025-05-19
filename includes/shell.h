@@ -110,6 +110,7 @@ typedef struct s_shell
 	int			status;
 	int			_stdin;
 	int			_stdout;
+	pid_t		*pids;
 }	t_shell;
 
 /**
@@ -233,9 +234,9 @@ int		change_env_value(t_env *env, char *var);
  * Error handle in general
 */
 int		syntax_error(char *input, int code);
-void	check_stat(char *path);
+void	check_stat(char *path, t_shell *mini, int **fd);
 void	perror_exit(const char *msg);
-void	stat_error(char *path, char c);
+void	stat_error(char *path, char c, t_shell *mini, int **fd);
 void	p_exe_error(char *command, int err, t_initenv *initenv);
 
 /**
@@ -293,7 +294,7 @@ void	exit_proccedure(t_shell *mini);
 */
 void	free_fds(int **fd, int count);
 void	close_fds2(int **fd, int limit);
-void	pre_execute(t_shell *mini, t_cmd *cmd);
+void	pre_execute(t_shell *mini, t_cmd *cmd, int **fd);
 int		**alloc_fds(int limit);
 int		init_pipes(int **fd, int limit);
 int		execute(t_shell *mini);

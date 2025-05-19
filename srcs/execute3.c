@@ -17,7 +17,7 @@
 */
 void	free_fds(int **fd, int count);
 void	close_fds2(int **fd, int limit);
-void	pre_execute(t_shell *mini, t_cmd *cmd);
+void	pre_execute(t_shell *mini, t_cmd *cmd, int **fd);
 
 /*
 * Frees a dynamically allocated array of pipe file descriptors.
@@ -71,13 +71,20 @@ void	close_fds2(int **fd, int limit)
 * - cmd: The command to prepare.
 */
 
-void	pre_execute(t_shell *mini, t_cmd *cmd)
+void	pre_execute(t_shell *mini, t_cmd *cmd, int **fd)
 {
 	if (handle_redirections(cmd) == -1)
+	{	
+		free_fds(fd, mini->num_cmds - 1);
+		free(mini->pids);
+		clear_env(mini->initenv->env);
+		free(mini->initenv);
+		clear_and_exit(mini);
 		exit(1);
+	}
 	if (cmd->is_builtin)
 		exit(check_builtin(cmd, mini));
-	check_stat(cmd->command);
+	check_stat(cmd->command, mini, fd);
 	mini->initenv->copy_env = copy_env(mini->initenv->env);
 	if (!cmd->command)
 	{

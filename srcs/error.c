@@ -16,9 +16,9 @@
 * Function declaration of helper fuctions
 */
 int		syntax_error(char *input, int code);
-void	check_stat(char *path);
+void	check_stat(char *path, t_shell *mini, int **fd);
 void	perror_exit(const char *msg);
-void	stat_error(char *path, char c);
+void	stat_error(char *path, char c, t_shell *mini, int **fd);
 void	p_exe_error(char *command, int err, t_initenv *initenv);
 
 /*
@@ -53,7 +53,7 @@ int	syntax_error(char *input, int code)
 * - path: The file path to check.
 */
 
-void	check_stat(char *path)
+void	check_stat(char *path, t_shell *mini, int **fd)
 {
 	struct stat	sb;
 
@@ -66,12 +66,17 @@ void	check_stat(char *path)
 			ft_putendl_fd(": command not found", 2);
 		else
 			ft_putendl_fd(": No such file or directory", 2);
+		free(mini->pids);
+		free_fds(fd, mini->num_cmds - 1);
+		clear_env(mini->initenv->env);
+		free(mini->initenv);
+		clear_and_exit(mini);
 		exit(127);
 	}
 	else if (S_ISDIR(sb.st_mode))
-		stat_error(path, 's');
+		stat_error(path, 's', mini, fd);
 	else if (access(path, X_OK) == -1)
-		stat_error(path, 'a');
+		stat_error(path, 'a', mini, fd);
 }
 
 /*
@@ -100,12 +105,17 @@ void	perror_exit(const char *msg)
 * - c: The error type ('s' or 'a').
 */
 
-void	stat_error(char *path, char c)
+void	stat_error(char *path, char c, t_shell *mini, int **fd)
 {
 	ft_putstr_fd(path, 2);
 	if (!ft_strchr(path, '/'))
 	{
 		ft_putendl_fd(": command not found", 2);
+		free_fds(fd, mini->num_cmds - 1);
+		free(mini->pids);
+		clear_env(mini->initenv->env);
+		free(mini->initenv);
+		clear_and_exit(mini);
 		exit (127);
 	}
 	else
@@ -114,6 +124,11 @@ void	stat_error(char *path, char c)
 			ft_putendl_fd(": Is a directory", 2);
 		if (c == 'a')
 			ft_putendl_fd(": Permission denied", 2);
+		free(mini->pids);
+		free_fds(fd, mini->num_cmds - 1);
+		clear_env(mini->initenv->env);
+		free(mini->initenv);
+		clear_and_exit(mini);
 		exit(126);
 	}
 }

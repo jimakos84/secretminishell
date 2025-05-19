@@ -78,8 +78,9 @@ pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index)
 		if (index < limit && (dup2(fd[index][1], STDOUT_FILENO) == -1))
 			perror_exit("dup2 stdout");
 		close_fds2(fd, limit);
-		pre_execute(mini, cmd);
+		pre_execute(mini, cmd, fd);
 		execution(mini, cmd);
+		clear_and_exit(mini);
 	}
 	return (pid);
 }
@@ -107,6 +108,7 @@ pid_t	*run_commands(t_shell *mini, t_cmd *current, int **fd, int *index)
 	pids = malloc(sizeof(pid_t) * (mini->num_cmds));
 	if (!pids)
 		return (NULL);
+	mini->pids = pids;
 	while (current)
 	{
 		pid = execute_command(mini, current, fd, i);
