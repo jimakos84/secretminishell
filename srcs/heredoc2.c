@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 15:35:42 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/20 05:49:57 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/20 05:53:08 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,10 @@ int	handle_heredoc_status(int status, char *cache, int fd, t_redir *r)
 	{
 		close(fd);
 		unlink(cache);
-		free(r->filename);
-		r->filename = ft_strdup(cache);
 		free(cache);
 		return (130);
 	}
 	close(fd);
-	unlink(cache);
 	free(r->filename);
 	r->filename = ft_strdup(cache);
 	free(cache);
