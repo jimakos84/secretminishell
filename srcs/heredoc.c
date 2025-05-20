@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/18 15:37:21 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/20 05:15:26 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 	int		status;
 	char	*cache;
 
+	status = 0;
 	cache = set_cache_file_name();
 	fd = open(cache, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd < 0)

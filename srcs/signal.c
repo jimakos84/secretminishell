@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:03:08 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/18 15:31:02 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/20 05:25:18 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	handler_heredoc(int sig, siginfo_t *info, void *context)
 {
 	(void)info;
 	(void)context;
-	g_sig = sig;
+	g_sig = SIGINT;
 	if (sig == SIGINT)
 	{
 		rl_replace_line("", 0);
