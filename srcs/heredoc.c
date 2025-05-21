@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/20 05:15:26 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 15:37:21 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ char	*expand_pmpt(t_shell *mini, char *pmpt, t_redir *r)
 
 static int	null_heredoc(char *filename)
 {
+	if (g_sig == SIGINT)
+		return (130);
 	ft_putstr_fd("minishell: warning: here-document"
 		" delimited by end-of-file (wanted `", 2);
 	ft_putstr_fd(filename, 2);
@@ -72,7 +74,6 @@ int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 	int		status;
 	char	*cache;
 
-	status = 0;
 	cache = set_cache_file_name();
 	fd = open(cache, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd < 0)
@@ -81,7 +82,7 @@ int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 	if (pid == -1)
 		return (perror("fork"), close(fd), -1);
 	else if (pid == 0)
-		handle_child_process(mini, r, fd);
+		handle_child_process(mini, r, fd, cache);
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	signal(SIGINT, SIG_DFL);

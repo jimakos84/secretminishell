@@ -1,9 +1,20 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/05/20 14:21:48 by dvlachos          #+#    #+#              #
+#    Updated: 2025/05/20 14:22:03 by dvlachos         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 TARGET = minishell
 
 CMD = cc
 
 CFLAGS = -Wall -Wextra -Werror -g 
-#-fsanitize=address,undefined
 
 LDFLAGS = -lreadline
 

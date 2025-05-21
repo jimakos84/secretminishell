@@ -213,5 +213,7 @@ static int	check_special_occurance(char *input)
 	if (len == 3)
 		if (validation_for_threechar(input))
 			return (1);
+	if (input[len - 1] == '|')
+		return (1);
 	return (0);
 }

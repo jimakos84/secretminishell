@@ -104,9 +104,12 @@ int	builtin_env(t_shell *mini)
 	{
 		while (temp)
 		{
-			printf("%s", temp->name);
-			printf("=");
-			printf("%s\n", temp->value);
+			if (temp->value && temp->value[0])
+			{
+				printf("%s", temp->name);
+				printf("=");
+				printf("%s\n", temp->value);
+			}
 			temp = temp->next;
 		}
 		return (0);

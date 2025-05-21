@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/20 05:15:12 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 15:38:39 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,8 +207,9 @@ char	*set_cache_file_name(void);
 int		execute_heredoc(t_shell *mini, t_redir *r, int fd);
 int		preprocessing_heredocs(t_shell *mini);
 int		check_heredoc_no_cmd(t_shell *mini, int last_exit_status);
-int		handle_child_process(t_shell *mini, t_redir *r, int fd);
+int		handle_child_process(t_shell *mini, t_redir *r, int fd, char *cache);
 int		handle_heredoc_status(int status, char *cache, int fd, t_redir *r);
+void	heredoc_cleaner(t_shell *mini);
 
 /**
  * Helper functions

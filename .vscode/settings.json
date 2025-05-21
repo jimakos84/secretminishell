@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "shell.h": "c",
-        "chrono": "c",
-        "variant": "c"
-    }
-}

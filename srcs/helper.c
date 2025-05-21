@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:28:10 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/20 03:07:42 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/18 11:31:26 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ static int	free_mini_and_return(t_shell *mini, int status)
 		ft_putendl_fd(mini->cmds->command, 2);
 	}
 	init_sig();
+	if (mini->cmds && !mini->cmds->cmd && mini->cmds->redir_list
+		&& mini->cmds->redir_list->type == 5)
+		unlink(mini->cmds->redir_list->filename);
 	clear_and_exit(mini);
 	return (status);
 }
@@ -75,7 +78,7 @@ int	activate_shell(char *input, t_initenv *env)
 	if (status)
 		return (free_mini_and_return(mini, status));
 	status = preprocessing_heredocs(mini);
-	if (status)
+	if (status || !mini->cmds->cmd)
 		return (free_mini_and_return(mini, status));
 	status = execute(mini);
 	if (status)

@@ -47,10 +47,15 @@ int	builtin_echo(t_cmd *cmd)
 	}
 	else
 	{
-		while (ft_strncmp(args[i], "-n", 2) == 0)
+		while (args[i] && ft_strncmp(args[i], "-n", 2) == 0)
 		{
 			set_n = 1;
 			i++;
+		}
+		if (!args[i])
+		{
+			write(1, "\n", 1);
+			return (0);
 		}
 		print_args(args, &i);
 		if (!set_n)
