@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:18:12 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/14 04:35:00 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/21 16:07:16 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int	check_builtin(t_cmd *current, t_shell *mini)
 			return (builtin_unset(mini));
 		if (ft_strncmp("export", cmd, 7) == 0)
 			return (builtin_export(mini));
-		if (ft_strncmp("echo", cmd, 4) == 0)
+		if (ft_strcmp("echo", cmd) == 0)
 			return (builtin_echo(current));
 		else
 			return (0);
