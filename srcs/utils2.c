@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:28:06 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 11:04:50 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/21 16:07:36 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ bool	builtin_cmd(char *cmd)
 	builtins[7] = NULL;
 	while (builtins[i])
 	{
-		if (ft_strncmp(cmd, builtins[i], ft_strlen(builtins[i])) == 0)
+		if (ft_strcmp(cmd, builtins[i]) == 0)
 			return (true);
 		i++;
 	}
