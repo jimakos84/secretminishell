@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:28:10 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/18 11:31:26 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/22 03:50:46 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,6 @@ static int	free_mini_and_return(t_shell *mini, int status)
 		ft_putendl_fd(mini->cmds->command, 2);
 	}
 	init_sig();
-	if (mini->cmds && !mini->cmds->cmd && mini->cmds->redir_list
-		&& mini->cmds->redir_list->type == 5)
-		unlink(mini->cmds->redir_list->filename);
 	clear_and_exit(mini);
 	return (status);
 }

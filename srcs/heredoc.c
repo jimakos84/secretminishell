@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:37:52 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/18 15:37:21 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/22 03:52:20 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ int	execute_heredoc(t_shell *mini, t_redir *r, int fd)
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	signal(SIGINT, SIG_DFL);
+	if (!mini->cmds->cmd)
+		unlink(cache);
 	return (handle_heredoc_status(status, cache, fd, r));
 }
 
