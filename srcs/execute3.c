@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 07:03:51 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 06:24:07 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/24 07:17:35 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,12 @@ void	pre_execute(t_shell *mini, t_cmd *cmd, int **fd)
 	mini->initenv->copy_env = copy_env(mini->initenv->env);
 	if (!cmd->command)
 	{
-		free_env(mini->initenv->copy_env);
+		free_fds(fd, mini->num_cmds - 1);
+		free(mini->pids);
+		clear_array(mini->initenv->copy_env);
+		clear_env(mini->initenv->env);
+		free(mini->initenv);
+		clear_and_exit(mini);
 		exit (1);
 	}
 }
