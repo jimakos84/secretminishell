@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:21:01 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/14 03:41:43 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/24 06:34:58 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ char	*extract_env_value(t_initenv *initenv, char *name)
 	temp = initenv->env;
 	while (temp)
 	{
-		if (ft_strncmp(name, temp->name, ft_strlen(name)) == 0)
+		if (ft_strcmp(name, temp->name) == 0)
 		{
 			value = temp->value;
 			break ;

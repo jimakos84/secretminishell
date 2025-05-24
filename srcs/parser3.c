@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:47 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/14 04:29:10 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/23 04:39:40 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 */
 int		count_args(t_list *tokens);
 int		ft_is_in_single(const char *str, int n);
-void	parse_commands(t_shell *mini, t_list *tokens);
 void	process_token_expansion(t_list *current, t_shell *mini);
 void	handle_dollar(t_list *list, t_shell *mini);
 
@@ -75,37 +74,7 @@ int	ft_is_in_single(const char *str, int n)
 	return (in_single);
 }
 
-/*
-* Parses the list of tokens into command structures and links them.
-*
-* Parameters:
-* - mini: Pointer to shell context.
-* - tokens: The list of input tokens.
-*/
 
-void	parse_commands(t_shell *mini, t_list *tokens)
-{
-	t_list	*current;
-	t_cmd	*cmd;
-
-	current = tokens;
-	while (current)
-	{
-		if (current->token == NULL || current->token[0] == '\0')
-		{
-			current = current->next;
-			continue ;
-		}
-		cmd = set_cmd(current);
-		if (!cmd)
-			return ;
-		current = fill_args_and_cmd(cmd, current, mini);
-		mini->cmds = list_add_command(mini->cmds, cmd);
-		mini->num_cmds++;
-		if (current && contains_unquoted_char(current->token, '|'))
-			current = current->next;
-	}
-}
 
 /*
 * Expands a single token in the list if it is not within single quotes.

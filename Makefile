@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dvlachos <dvlachos@student.hive.fi>        +#+  +:+       +#+         #
+#    By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/20 14:21:48 by dvlachos          #+#    #+#              #
-#    Updated: 2025/05/20 14:22:03 by dvlachos         ###   ########.fr        #
+#    Updated: 2025/05/23 05:17:45 by tsomacha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ TARGET = minishell
 
 CMD = cc
 
-CFLAGS = -Wall -Wextra -Werror -g 
+CFLAGS = -Wall -Wextra -Werror -g
 
 LDFLAGS = -lreadline
 
@@ -46,6 +46,7 @@ SRCS = \
 	srcs/parser2.c\
 	srcs/parser3.c\
 	srcs/parser4.c\
+	srcs/parser5.c\
 	srcs/signal.c\
 	srcs/token.c\
 	srcs/token2.c\
@@ -62,6 +63,7 @@ SRCS = \
 	srcs/redirect2.c\
 	srcs/quote.c\
 	main.c\
+	tools.c\
 
 OBJS = $(SRCS:.c=.o)
 

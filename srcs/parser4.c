@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:55 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/07 12:13:58 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/24 05:44:44 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,29 +101,29 @@ char	*find_cmd(t_shell *mini, t_list *tokens)
 	return (cmd);
 }
 
-void	init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
+t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 {
-	remove_quotes_inplace(tokens->token);
-	cmd->cmd = ft_strdup(tokens->token);
+	t_list	*current;
+
+	current = tokens;
+	if (!current)
+		return (current);
+	if (cmd && cmd->cmd && ft_strcmp(cmd->cmd , "rd") == 0)
+	{
+		free(cmd->cmd);
+		cmd->cmd = NULL;
+	}
+	remove_quotes_inplace(current->token);
+	cmd->cmd = ft_strdup(current->token);
 	if (!cmd->cmd)
-		return ;
+		return (current);
 	if (builtin_cmd(cmd->cmd))
 		cmd->is_builtin = 1;
 	else
 		cmd->command = set_path_name(mini, cmd->cmd);
 	cmd->args[(*i)++] = ft_strdup(cmd->cmd);
-}
-
-t_list	*process_redirections(t_cmd *cmd, t_list *tokens, int *i)
-{
-	t_list	*current;
-
-	current = tokens;
-	while (current && is_redirection_token(current->token))
-	{
-		current = handle_arg_or_redirection(cmd, current, i);
-		if (!current)
-			break ;
-	}
+	current = current->next;
 	return (current);
 }
+
+
