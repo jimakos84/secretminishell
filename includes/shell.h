@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/18 15:38:39 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/24 03:51:37 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	handle_dollar(t_list *list, t_shell *mini);
 int		set_type(char *token);
 t_cmd	*set_cmd(t_list *token);
 char	*find_cmd(t_shell *mini, t_list *tokens);
-void	init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
+t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
 t_list	*process_redirections(t_cmd *cmd, t_list *tokens, int *i);
 void	expansion_preprocess(t_list *tokens);
 
@@ -309,4 +309,8 @@ int		activate_shell(char *input, t_initenv *env);
 int		ft_isquoted(const char *str, int n);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
 
+
+int print_cmd(t_cmd *cmd);
+int print_token(t_list *token);
+int print_all(t_shell *mini);
 #endif

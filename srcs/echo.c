@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 17:37:14 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/09 06:50:31 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/24 05:03:04 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	builtin_echo(t_cmd *cmd)
 	args = cmd->args;
 	if (!args[i])
 	{
-		write(1, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 		return (0);
 	}
 	else
@@ -54,12 +54,12 @@ int	builtin_echo(t_cmd *cmd)
 		}
 		if (!args[i])
 		{
-			write(1, "\n", 1);
+			write(STDOUT_FILENO, "\n", 1);
 			return (0);
 		}
 		print_args(args, &i);
 		if (!set_n)
-			write(1, "\n", 1);
+			write(STDOUT_FILENO, "\n", 1);
 	}
 	return (0);
 }

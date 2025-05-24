@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:28:10 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/22 03:50:46 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/24 06:26:49 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,15 @@ int	activate_shell(char *input, t_initenv *env)
 	status = parse_and_expand(mini);
 	if (status)
 		return (free_mini_and_return(mini, status));
+	//print_all(mini);
+	//return (0);
 	status = preprocessing_heredocs(mini);
-	if (status || !mini->cmds->cmd)
+	if (status)
 		return (free_mini_and_return(mini, status));
 	status = execute(mini);
 	if (status)
 		return (free_mini_and_return(mini, status));
+	//print_all(mini);
 	status = clear_and_exit(mini);
 	if (status)
 		return (status);
