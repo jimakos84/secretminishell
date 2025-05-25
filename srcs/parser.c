@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:31 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 04:24:09 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 16:13:30 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,42 @@ int	parse_and_expand(t_shell *mini)
 	handle_dollar(mini->tokens, mini);
 	parse_commands(mini, mini->tokens);
 	return (0);
+}
+
+/**
+ * Parses a list of tokens to build command structures for execution
+ * Iterates through the token list, skipping empty tokens
+ * For each segment between pipes, creates and fills a command structure
+ * Adds valid commands to the shell's command list and increments command count
+ * Moves to the next segment if a pipe token is found
+ */
+void	parse_commands(t_shell *mini, t_list *tokens)
+{
+	t_list	*current;
+	t_cmd	*cmd;
+
+	current = tokens;
+	if (current && !current->token)
+		current = current->next;
+	while (current)
+	{
+		cmd = set_cmd(tokens);
+		while (current)
+		{
+			if (check_for_pipe_token(current))
+				break ;
+			if (current && !current->token)
+				current = current->next;
+			current = fill_args_and_cmd(cmd, current, mini);
+		}
+		if (cmd && cmd->cmd)
+		{
+			mini->cmds = list_add_command(mini->cmds, cmd);
+			mini->num_cmds++;
+		}
+		if (check_for_pipe_token(current))
+			current = current->next;
+	}
 }
 
 /*

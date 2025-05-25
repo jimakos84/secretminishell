@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:30:51 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/18 15:10:12 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 13:00:08 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ int	main(int ac, char **av, char **envp)
 		initenv = NULL;
 		initenv = malloc(sizeof(t_initenv));
 		if (!initenv)
-			return (1);
+		{
+			perror("initenv fails!");
+			return (status);
+		}
 		initenv->last_status = 0;
 		(void)av;
 		init_sig();
@@ -82,6 +85,15 @@ void	init_env(t_initenv **initenv, char **envp)
 	list_env(&(*initenv)->env, envp);
 }
 
+static void	check_sigint(t_initenv *initenv)
+{
+	if (g_sig == SIGINT)
+	{
+		initenv->last_status = 130;
+		g_sig = 0;
+	}
+}
+
 /*
 * Initializes a single iteration of the shell input loop.
 * - Displays the "minishell> " prompt and reads user input.
@@ -110,6 +122,7 @@ static void	init_shell(t_initenv *initenv)
 		free(input);
 		return ;
 	}
+	check_sigint(initenv);
 	add_history(input);
 	remove_comments(&input);
 	initenv->last_status = activate_shell(input, initenv);

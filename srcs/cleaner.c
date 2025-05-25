@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:48:20 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 05:56:27 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 14:08:24 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	clear_and_exit(t_shell *mini)
 {
 	if (mini->cmds)
 		clear_commands(mini->cmds);
-	if(mini->tokens)
+	if (mini->tokens)
 		clear_tokens(mini->tokens);
 	mini->initenv = NULL;
 	free(mini);

@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 04:38:15 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 06:27:48 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 16:14:34 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,6 @@ void	parse_commands(t_shell *mini, t_list *tokens);
 t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
 t_list	*fill_remaining_args(t_cmd *cmd, t_list *tokens, int *i);
 
-/*
-* Parses the list of tokens into command structures and links them.
-*
-* Parameters:
-* - mini: Pointer to shell context.
-* - tokens: The list of input tokens.
-*/
-
 int	check_for_pipe_token(t_list *node)
 {
 	if (node)
@@ -40,34 +32,6 @@ int	check_for_pipe_token(t_list *node)
 		return (0);
 	}
 	return (0);
-}
-
-void	parse_commands(t_shell *mini, t_list *tokens)
-{
-	t_list	*current;
-	t_cmd	*cmd;
-
-	current = tokens;
-	while (current)
-	{
-		cmd = set_cmd(tokens);
-		while(current)
-		{
-			if (check_for_pipe_token(current))
-				break ;
-			if (current && !current->token)
-				current = current->next;
-			current = fill_args_and_cmd(cmd, current, mini);
-		}
-		if (cmd && cmd->cmd)
-		{
-			mini->cmds = list_add_command(mini->cmds, cmd);
-			mini->num_cmds++;
-			cmd = NULL;
-		}
-		if (check_for_pipe_token(current))
-			current = current->next;
-	}
 }
 
 t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
@@ -103,27 +67,23 @@ t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
  * Returns:
  * - The next token node to process.
  */
+t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
+{
+	int		type;
+	t_redir	*redir;
 
- t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i)
- {
-	 int		type;
-	 t_redir	*redir;
-
-	 if (is_redirection_token(current->token))
-	 {
-		 if (!current->next)
-			 return (current);
-		 type = set_type(current->token);
-		 current = current->next;
-		 if (current->token[0])
-			 redir = create_redir_node(type, current->token);
-		 else
-			 return (NULL);
-		 add_redir(&cmd->redir_list, redir);
-		 current = current->next;
-	 }
-	 else
-	 {
+	if (is_redirection_token(current->token))
+	{
+		if (!current->next)
+			return (current);
+		type = set_type(current->token);
+		current = current->next;
+		redir = create_redir_node(type, current->token);
+		add_redir(&cmd->redir_list, redir);
+		current = current->next;
+	}
+	else
+	{
 		if (current && current->token)
 		{
 			cmd->args[*i] = ft_strdup(current->token);
@@ -131,11 +91,11 @@ t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
 			(*i)++;
 		}
 		current = current->next;
-	 }
-	 return (current);
- }
+	}
+	return (current);
+}
 
- /*
+/*
  * Fills command arguments and sets command path or builtin flags.
  *
  * Parameters:
@@ -145,7 +105,7 @@ t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
  *
  * Returns:
  * - The token node following the end of the current command.
- */
+*/
 
 t_list	*fill_remaining_args(t_cmd *cmd, t_list *tokens, int *i)
 {

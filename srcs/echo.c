@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 17:37:14 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/24 05:03:04 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 14:54:57 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 * Function declaration of helper fuctions
 */
 void	print_args(char **args, int *index);
+int		proper_flag(char *str);
 
 /*
 * Implements the `echo` built-in command.
@@ -40,22 +41,17 @@ int	builtin_echo(t_cmd *cmd)
 	i = 1;
 	set_n = 0;
 	args = cmd->args;
-	if (!args[i])
+	if (cmd->num_args == 0)
 	{
 		write(STDOUT_FILENO, "\n", 1);
 		return (0);
 	}
 	else
 	{
-		while (args[i] && ft_strncmp(args[i], "-n", 2) == 0)
+		while (args[i] && proper_flag(args[i]))
 		{
 			set_n = 1;
 			i++;
-		}
-		if (!args[i])
-		{
-			write(STDOUT_FILENO, "\n", 1);
-			return (0);
 		}
 		print_args(args, &i);
 		if (!set_n)
@@ -85,4 +81,21 @@ void	print_args(char **args, int *index)
 		if (args[i])
 			write(1, " ", 1);
 	}
+}
+
+int	proper_flag(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str && str[i] == '-')
+	{
+		i++;
+		while (str && str[i] == 'n')
+			i++;
+		if (str[i] == '\0')
+			return (1);
+		return (0);
+	}
+	return (0);
 }

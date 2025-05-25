@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:55 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 05:44:44 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 14:09:45 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 	current = tokens;
 	if (!current)
 		return (current);
-	if (cmd && cmd->cmd && ft_strcmp(cmd->cmd , "rd") == 0)
+	if (cmd && cmd->cmd && ft_strcmp(cmd->cmd, "rd") == 0)
 	{
 		free(cmd->cmd);
 		cmd->cmd = NULL;
@@ -125,5 +125,3 @@ t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 	current = current->next;
 	return (current);
 }
-
-
