@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:11:59 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 02:33:51 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 13:18:04 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,15 @@ t_list	*list_add_back(t_list *list, char *str)
 
 	node = malloc(sizeof(t_list));
 	if (!node)
+	{
+		perror("node initializing fails !");
 		return (NULL);
+	}
+	if (!str)
+	{
+		free(node);
+		return (NULL);
+	}
 	node->next = NULL;
 	node->token = ft_strdup(str);
 	node->in_single_quotes = 0;

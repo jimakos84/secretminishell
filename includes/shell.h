@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 03:51:37 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 16:23:36 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,13 +117,13 @@ typedef struct s_shell
  * Validation
 */
 int		input_validate(char **input, t_initenv *env);
-char	*input_preprocess(char **input);
-void	remove_comments(char **input);
 int		check_expansion(char *input, t_initenv *env, int i);
 int		check_expansion2(char *input, t_initenv *env, int i);
 int		validation_for_onechar(char *input);
 int		validation_for_twochar(char *input);
 int		validation_for_threechar(char *input);
+char	*input_preprocess(char **input);
+void	remove_comments(char **input);
 
 /**
  * Tokenization
@@ -134,26 +134,27 @@ char	*handle_token(const char *input, int *index);
 /**
  * Parsing and expanding
 */
+int		set_type(char *token);
+int		check_for_pipe_token(t_list *node);
 int		parse_and_expand(t_shell *mini);
+int		count_args(t_list *tokens);
+int		ft_is_in_single(const char *str, int n);
 char	*extract_value(t_shell *mini, char *token, int *index);
-t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i);
-t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
-t_cmd	*allocate_cmd_node(void);
+char	*find_cmd(t_shell *mini, t_list *tokens);
 char	**allocate_args_array(int num_args);
 char	*set_path_name(t_shell *mini, char *token);
 char	*copy_var_value(t_shell *mini, char *token, int *index);
 char	*expand_token(char *token, t_shell *mini);
-int		count_args(t_list *tokens);
-int		ft_is_in_single(const char *str, int n);
 void	parse_commands(t_shell *mini, t_list *tokens);
 void	process_token_expansion(t_list *current, t_shell *mini);
 void	handle_dollar(t_list *list, t_shell *mini);
-int		set_type(char *token);
-t_cmd	*set_cmd(t_list *token);
-char	*find_cmd(t_shell *mini, t_list *tokens);
+void	expansion_preprocess(t_list *tokens);
+t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i);
+t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
 t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
 t_list	*process_redirections(t_cmd *cmd, t_list *tokens, int *i);
-void	expansion_preprocess(t_list *tokens);
+t_cmd	*allocate_cmd_node(void);
+t_cmd	*set_cmd(t_list *token);
 
 /**
  * Utility functions
@@ -162,18 +163,18 @@ int		ft_strnmcpy(char **dest, char *src, int n, int m);
 int		ft_arraylen(char **envp);
 int		ft_isempty(char *str);
 int		ft_isspace(int c);
-char	*ft_strnmdup(char const *src, int n, int m);
 int		quotes_checker(char *input, int len);
-char	*ft_strjoin_free(char *s1, char *s2);
-void	free_env(char **env);
-bool	builtin_cmd(char *cmd);
-bool	is_redir_or_pipe(char c);
-bool	is_numerical(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_getpid(void);
 int		ft_rand(void);
 char	*random_filename(void);
 char	*set_cache_file_name(void);
+char	*ft_strnmdup(char const *src, int n, int m);
+char	*ft_strjoin_free(char *s1, char *s2);
+void	free_env(char **env);
+bool	builtin_cmd(char *cmd);
+bool	is_redir_or_pipe(char c);
+bool	is_numerical(char *str);
 
 /**
  * Quote Utility functions
@@ -203,12 +204,12 @@ int		handle_append(t_redir *r, int fd);
 int		handle_input(t_redir *r, int fd);
 int		handle_heredoc(t_redir *r, int fd);
 int		heredoc_interaction(t_shell *mini, t_redir *r, int *fd);
-char	*set_cache_file_name(void);
 int		execute_heredoc(t_shell *mini, t_redir *r, int fd);
 int		preprocessing_heredocs(t_shell *mini);
 int		check_heredoc_no_cmd(t_shell *mini, int last_exit_status);
 int		handle_child_process(t_shell *mini, t_redir *r, int fd, char *cache);
 int		handle_heredoc_status(int status, char *cache, int fd, t_redir *r);
+char	*set_cache_file_name(void);
 void	heredoc_cleaner(t_shell *mini);
 
 /**
@@ -217,12 +218,12 @@ void	heredoc_cleaner(t_shell *mini);
 int		ft_lst_len(t_env *env);
 int		is_redirection_token(char *token);
 int		is_valid_identifier_len(const char *name, int len);
-void	add_redir(t_redir **list, t_redir *new);
 char	*string_build(char *s1, char *s2);
 char	*string_build2(char *s1, char *s2);
 char	**get_path_values(t_shell *mini);
-t_redir	*create_redir_node(int type, const char *filename);
+void	add_redir(t_redir **list, t_redir *new);
 bool	is_invalid_pipe_sequence(t_list *current);
+t_redir	*create_redir_node(int type, const char *filename);
 
 /**
  * Built in export
@@ -247,24 +248,24 @@ int		clear_and_exit(t_shell *mini);
 int		clear_commands(t_cmd *cmds);
 int		clear_tokens(t_list *tokens);
 int		clear_array(char **array);
+int		cleanup_and_exit(t_shell *mini);
 void	clear_env(t_env *env);
 void	free_redirections(t_redir *redir_list);
-int		cleanup_and_exit(t_shell *mini);
 void	clear_path_dirs(char **path_dirs, int i);
 
 /**
  * Built_in funtions
 */
-void	updatewd(t_shell *mini, char *newpwd, char *oldpwd);
 int		print_cd_error(char *path, char *oldpwd);
 int		try_change_dir(t_shell *mini, char *target, char *oldpwd);
 int		builtin_cd(t_shell *mini);
 int		check_builtin(t_cmd *current, t_shell *mini);
-void	remove_env_nodes(t_shell *mini, char *unset);
 int		builtin_unset(t_shell *mini);
 int		builtin_env(t_shell *mini);
 int		builtin_pwd(t_initenv *env);
 int		home_not_set(char *oldpwd);
+void	updatewd(t_shell *mini, char *newpwd, char *oldpwd);
+void	remove_env_nodes(t_shell *mini, char *unset);
 
 /**
  * Built_in echo
@@ -275,11 +276,11 @@ void	print_args(char **args, int *index);
 /**
  * Handle enviornment
 */
-t_env	*new_node(char *content);
-void	add_to_list(t_env **env, char *content);
-void	list_env(t_env **env, char **envp);
 char	**copy_env(t_env *env);
 char	*extract_env_value(t_initenv *initenv, char *name);
+void	add_to_list(t_env **env, char *content);
+void	list_env(t_env **env, char **envp);
+t_env	*new_node(char *content);
 
 /**
  * Built in exit
@@ -293,24 +294,25 @@ void	exit_proccedure(t_shell *mini);
 /**
  * Execution funtions
 */
-void	free_fds(int **fd, int count);
-void	close_fds2(int **fd, int limit);
-void	pre_execute(t_shell *mini, t_cmd *cmd, int **fd);
 int		**alloc_fds(int limit);
 int		init_pipes(int **fd, int limit);
 int		execute(t_shell *mini);
 int		handle_builtin(t_shell *mini, t_cmd *current);
 int		wait_for_children(int n, t_shell *mini, pid_t *pids);
 int		execution(t_shell *mini, t_cmd *cmd);
-pid_t	*run_commands(t_shell *mini, t_cmd *current, int **fd, int *index);
-pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index);
-
 int		activate_shell(char *input, t_initenv *env);
 int		ft_isquoted(const char *str, int n);
+void	free_fds(int **fd, int count);
+void	close_fds2(int **fd, int limit);
+void	pre_execute(t_shell *mini, t_cmd *cmd, int **fd);
+pid_t	*run_commands(t_shell *mini, t_cmd *current, int **fd, int *index);
+pid_t	execute_command(t_shell *mini, t_cmd *cmd, int **fd, int index);
 t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
 
-
-int print_cmd(t_cmd *cmd);
-int print_token(t_list *token);
-int print_all(t_shell *mini);
+/**
+ * Debugging tool funtions
+*/
+int		print_cmd(t_cmd *cmd);
+int		print_token(t_list *token);
+int		print_all(t_shell *mini);
 #endif

@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:28:10 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 06:26:49 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 14:01:34 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,14 @@ static int	free_mini_and_return(t_shell *mini, int status)
 	return (status);
 }
 
-static void	check_sigint(t_initenv *initenv)
-{
-	if (g_sig == SIGINT)
-	{
-		initenv->last_status = 130;
-		g_sig = 0;
-	}
-}
-
 int	activate_shell(char *input, t_initenv *env)
 {
 	int		status;
 	t_shell	*mini;
 
-	check_sigint(env);
 	mini = configure_mini_shell(env);
+	if (!mini)
+		return (1);
 	status = input_validate(&input, env);
 	if (status)
 		return (free_mini_and_return(mini, status));
@@ -74,15 +66,12 @@ int	activate_shell(char *input, t_initenv *env)
 	status = parse_and_expand(mini);
 	if (status)
 		return (free_mini_and_return(mini, status));
-	//print_all(mini);
-	//return (0);
 	status = preprocessing_heredocs(mini);
 	if (status)
 		return (free_mini_and_return(mini, status));
 	status = execute(mini);
 	if (status)
 		return (free_mini_and_return(mini, status));
-	//print_all(mini);
 	status = clear_and_exit(mini);
 	if (status)
 		return (status);
@@ -103,7 +92,10 @@ static t_shell	*configure_mini_shell(t_initenv *env)
 
 	mini = malloc(sizeof(t_shell));
 	if (!mini)
+	{
+		perror("mini initializing fails!");
 		return (NULL);
+	}
 	mini->num_cmds = 0;
 	mini->tokens = NULL;
 	mini->cmds = NULL;

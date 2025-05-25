@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:47 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/23 04:39:40 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/25 14:09:11 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ int	ft_is_in_single(const char *str, int n)
 	}
 	return (in_single);
 }
-
-
 
 /*
 * Expands a single token in the list if it is not within single quotes.
