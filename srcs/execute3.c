@@ -83,7 +83,7 @@ void	pre_execute(t_shell *mini, t_cmd *cmd, int **fd)
 		exit(1);
 	}
 	if (cmd->is_builtin)
-		exit(check_builtin(cmd, mini));
+		exit_builtin(cmd, mini, fd);
 	check_stat(cmd->command, mini, fd);
 	mini->initenv->copy_env = copy_env(mini->initenv->env);
 	if (!cmd->command)

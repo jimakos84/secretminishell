@@ -266,6 +266,7 @@ int		builtin_pwd(t_initenv *env);
 int		home_not_set(char *oldpwd);
 void	updatewd(t_shell *mini, char *newpwd, char *oldpwd);
 void	remove_env_nodes(t_shell *mini, char *unset);
+void	exit_builtin(t_cmd *cmd, t_shell *mini, int **fd);
 
 /**
  * Built_in echo

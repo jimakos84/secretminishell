@@ -85,3 +85,17 @@ char	*set_cache_file_name(void)
 	}
 	return (file_name);
 }
+
+void	exit_builtin(t_cmd *cmd, t_shell *mini, int **fd)
+{
+	int		status;
+
+	status = 0;
+	status = check_builtin(cmd, mini);
+	free(mini->pids);
+	free_fds(fd, mini->num_cmds - 1);
+	clear_env(mini->initenv->env);
+	free(mini->initenv);
+	clear_and_exit(mini);
+	exit (status);
+}
