@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 07:03:51 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 07:17:35 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/28 05:44:17 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,10 @@ void	close_fds2(int **fd, int limit)
 	i = 0;
 	while (i < limit)
 	{
-		close(fd[i][0]);
-		close(fd[i][1]);
+		if (close(fd[i][0]) == -1)
+			perror("close fd[0] fails");
+		if (close(fd[i][1]) == -1 )
+			perror("close fd[1] fails");
 		i++;
 	}
 }
