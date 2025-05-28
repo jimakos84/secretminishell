@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:55 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/25 14:09:45 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/27 19:42:30 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 	t_list	*current;
 
 	current = tokens;
-	if (!current)
+	if (!current && check_for_pipe_token(current))
 		return (current);
 	if (cmd && cmd->cmd && ft_strcmp(cmd->cmd, "rd") == 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/24 04:58:12 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/28 05:50:35 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,14 @@ int	init_pipes(int **fd, int limit)
 		if (pipe(fd[i]) == -1)
 		{
 			perror("Pipe creation failed");
+			while (--i >= 0)
+			{
+				if (close(fd[i][0]) == -1)
+					perror("close fd[0] fails");
+				if (close(fd[i][1]) == -1 )
+					perror("close fd[1] fails");
+			}
+			free_fds(fd, limit);
 			return (1);
 		}
 		i++;
