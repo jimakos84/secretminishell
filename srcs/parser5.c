@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 04:38:15 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/27 19:43:38 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 09:23:28 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ t_list	*fill_remaining_args(t_cmd *cmd, t_list *tokens, int *i)
 
 	current = tokens;
 	if (!current)
+		return (current);
+	if (is_redirection_token(current->token))
 		return (current);
 	while (current && !check_for_pipe_token(current))
 		current = handle_arg_or_redirection(cmd, current, i);

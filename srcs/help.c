@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 11:13:11 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/16 06:38:29 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 08:45:58 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ int	is_redirection_token(char *token)
 {
 	if (!token)
 		return (0);
-	if (ft_strncmp(token, ">", 2) == 0)
+	if (ft_strcmp(token, ">") == 0)
 		return (1);
-	if (ft_strncmp(token, ">>", 3) == 0)
+	if (ft_strcmp(token, ">>") == 0)
 		return (1);
-	if (ft_strncmp(token, "<", 2) == 0)
+	if (ft_strcmp(token, "<") == 0)
 		return (1);
-	if (ft_strncmp(token, "<<", 3) == 0)
+	if (ft_strcmp(token, "<<") == 0)
 		return (1);
 	return (0);
 }

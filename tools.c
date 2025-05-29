@@ -13,6 +13,8 @@ int print_token(t_list *token)
 		printf("token : {%s}\n", current->token);
 		current = current->next;
 	}
+	if(!current)
+		printf("token : {(null)}}\n");
 	return (0);
 }
 
