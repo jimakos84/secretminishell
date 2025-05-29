@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:55 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/29 06:43:28 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 09:21:16 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 	if (current && check_for_pipe_token(current))
 		return (current);
 	if (!current)
+		return (current);
+	if (is_redirection_token(current->token))
 		return (current);
 	remove_quotes_inplace(current->token);
 	cmd->cmd = ft_strdup(current->token);
