@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:24:34 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/28 05:50:35 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 03:07:28 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,13 @@ int	**alloc_fds(int limit)
 	int	**fd;
 	int	i;
 
-	fd = malloc(sizeof(int *) * limit);
+	fd = ft_calloc(sizeof(int *), limit);
 	if (!fd)
 		return (NULL);
 	i = 0;
 	while (i < limit)
 	{
-		fd[i] = malloc(sizeof(int) * 2);
+		fd[i] = ft_calloc(sizeof(int), 2);
 		if (!fd[i])
 		{
 			free_fds(fd, i);
