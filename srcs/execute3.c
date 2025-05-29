@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 07:03:51 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/29 08:32:35 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:29:48 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	pre_execute(t_shell *mini, t_cmd *cmd, int **fd)
 		clear_env(mini->initenv->env);
 		free(mini->initenv);
 		clear_and_exit(mini);
-		exit(1);
+		exit(0);
 	}
 	if (cmd->is_builtin)
 		exit_builtin(cmd, mini, fd);
