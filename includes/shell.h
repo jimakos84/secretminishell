@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/25 16:23:36 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 03:36:56 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,7 +300,7 @@ int		init_pipes(int **fd, int limit);
 int		execute(t_shell *mini);
 int		handle_builtin(t_shell *mini, t_cmd *current);
 int		wait_for_children(int n, t_shell *mini, pid_t *pids);
-int		execution(t_shell *mini, t_cmd *cmd);
+int		execution(t_shell *mini, t_cmd *cmd, int **fd);
 int		activate_shell(char *input, t_initenv *env);
 int		ft_isquoted(const char *str, int n);
 void	free_fds(int **fd, int count);

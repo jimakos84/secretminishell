@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:23:57 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/15 05:55:16 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 04:35:31 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,8 @@ void	p_exe_error(char *command, int err, t_initenv *initenv)
 		ft_putstr_fd(command, 2);
 		ft_putendl_fd(": Is a directory", 2);
 	}
+	else if (err == ENOEXEC)
+		initenv->last_status = 0;
 	else
-	{
 		initenv->last_status = err % 256;
-	}
 }
