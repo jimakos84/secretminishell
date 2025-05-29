@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:30:51 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/25 13:00:08 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:44:14 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,10 @@ static void	init_shell(t_initenv *initenv)
 {
 	char	*input;
 
-	input = readline("minishell> ");
+	if (isatty(STDIN_FILENO))
+		input = readline("minishell> ");
+	else
+		input = get_next_line(STDIN_FILENO);
 	if (!input)
 	{
 		clear_env(initenv->env);
