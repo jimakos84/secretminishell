@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 12:23:19 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/24 06:36:24 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:47:24 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ ssize_t	ft_haschar(char *str, int c)
 	return (-1);
 }
 
-char	*ft__line(char *str, int c)
+char	*ft_extract_line(char *str, int c)
 {
 	ssize_t	count;
 	ssize_t	index;
