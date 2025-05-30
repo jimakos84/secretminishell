@@ -39,6 +39,7 @@ int	extract_tokens(t_list **tokens, char *input)
 	if (!*tokens)
 		return (1);
 	set_single_quote_flags(*tokens);
+	remove_dollar_quote(*tokens);
 	return (0);
 }
 

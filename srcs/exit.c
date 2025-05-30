@@ -31,7 +31,7 @@ int	check_valid_value(char *value)
 {
 	int	exit_value;
 
-	exit_value = ft_atoi(value);
+	exit_value = ft_atol(value);
 	exit_value = exit_value % 256;
 	return (exit_value);
 }
@@ -110,10 +110,12 @@ int	validate_exit_argument(t_shell *mini, char *arg)
 	i = 0;
 	while (arg[i])
 	{
-		if (!ft_isdigit(arg[i]) && arg[i] != '-' && arg[i] != '+')
+		if ((!ft_isdigit(arg[i]) && arg[i] != '-' && arg[i] != '+')
+			|| (ft_atol(mini->cmds->args[1]) == -1
+				&& ft_strcmp("-1", mini->cmds->args[1])))
 		{
 			mini->initenv->last_status = 2;
-			printf("exit\n");
+			ft_putendl_fd("exit", 2);
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(arg, 2);
 			ft_putendl_fd(": numeric argument required", 2);
@@ -149,9 +151,10 @@ int	exit_mini(t_shell *mini)
 	{
 		if (validate_exit_argument(mini, mini->cmds->args[1]))
 			return (1);
+		ft_putendl_fd("exit", 2);
 	}
 	else
-		printf("exit\n");
+		ft_putendl_fd("exit", 2);
 	cleanup_and_exit(mini);
 	return (0);
 }
