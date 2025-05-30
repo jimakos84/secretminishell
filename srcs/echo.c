@@ -72,7 +72,9 @@ int	builtin_echo(t_cmd *cmd)
 void	print_args(char **args, int *index)
 {
 	int	i;
+	int	j;
 
+	j = 0;
 	i = *index;
 	while (args && args[i])
 	{

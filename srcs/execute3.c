@@ -57,7 +57,7 @@ void	close_fds2(int **fd, int limit)
 	{
 		if (close(fd[i][0]) == -1)
 			perror("close fd[0] fails");
-		if (close(fd[i][1]) == -1 )
+		if (close(fd[i][1]) == -1)
 			perror("close fd[1] fails");
 		i++;
 	}
