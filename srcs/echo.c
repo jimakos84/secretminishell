@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 17:37:14 by dvlachos          #+#    #+#             */
-/*   Updated: 2025/05/25 14:54:57 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/05/31 06:42:26 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,7 @@ int	builtin_echo(t_cmd *cmd)
 void	print_args(char **args, int *index)
 {
 	int	i;
-	int	j;
 
-	j = 0;
 	i = *index;
 	while (args && args[i])
 	{
