@@ -130,6 +130,7 @@ void	remove_comments(char **input);
 */
 int		extract_tokens(t_list **tokens, char *input);
 char	*handle_token(const char *input, int *index);
+void	remove_dollar_quote(t_list *tokens);
 
 /**
  * Parsing and expanding
@@ -175,6 +176,7 @@ void	free_env(char **env);
 bool	builtin_cmd(char *cmd);
 bool	is_redir_or_pipe(char c);
 bool	is_numerical(char *str);
+long	ft_atol(const char *s);
 
 /**
  * Quote Utility functions
