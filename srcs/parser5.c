@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 04:38:15 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/29 09:23:28 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/06/02 01:26:45 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 */
 void	init_rd_cmd(t_cmd *cmd);
 void	parse_commands(t_shell *mini, t_list *tokens);
-t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
+t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
 t_list	*fill_remaining_args(t_cmd *cmd, t_list *tokens, int *i);
 
 int	check_for_pipe_token(t_list *node)
@@ -34,23 +34,23 @@ int	check_for_pipe_token(t_list *node)
 	return (0);
 }
 
-t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini)
+t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 {
-	int		i;
 	t_list	*current;
 
-	i = 0;
 	current = tokens;
+	if (current && !current->token)
+		current = current->next;
 	if (check_for_pipe_token(current))
 		return (current);
 	if (is_redirection_token(current->token))
 	{
 		if (!cmd || !cmd->cmd)
 			init_rd_cmd(cmd);
-		current = handle_arg_or_redirection(cmd, current, &i);
+		current = handle_arg_or_redirection(cmd, current, i);
 	}
-	current = init_cmd_from_token(cmd, current, mini, &i);
-	current = fill_remaining_args(cmd, current, &i);
+	current = init_cmd_from_token(cmd, current, mini, i);
+	current = fill_remaining_args(cmd, current, i);
 	return (current);
 }
 

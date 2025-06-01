@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:31 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/29 06:43:55 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/06/02 01:26:11 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 char	*string_build(char *s1, char *s2);
 char	*extract_value(t_shell *mini, char *token, int *index);
 t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i);
-t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
+t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
 
 /*
 * Parses and expands all tokens in the shell input.
@@ -49,20 +49,20 @@ void	parse_commands(t_shell *mini, t_list *tokens)
 {
 	t_list	*current;
 	t_cmd	*cmd;
+	int		i;
 
 	current = tokens;
 	if (current && !current->token)
 		current = current->next;
 	while (current)
 	{
+		i = 0;
 		cmd = set_cmd(tokens);
 		while (current)
 		{
 			if (check_for_pipe_token(current))
 				break ;
-			if (current && !current->token)
-				current = current->next;
-			current = fill_args_and_cmd(cmd, current, mini);
+			current = fill_args_and_cmd(cmd, current, mini, &i);
 		}
 		if (cmd && cmd->cmd)
 		{
