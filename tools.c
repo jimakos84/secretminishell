@@ -1,8 +1,20 @@
 #include "includes/shell.h"
 
+int print_t(t_list *token);
 int print_cmd(t_cmd *cmd);
 int print_token(t_list *token);
 int print_all(t_shell *mini);
+
+int print_t(t_list *token)
+{
+	t_list *current = token;
+
+	if(current)
+		printf("token : {%s}\n", current->token);
+	else
+		printf("token : {(null)}}\n");
+	return (0);
+}
 
 int print_token(t_list *token)
 {
