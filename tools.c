@@ -57,3 +57,14 @@ int print_cmd(t_cmd *cmd)
 	printf("------------------------------------------------ eof ---\n");
 	return (0);
 }
+
+int print_all(t_shell *mini)
+{
+	t_cmd *current = mini->cmds;
+	while(current)
+	{
+		print_cmd(current);
+		current = current->next;
+	}
+	return (0);
+}
