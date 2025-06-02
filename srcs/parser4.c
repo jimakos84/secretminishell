@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:13:55 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/06/02 01:11:15 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/06/02 03:37:18 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,9 @@ t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 	t_list	*current;
 
 	current = tokens;
-	if (current && check_for_pipe_token(current))
-		return (current);
 	if (!current)
 		return (current);
-	if (is_redirection_token(current->token))
+	if (check_for_pipe_token(current) || is_redirection_token(current->token))
 		return (current);
 	remove_quotes_inplace(current->token);
 	if (cmd && cmd->cmd && ft_strcmp(cmd->cmd, "rd") == 0)
@@ -119,11 +117,13 @@ t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i)
 		cmd->cmd = NULL;
 	}
 	if (cmd && !cmd->cmd)
+	{
 		cmd->cmd = ft_strdup(current->token);
-	if (builtin_cmd(cmd->cmd))
-		cmd->is_builtin = 1;
-	else
-		cmd->command = set_path_name(mini, cmd->cmd);
+		if (builtin_cmd(cmd->cmd))
+			cmd->is_builtin = 1;
+		else
+			cmd->command = set_path_name(mini, cmd->cmd);
+	}
 	cmd->args[(*i)++] = ft_strdup(current->token);
 	current = current->next;
 	return (current);
