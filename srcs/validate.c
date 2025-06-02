@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/15 05:53:42 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:25:10 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ static int	check_special_occurance(char *input)
 	if (len == 3)
 		if (validation_for_threechar(input))
 			return (1);
-	if (input[len - 1] == '|')
+	if (len > 1 && input[len - 1] == '|')
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: tsomacha <tsomacha@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 05:39:43 by tsomacha          #+#    #+#             */
-/*   Updated: 2025/05/29 03:36:56 by tsomacha         ###   ########.fr       */
+/*   Updated: 2025/06/02 04:05:33 by tsomacha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	process_token_expansion(t_list *current, t_shell *mini);
 void	handle_dollar(t_list *list, t_shell *mini);
 void	expansion_preprocess(t_list *tokens);
 t_list	*handle_arg_or_redirection(t_cmd *cmd, t_list *current, int *i);
-t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini);
+t_list	*fill_args_and_cmd(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
 t_list	*init_cmd_from_token(t_cmd *cmd, t_list *tokens, t_shell *mini, int *i);
 t_list	*process_redirections(t_cmd *cmd, t_list *tokens, int *i);
 t_cmd	*allocate_cmd_node(void);
@@ -315,6 +315,7 @@ t_cmd	*list_add_command(t_cmd *cmds, t_cmd *node);
 /**
  * Debugging tool funtions
 */
+int		print_t(t_list *token);
 int		print_cmd(t_cmd *cmd);
 int		print_token(t_list *token);
 int		print_all(t_shell *mini);
